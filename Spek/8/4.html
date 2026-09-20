@@ -1,0 +1,1237 @@
+<!DOCTYPE html>
+<!-- saved from url=(0041)https://milaedu.com/mock-test/119542/exam -->
+<html lang="vi"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Speaking - Thi thử</title>
+    <meta name="csrf-token" content="CQ7nX7MAJZdAiQuEl9diUbItADqC28MIBDORmNcU">
+    <link rel="preload" as="style" href="./4_files/app-BuvHWCYF.css"><link rel="modulepreload" as="script" href="./4_files/app-DbvjfmZc.js.tải xuống"><link rel="stylesheet" href="./4_files/app-BuvHWCYF.css"><script type="module" src="./4_files/app-DbvjfmZc.js.tải xuống"></script>    <style>
+        /* Restore Tailwind's reset styles for CKEditor content */
+        .ck-content strong { font-weight: bold; }
+        .ck-content em { font-style: italic; }
+        .ck-content u { text-decoration: underline; }
+        .ck-content s { text-decoration: line-through; }
+        .ck-content ul { list-style-type: disc; padding-left: 1.5rem; margin-top: 0.5rem; margin-bottom: 0.5rem; }
+        .ck-content ol { list-style-type: decimal; padding-left: 1.5rem; margin-top: 0.5rem; margin-bottom: 0.5rem; }
+        .ck-content h1 { font-size: 2em; font-weight: bold; margin-top: 0.67em; margin-bottom: 0.67em; }
+        .ck-content h2 { font-size: 1.5em; font-weight: bold; margin-top: 0.83em; margin-bottom: 0.83em; }
+        .ck-content h3 { font-size: 1.17em; font-weight: bold; margin-top: 1em; margin-bottom: 1em; }
+        .ck-content p { margin-bottom: 0.5em; }
+    </style>
+</head>
+<body class="bg-gray-50">
+    <nav class="bg-white shadow-sm">
+        <div class="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16">
+                <div class="flex items-center space-x-4 sm:space-x-6">
+                    <a href="https://milaedu.com/dashboard" class="text-base sm:text-lg md:text-xl font-bold text-blue-600 whitespace-nowrap">Milaedu</a>
+                    
+                    <a href="https://milaedu.com/instructions" class="flex items-center gap-1 sm:gap-2 text-sm font-medium text-gray-600 hover:text-blue-600 transition-colors ">
+                        <svg class="w-4 h-4 sm:w-5 sm:h-5 hidden sm:block" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path>
+                        </svg>
+                        <span class="whitespace-nowrap">Hướng dẫn</span>
+                    </a>
+
+                    
+                                    </div>
+                <div class="flex items-center space-x-2 sm:space-x-4">
+                                        <span class="text-sm font-medium text-slate-700 hidden sm:inline">Tùng</span>
+                    <form method="POST" action="https://milaedu.com/logout" class="whitespace-nowrap flex">
+                        <input type="hidden" name="_token" value="CQ7nX7MAJZdAiQuEl9diUbItADqC28MIBDORmNcU" autocomplete="off">                        <button type="submit" class="inline-flex items-center justify-center px-4 py-2 rounded-lg font-medium transition-colors bg-gray-200 hover:bg-gray-300 text-gray-800 text-xs sm:text-sm px-2 sm:px-4 py-1.5 sm:py-2">
+        Đăng xuất
+    </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <main class="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8 py-8">
+                
+        
+        
+        
+        <meta name="csrf-token" content="CQ7nX7MAJZdAiQuEl9diUbItADqC28MIBDORmNcU">
+
+<div class="min-h-screen bg-gray-50 flex flex-col" x-data="mockTestExam()">
+
+    
+    <div class="bg-white shadow-sm sticky top-0 z-40 border-b border-gray-100">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-14">
+                <h1 class="text-lg font-bold text-gray-800">
+                    Speaking — Thi thử
+                </h1>
+                <div class="flex items-center gap-4">
+                    
+                    <span x-show="lastSaved" x-transition:leave="transition ease-in duration-500" x-transition:leave-start="opacity-100" x-transition:leave-end="opacity-0" class="text-xs text-green-600 font-medium flex items-center gap-1" style="display: none;">
+                        <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                        Đã lưu
+                    </span>
+                    <div class="flex items-center gap-2 px-4 py-2 rounded-full bg-blue-50 text-blue-700" :class="timeRemaining &lt;= 300 ? 'bg-red-100 text-red-700' : 'bg-blue-50 text-blue-700'">
+
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                        </svg>
+                        <span class="font-mono font-bold text-lg" x-text="formatTime(timeRemaining)">11:41</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    
+    <div class="bg-white border-b border-gray-200 sticky top-14 z-30">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex gap-1 overflow-x-auto py-2">
+                                    <button @click="switchSection(0)" class="flex-shrink-0 px-4 py-2 rounded-lg text-sm font-medium transition-all bg-gray-100 text-gray-600 hover:bg-gray-200" :class="currentSectionIndex === 0
+                            ? 'bg-blue-600 text-white shadow-md'
+                            : (sectionAnswered(0) ? 'bg-green-100 text-green-700 hover:bg-green-200' : 'bg-gray-100 text-gray-600 hover:bg-gray-200')">
+                        <span class="flex items-center gap-2">
+                            <span>1. Part 1</span>
+                            <template x-if="sectionAnswered(0)"></template>
+                        </span>
+                    </button>
+                                    <button @click="switchSection(1)" class="flex-shrink-0 px-4 py-2 rounded-lg text-sm font-medium transition-all bg-gray-100 text-gray-600 hover:bg-gray-200" :class="currentSectionIndex === 1
+                            ? 'bg-blue-600 text-white shadow-md'
+                            : (sectionAnswered(1) ? 'bg-green-100 text-green-700 hover:bg-green-200' : 'bg-gray-100 text-gray-600 hover:bg-gray-200')">
+                        <span class="flex items-center gap-2">
+                            <span>2. Part 2</span>
+                            <template x-if="sectionAnswered(1)"></template>
+                        </span>
+                    </button>
+                                    <button @click="switchSection(2)" class="flex-shrink-0 px-4 py-2 rounded-lg text-sm font-medium transition-all bg-gray-100 text-gray-600 hover:bg-gray-200" :class="currentSectionIndex === 2
+                            ? 'bg-blue-600 text-white shadow-md'
+                            : (sectionAnswered(2) ? 'bg-green-100 text-green-700 hover:bg-green-200' : 'bg-gray-100 text-gray-600 hover:bg-gray-200')">
+                        <span class="flex items-center gap-2">
+                            <span>3. Part 3</span>
+                            <template x-if="sectionAnswered(2)"></template>
+                        </span>
+                    </button>
+                                    <button @click="switchSection(3)" class="flex-shrink-0 px-4 py-2 rounded-lg text-sm font-medium transition-all bg-blue-600 text-white shadow-md" :class="currentSectionIndex === 3
+                            ? 'bg-blue-600 text-white shadow-md'
+                            : (sectionAnswered(3) ? 'bg-green-100 text-green-700 hover:bg-green-200' : 'bg-gray-100 text-gray-600 hover:bg-gray-200')">
+                        <span class="flex items-center gap-2">
+                            <span>4. Part 4</span>
+                            <template x-if="sectionAnswered(3)"></template>
+                        </span>
+                    </button>
+                            </div>
+        </div>
+    </div>
+
+    
+    <main class="flex-1 max-w-7xl mx-auto w-full px-4 sm:px-6 lg:px-8 py-8 pb-32">
+
+        
+        <div x-show="questions.length &gt; 1" class="mb-4 bg-white rounded-lg shadow p-3" style="display: none;">
+            <div class="flex items-center justify-between">
+                <button @click="prevQuestion()" :disabled="currentIndex === 0" class="px-3 py-1.5 text-sm border border-gray-200 rounded-lg hover:bg-gray-50 disabled:opacity-40 disabled:cursor-not-allowed" disabled="disabled">
+                    ← Câu trước
+                </button>
+                <div class="flex items-center gap-1.5 flex-wrap justify-center">
+                    <template x-for="(q, qi) in questions" :key="q.id"></template><button @click="goToQuestion(qi)" class="w-8 h-8 rounded-full text-xs font-bold transition-all bg-blue-600 text-white ring-2 ring-blue-300 scale-110" :class="currentIndex === qi
+                                ? 'bg-blue-600 text-white ring-2 ring-blue-300 scale-110'
+                                : (answers[q.id] !== undefined ? 'bg-green-100 text-green-700 border border-green-300' : 'bg-gray-100 text-gray-500 border border-gray-200 hover:bg-gray-200')" x-text="qi + 1">1</button>
+                </div>
+                <button @click="nextQuestion()" :disabled="currentIndex &gt;= questions.length - 1" class="px-3 py-1.5 text-sm border border-gray-200 rounded-lg hover:bg-gray-50 disabled:opacity-40 disabled:cursor-not-allowed" disabled="disabled">
+                    Câu sau →
+                </button>
+            </div>
+            <div class="text-center text-xs text-gray-400 mt-2">
+                Câu <span x-text="currentIndex + 1">1</span> / <span x-text="questions.length">1</span>
+            </div>
+        </div>
+
+        
+        <template x-if="currentQuestion"></template><div class="bg-white rounded-lg shadow-lg overflow-hidden">
+                
+                <div class="p-6 border-b border-gray-100 bg-blue-50">
+                    <div class="max-w-3xl mx-auto">
+                        <div class="text-sm text-gray-500 mb-2">
+                            Section <span x-text="currentSectionIndex + 1">4</span> — Part <span x-text="sections[currentSectionIndex].part_label ?? sections[currentSectionIndex].part">4</span>
+                            <template x-if="questions.length &gt; 1"></template>
+                        </div>
+                        <div class="text-base md:text-lg font-medium" x-text="currentQuestion.stem">In this part, I'm going to show you a picture and ask you three questions. You will have one minute to think about your answers before you start speaking. You will have two minutes to answer all three questions.</div>
+                    </div>
+                </div>
+
+                
+                <div class="p-6">
+                    <template x-if="currentQuestion.skill === 'reading' &amp;&amp; currentQuestion.part === 1"></template>
+                    <template x-if="currentQuestion.skill === 'reading' &amp;&amp; currentQuestion.part === 2"></template>
+                    <template x-if="currentQuestion.skill === 'reading' &amp;&amp; currentQuestion.part === 3"></template>
+                    <template x-if="currentQuestion.skill === 'reading' &amp;&amp; currentQuestion.part === 4"></template>
+
+                    <template x-if="currentQuestion.skill === 'listening' &amp;&amp; currentQuestion.part === 1"></template>
+                    <template x-if="currentQuestion.skill === 'listening' &amp;&amp; currentQuestion.part === 2"></template>
+                    <template x-if="currentQuestion.skill === 'listening' &amp;&amp; currentQuestion.part === 3"></template>
+                    <template x-if="currentQuestion.skill === 'listening' &amp;&amp; currentQuestion.part === 4"></template>
+                    <template x-if="currentQuestion.skill === 'writing' &amp;&amp; currentQuestion.part === 1"></template>
+                    <template x-if="currentQuestion.skill === 'writing' &amp;&amp; currentQuestion.part === 2"></template>
+                    <template x-if="currentQuestion.skill === 'writing' &amp;&amp; currentQuestion.part === 3"></template>
+                    <template x-if="currentQuestion.skill === 'writing' &amp;&amp; currentQuestion.part === 4"></template>
+                    <template x-if="currentQuestion &amp;&amp; currentQuestion.skill === 'speaking' &amp;&amp; currentQuestion.part === 1"></template>
+                    <template x-if="currentQuestion &amp;&amp; currentQuestion.skill === 'speaking' &amp;&amp; currentQuestion.part === 2"></template>
+                    <template x-if="currentQuestion &amp;&amp; currentQuestion.skill === 'speaking' &amp;&amp; currentQuestion.part === 3"></template>
+                    <template x-if="currentQuestion &amp;&amp; currentQuestion.skill === 'speaking' &amp;&amp; currentQuestion.part === 4"></template><div class="space-y-6">
+    <div class="bg-red-50 border-l-4 border-red-500 p-4 rounded-r-lg">
+        <h3 class="text-lg font-semibold text-red-800 flex items-center gap-2">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8h2a2 2 0 012 2v6a2 2 0 01-2 2h-2v4l-4-4H9a1.994 1.994 0 01-1.414-.586m0 0L11 14h4a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2v4l.586-.586z"></path></svg>
+            Extended Discussion
+        </h3>
+        <p class="text-sm text-red-700 mt-1">Please look at the picture and answer the 3 questions. You have 1 minute to think and 2 minutes to talk.</p>
+    </div>
+
+    <!-- Image Display -->
+    <template x-if="currentQuestion.metadata.image_path"></template><div class="bg-white p-4 rounded-xl border border-gray-200 text-center">
+            <img :src="`/storage/${currentQuestion.metadata.image_path}`" alt="Speaking Image" class="max-h-64 object-contain mx-auto rounded-lg shadow-sm" src="./4_files/AUYvGqzBuoldbyjHhevABvs2KSJvv8giFpBP0iPC.jpg">
+        </div>
+
+    <!-- Active Question Display (All 3 questions shown together) -->
+    <div class="bg-white p-6 md:p-8 rounded-xl border-2 border-red-100 relative overflow-hidden">
+        <!-- Progress Bar for Part (always 100% since it's a single long response) -->
+        <div class="absolute top-0 left-0 h-1 bg-red-500 w-full"></div>
+             
+        <div class="space-y-4 mb-8 text-left max-w-2xl mx-auto">
+            <template x-for="(qText, idx) in currentQuestion.metadata.questions"></template><div class="flex items-start gap-3">
+                    <span class="inline-flex items-center justify-center w-6 h-6 rounded-full bg-red-100 text-red-800 font-bold text-sm shrink-0 mt-0.5" x-text="idx + 1">1</span>
+                    <h2 class="text-lg font-bold text-gray-800" x-text="qText">Tell me a time when you gave help.</h2>
+                </div><div class="flex items-start gap-3">
+                    <span class="inline-flex items-center justify-center w-6 h-6 rounded-full bg-red-100 text-red-800 font-bold text-sm shrink-0 mt-0.5" x-text="idx + 1">2</span>
+                    <h2 class="text-lg font-bold text-gray-800" x-text="qText">How did you feel?</h2>
+                </div><div class="flex items-start gap-3">
+                    <span class="inline-flex items-center justify-center w-6 h-6 rounded-full bg-red-100 text-red-800 font-bold text-sm shrink-0 mt-0.5" x-text="idx + 1">3</span>
+                    <h2 class="text-lg font-bold text-gray-800" x-text="qText">How can people be encouraged to do good things?/ What are ways to motivate others?</h2>
+                </div>
+        </div>
+
+        <!-- Recording Timer UI -->
+        <div class="flex flex-col items-center justify-center space-y-4 border-t border-gray-100 pt-8 mt-4">
+            
+            <!-- Playing Audio State -->
+            <div x-show="speakingState === 'playing_audio'" class="text-red-500 flex flex-col items-center" style="display: none;">
+                <svg class="w-12 h-12 animate-pulse mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z"></path></svg>
+                <div class="text-lg font-medium animate-pulse">Playing question audio...</div>
+            </div>
+
+            <!-- Prep Time State -->
+            <div x-show="speakingState === 'prep'" class="text-amber-500 flex flex-col items-center" style="display: none;">
+                <svg class="w-12 h-12 animate-pulse mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                <div class="text-lg font-medium">Preparation Time (Think about your answers)</div>
+                <div class="text-4xl font-bold" x-text="formatTime(speakingTimer)">00:44</div>
+            </div>
+
+            <!-- Recording State -->
+            <div x-show="speakingState === 'recording'" class="flex flex-col items-center relative gap-4" style="">
+                <div class="relative w-32 h-32 flex items-center justify-center">
+                    <svg class="w-full h-full transform -rotate-90 absolute" viewBox="0 0 100 100">
+                        <circle cx="50" cy="50" r="45" fill="none" stroke="#fee2e2" stroke-width="8"></circle>
+                        <circle cx="50" cy="50" r="45" fill="none" class="stroke-red-500 transition-all duration-1000 linear" stroke-width="8" stroke-dasharray="283" :stroke-dashoffset="283 - (283 * (speakingTimer / currentQuestion.metadata.total_answer_time))" stroke-dashoffset="179.23333333333335"></circle>
+                    </svg>
+                    <div class="text-3xl font-bold text-red-600 absolute" x-text="formatTime(speakingTimer)">00:44</div>
+                </div>
+                <div class="text-sm font-semibold text-red-600 uppercase tracking-widest animate-pulse">Recording (All 3 Questions)...</div>
+            </div>
+            
+            <!-- Idle State -->
+            <div x-show="speakingState === 'idle'" class="mt-4" style="display: none;">
+                <button @click="startSpeakingPart()" class="px-8 py-4 bg-red-600 hover:bg-red-700 text-white rounded-full font-bold text-lg shadow-lg hover:shadow-xl transition-all flex items-center gap-3">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                    Start Part 4
+                </button>
+            </div>
+            
+            <!-- Saving State -->
+            <div x-show="speakingState === 'saving'" class="text-red-600 flex flex-col items-center" style="display: none;">
+                <svg class="w-10 h-10 animate-spin mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path></svg>
+                <div class="text-sm font-medium">Processing Audio...</div>
+            </div>
+        </div>
+    </div>
+</div>
+                </div>
+            </div>
+    </main>
+
+    
+    <footer class="fixed bottom-0 left-0 right-0 z-50 bg-white border-t border-gray-200 shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.05)]">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3">
+            <div class="flex items-center justify-between gap-3">
+                
+                <button @click="prevSection()" :disabled="currentSectionIndex === 0" class="px-4 py-2.5 border border-gray-200 rounded-lg text-sm font-medium text-gray-600 hover:bg-gray-50 disabled:opacity-40 disabled:cursor-not-allowed transition-colors">
+                    ← Trước
+                </button>
+
+                
+                <div class="flex items-center gap-1">
+                                            <div @click="switchSection(0)" class="w-3 h-3 rounded-full cursor-pointer transition-all bg-gray-300" :class="currentSectionIndex === 0
+                                ? 'bg-blue-600 scale-125'
+                                : (sectionAnswered(0) ? 'bg-green-400' : 'bg-gray-300')">
+                        </div>
+                                            <div @click="switchSection(1)" class="w-3 h-3 rounded-full cursor-pointer transition-all bg-gray-300" :class="currentSectionIndex === 1
+                                ? 'bg-blue-600 scale-125'
+                                : (sectionAnswered(1) ? 'bg-green-400' : 'bg-gray-300')">
+                        </div>
+                                            <div @click="switchSection(2)" class="w-3 h-3 rounded-full cursor-pointer transition-all bg-gray-300" :class="currentSectionIndex === 2
+                                ? 'bg-blue-600 scale-125'
+                                : (sectionAnswered(2) ? 'bg-green-400' : 'bg-gray-300')">
+                        </div>
+                                            <div @click="switchSection(3)" class="w-3 h-3 rounded-full cursor-pointer transition-all bg-blue-600 scale-125" :class="currentSectionIndex === 3
+                                ? 'bg-blue-600 scale-125'
+                                : (sectionAnswered(3) ? 'bg-green-400' : 'bg-gray-300')">
+                        </div>
+                                    </div>
+
+                
+                <template x-if="currentSectionIndex &lt; sections.length - 1"></template>
+                <template x-if="currentSectionIndex &gt;= sections.length - 1"></template><button @click="confirmSubmit()" class="px-5 py-2.5 bg-green-600 hover:bg-green-700 text-white font-semibold rounded-lg shadow-md transition-colors text-sm">
+                        🏁 Nộp bài
+                    </button>
+            </div>
+        </div>
+    </footer>
+
+    
+    <div x-show="showConfirmModal" class="fixed inset-0 z-[100] flex items-center justify-center bg-black/50" style="display: none;">
+        <div class="bg-white rounded-2xl shadow-2xl p-8 max-w-md w-full mx-4" @click.outside="showConfirmModal = false">
+            <h3 class="text-xl font-bold text-gray-800 mb-4">Xác nhận nộp bài?</h3>
+            <p class="text-gray-600 mb-2">Bạn đã hoàn thành:</p>
+            <div class="bg-gray-50 rounded-lg p-4 mb-6">
+                <div class="flex justify-between text-sm mb-2">
+                    <span class="text-gray-500">Sections đã làm:</span>
+                    <span class="font-bold" x-text="answeredCount + '/' + sections.length">0/4</span>
+                </div>
+                <div class="w-full bg-gray-200 rounded-full h-2">
+                    <div class="bg-green-500 h-2 rounded-full transition-all" :style="'width:' + (answeredCount/sections.length*100) + '%'" style="width:0%"></div>
+                </div>
+            </div>
+            <div class="flex gap-3">
+                <button @click="showConfirmModal = false" class="flex-1 px-4 py-3 border border-gray-300 rounded-lg text-gray-700 font-medium hover:bg-gray-50">
+                    Quay lại
+                </button>
+                <button @click="submitTest()" class="flex-1 px-4 py-3 bg-green-600 text-white rounded-lg font-semibold hover:bg-green-700" :disabled="submitting">
+                    <span x-show="!submitting">Nộp bài</span>
+                    <span x-show="submitting" style="display: none;">Đang nộp...</span>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+function mockTestExam() {
+    // Build sections data from server
+    const sectionsData = [{"index":0,"part":1,"part_label":"1","set_id":241,"questions":[{"id":557,"skill":"speaking","part":1,"stem":"In this part, I am going to ask you three short questions about yourself and your interests. You will have 30 seconds to reply to each question.","audio_path":null,"audio_url":null,"audio_urls":[],"image_path":null,"metadata":{"questions":["What do you like doing in your free time?","What did you do last night?","Please tell me about your favourite food"],"sample_answer":null,"prep_time":0,"answer_time_per_question":30},"point":5,"title":null}]},{"index":1,"part":2,"part_label":"2","set_id":241,"questions":[{"id":515,"skill":"speaking","part":2,"stem":"Write a short text (20-30 words).","audio_path":null,"audio_url":null,"audio_urls":[],"image_path":null,"metadata":{"image_path":"speaking_images\/1zcPY1LyyMDObmhaALGVzLGxs2iSQZvC47d1cR4M.jpg","questions":["Describe the picture?","What kind of games did you play when you were a child?","Why do children have to spend time playing?"],"sample_answer":null,"prep_time":0,"answer_time_per_question":45},"point":5,"title":"\u0110\u1ec1 8 - Part 2"}]},{"index":2,"part":3,"part_label":"3","set_id":241,"questions":[{"id":516,"skill":"speaking","part":3,"stem":"In this part, I\u0027m going to ask you to compare two pictures, and I will then ask you two questions about them. You will have 45 seconds for each response.","audio_path":null,"audio_url":null,"audio_urls":[],"image_path":null,"metadata":{"image_paths":["speaking_images\/WGjBZU8hbuGmZKuPc0H675L6BBfV6ReeMfwYnEdq.jpg","speaking_images\/DgagEs32mBZXKHUy3fAkGXyCNFWOXd5CBgxB17Kx.png"],"questions":["Tell me what you see in the two pictures.","The attractions of keeping these animals as pets?","Some people think that animals should not be kept in the home. What do you think?"],"sample_answer":null,"prep_time":0,"answer_time_per_question":45},"point":10,"title":"\u0110\u1ec1 8 - Part 3"}]},{"index":3,"part":4,"part_label":"4","set_id":241,"questions":[{"id":517,"skill":"speaking","part":4,"stem":"In this part, I\u0027m going to show you a picture and ask you three questions. You will have one minute to think about your answers before you start speaking. You will have two minutes to answer all three questions.","audio_path":null,"audio_url":null,"audio_urls":[],"image_path":null,"metadata":{"image_path":"speaking_images\/AUYvGqzBuoldbyjHhevABvs2KSJvv8giFpBP0iPC.jpg","questions":["Tell me a time when you gave help.","How did you feel?","How can people be encouraged to do good things?\/ What are ways to motivate others?"],"sample_answer":null,"prep_time":60,"total_answer_time":120},"point":20,"title":"\u0110\u1ec1 8 - Part 4"}]}];
+
+    return {
+        // Core state
+        sections: sectionsData,
+        isFullTest: true,
+        currentSectionIndex: 0,
+        timeRemaining: 12 * 60,
+        timerInterval: null,
+        autoSaveInterval: null,
+        showConfirmModal: false,
+        submitting: false,
+        storageKey: 'mock_exam_119542',
+        lastSaved: null,
+
+        // Per-section answers: { sectionIndex: { questionId: answer } }
+        sectionAnswers: {},
+
+        // Practice-compatible state (shared across all sections, reset on switch)
+        questions: [],
+        currentIndex: 0,
+        answers: {},
+        feedback: {},
+        showNavMenu: false,
+
+        // Reading state
+        part1Answers: {},
+        part2Slots: [],
+        part2Pool: [],
+        p2DragOverSlot: null,
+        p2DraggingPoolIdx: null,
+        p2SelectedPoolIdx: null,
+        part3Answers: [],
+        part4Answers: [],
+
+        // Listening state
+        listeningPart1Answer: null,
+        listeningPart2Answers: [],
+        listeningPart3Answers: [],
+        listeningPart4Answers: [],
+
+        // Writing state
+        writingPart1Answers: [],
+        writingPart2Answer: '',
+        writingPart3Answers: [],
+        writingPart4Answers: [],
+
+        // Speaking state
+        speakingAnswers: {},
+        speakingState: 'idle', // idle, prep, recording, saving
+        speakingTimer: 0,
+        speakingInterval: null,
+        speakingSubIndex: 0,
+        mediaRecorder: null,
+        audioChunks: [],
+        audioPlayerUrl: null,
+
+        init() {
+            // Restore from localStorage if available
+            this.restoreFromStorage();
+
+            // Start countdown timer
+            this.timerInterval = setInterval(() => {
+                if (this.timeRemaining > 0) {
+                    this.timeRemaining--;
+                } else {
+                    this.autoSubmit();
+                }
+            }, 1000);
+
+            // Auto-save every 15 seconds
+            this.autoSaveInterval = setInterval(() => {
+                this.saveSectionState();
+                this.saveToStorage();
+            }, 15000);
+
+            // Load first section (or restored section)
+            this.loadSection(this.currentSectionIndex);
+
+            // Cleanup on page exit/reload
+            window.addEventListener('beforeunload', () => this.cleanup());
+        },
+
+        destroy() {
+            this.cleanup();
+        },
+
+        cleanup() {
+            // 1. Stop all intervals
+            if (this.timerInterval) clearInterval(this.timerInterval);
+            if (this.autoSaveInterval) clearInterval(this.autoSaveInterval);
+            if (this.speakingInterval) clearInterval(this.speakingInterval);
+
+            // 2. Stop TTS (SpeechSynthesis)
+            if ('speechSynthesis' in window) {
+                window.speechSynthesis.cancel();
+            }
+
+            // 3. Stop MediaRecorder and release Microphone
+            if (this.mediaRecorder && this.mediaRecorder.state !== 'inactive') {
+                try { this.mediaRecorder.stop(); } catch(e) {}
+            }
+            if (this.mediaRecorder && this.mediaRecorder.stream) {
+                this.mediaRecorder.stream.getTracks().forEach(track => track.stop());
+            }
+
+            // 4. Force stop all audio elements
+            document.querySelectorAll('audio').forEach(audio => {
+                try {
+                    audio.pause();
+                    audio.src = '';
+                    audio.load(); // This stops the buffering/loading
+                } catch(e) {}
+            });
+        },
+
+        formatTime(seconds) {
+            const m = Math.floor(seconds / 60);
+            const s = seconds % 60;
+            return String(m).padStart(2, '0') + ':' + String(s).padStart(2, '0');
+        },
+
+        // --- Section Management ---
+        loadSection(sectionIndex) {
+            // Save current section answers before switching
+            this.saveSectionState();
+
+            this.currentSectionIndex = sectionIndex;
+            const section = this.sections[sectionIndex];
+            this.questions = section.questions;
+            this.currentIndex = 0;
+
+            // Reset state
+            this.answers = {};
+            this.feedback = {};
+
+            // Restore if previously answered
+            if (this.sectionAnswers[sectionIndex]) {
+                this.answers = { ...this.sectionAnswers[sectionIndex] };
+            }
+
+            this.loadQuestionState();
+
+            // Auto-skip empty sections (e.g., if Part 1 has no questions)
+            if (this.questions && this.questions.length === 0 && sectionIndex < this.sections.length - 1) {
+                console.log(`--- Mock Test: Section ${sectionIndex} is empty. Auto-skipping to next section. ---`);
+                setTimeout(() => {
+                    this.nextSection();
+                }, 50);
+            }
+        },
+
+        saveSectionState() {
+            if (this.sections.length === 0) return;
+            // Save answers for current section
+            this.collectCurrentAnswers();
+            this.sectionAnswers[this.currentSectionIndex] = { ...this.answers };
+            // Persist to localStorage immediately after saving
+            this.saveToStorage();
+        },
+
+        // --- localStorage persistence ---
+        saveToStorage() {
+            try {
+                const state = {
+                    sectionAnswers: this.sectionAnswers,
+                    currentSectionIndex: this.currentSectionIndex,
+                    timeRemaining: this.timeRemaining,
+                    savedAt: Date.now(),
+                };
+                localStorage.setItem(this.storageKey, JSON.stringify(state));
+                this.lastSaved = Date.now();
+                setTimeout(() => { this.lastSaved = null; }, 2000);
+            } catch (e) {
+                // localStorage might be full or unavailable — silently ignore
+            }
+        },
+
+        restoreFromStorage() {
+            try {
+                const raw = localStorage.getItem(this.storageKey);
+                if (!raw) return;
+                const state = JSON.parse(raw);
+                // Only restore if saved within exam duration (avoid stale data)
+                const maxAge = 12 * 60 * 1000;
+                if (Date.now() - (state.savedAt || 0) > maxAge) {
+                    localStorage.removeItem(this.storageKey);
+                    return;
+                }
+                if (state.sectionAnswers) this.sectionAnswers = state.sectionAnswers;
+                if (typeof state.timeRemaining === 'number' && state.timeRemaining > 0) {
+                    this.timeRemaining = state.timeRemaining;
+                }
+                if (typeof state.currentSectionIndex === 'number') {
+                    this.currentSectionIndex = state.currentSectionIndex;
+                }
+            } catch (e) {
+                // Corrupted data — ignore
+            }
+        },
+
+        clearStorage() {
+            try { localStorage.removeItem(this.storageKey); } catch (e) {}
+        },
+
+        collectCurrentAnswers() {
+            // Auto-collect current input state into answers
+            const q = this.currentQuestion;
+            if (!q) return;
+
+            if (q.skill === 'reading') {
+                switch (q.part) {
+                    case 1:
+                        if (Object.keys(this.part1Answers[q.id] || {}).length > 0) {
+                            this.answers[q.id] = { ...this.part1Answers[q.id] };
+                        }
+                        break;
+                    case 2:
+                        if (this.part2Slots.some(s => s !== null)) {
+                            this.answers[q.id] = [...this.part2Slots];
+                        }
+                        break;
+                    case 3:
+                        if (this.part3Answers.some(a => a !== '' && a !== null)) {
+                            this.answers[q.id] = [...this.part3Answers];
+                        }
+                        break;
+                    case 4:
+                        if (this.part4Answers.some(a => a !== '' && a !== null)) {
+                            this.answers[q.id] = [...this.part4Answers];
+                        }
+                        break;
+                }
+            } else if (q.skill === 'listening') {
+                switch (q.part) {
+                    case 1:
+                        if (this.listeningPart1Answer !== null) this.answers[q.id] = this.listeningPart1Answer;
+                        break;
+                    case 2:
+                        if (this.listeningPart2Answers.some(a => a !== '')) this.answers[q.id] = [...this.listeningPart2Answers];
+                        break;
+                    case 3:
+                        if (this.listeningPart3Answers.some(a => a !== '')) this.answers[q.id] = [...this.listeningPart3Answers];
+                        break;
+                    case 4:
+                        if (this.listeningPart4Answers.some(a => a !== null)) this.answers[q.id] = [...this.listeningPart4Answers];
+                        break;
+                }
+            } else if (q.skill === 'writing') {
+                switch (q.part) {
+                    case 1:
+                        if (this.writingPart1Answers.some(a => (a || '').trim())) this.answers[q.id] = [...this.writingPart1Answers];
+                        break;
+                    case 2:
+                        if (this.writingPart2Answer.trim()) this.answers[q.id] = this.writingPart2Answer;
+                        break;
+                    case 3:
+                        if (this.writingPart3Answers.some(a => (a || '').trim())) this.answers[q.id] = [...this.writingPart3Answers];
+                        break;
+                    case 4:
+                        if (this.writingPart4Answers.some(a => (a || '').trim())) this.answers[q.id] = [...this.writingPart4Answers];
+                        break;
+                }
+            } else if (q.skill === 'speaking') {
+                if (this.speakingAnswers[q.id]) {
+                    this.answers[q.id] = this.speakingAnswers[q.id];
+                }
+            }
+        },
+
+        switchSection(index) {
+            if (index === this.currentSectionIndex) return;
+            this.loadSection(index);
+            window.scrollTo(0, 0);
+        },
+
+        nextSection() {
+            if (this.currentSectionIndex < this.sections.length - 1) {
+                this.switchSection(this.currentSectionIndex + 1);
+            }
+        },
+
+        prevSection() {
+            if (this.currentSectionIndex > 0) {
+                this.switchSection(this.currentSectionIndex - 1);
+            }
+        },
+
+        // --- Within-section question navigation ---
+        goToQuestion(qi) {
+            if (qi === this.currentIndex) return;
+            this.collectCurrentAnswers();
+            this.currentIndex = qi;
+            this.loadQuestionState();
+            window.scrollTo(0, 0);
+        },
+
+        nextQuestion() {
+            if (this.currentIndex < this.questions.length - 1) {
+                this.goToQuestion(this.currentIndex + 1);
+            }
+        },
+
+        prevQuestion() {
+            if (this.currentIndex > 0) {
+                this.goToQuestion(this.currentIndex - 1);
+            }
+        },
+
+        sectionAnswered(index) {
+            return this.sectionAnswers[index] && Object.keys(this.sectionAnswers[index]).length > 0;
+        },
+
+        get answeredCount() {
+            return Object.keys(this.sectionAnswers).filter(k => {
+                return this.sectionAnswers[k] && Object.keys(this.sectionAnswers[k]).length > 0;
+            }).length;
+        },
+
+        get currentQuestion() {
+            if (!this.questions || this.questions.length === 0) return null;
+            return this.questions[this.currentIndex];
+        },
+
+        // --- Practice-compatible methods (reused by partials) ---
+        loadQuestionState() {
+            const q = this.currentQuestion;
+            if (!q) return;
+            const saved = this.answers[q.id]; // Restore previously saved answer
+
+            if (q.skill === 'reading') {
+                this.part1Answers[q.id] = this.part1Answers[q.id] || {};
+                this.part3Answers = saved && Array.isArray(saved) && q.part === 3
+                    ? [...saved] : new Array(q.metadata.questions?.length || 0).fill('');
+                this.part4Answers = saved && Array.isArray(saved) && q.part === 4
+                    ? [...saved] : new Array(q.metadata.paragraphs?.length || 0).fill('');
+
+                if (q.part === 2) {
+                    const sentences = q.metadata.sentences.slice(1).map((text, idx) => ({
+                        text, originalIndex: idx + 1
+                    }));
+                    
+                    if (saved && Array.isArray(saved)) {
+                        this.part2Slots = [...saved];
+                        // Remove placed items from pool
+                        const savedIndices = saved.filter(s => s !== null).map(s => s.originalIndex);
+                        this.part2Pool = sentences.filter(s => !savedIndices.includes(s.originalIndex)).sort(() => Math.random() - 0.5);
+                    } else {
+                        this.part2Pool = sentences.sort(() => Math.random() - 0.5);
+                        this.part2Slots = new Array(sentences.length).fill(null);
+                    }
+                }
+            }
+
+            if (q.skill === 'listening') {
+                if (q.part === 1) this.listeningPart1Answer = (saved !== undefined) ? saved : null;
+                if (q.part === 2) this.listeningPart2Answers = saved && Array.isArray(saved)
+                    ? [...saved] : new Array(q.metadata.items?.length || 0).fill('');
+                if (q.part === 3) this.listeningPart3Answers = saved && Array.isArray(saved)
+                    ? [...saved] : new Array(q.metadata.statements?.length || 0).fill('');
+                if (q.part === 4) this.listeningPart4Answers = saved && Array.isArray(saved)
+                    ? [...saved] : new Array(q.metadata.questions?.length || 0).fill(null);
+            }
+
+            if (q.skill === 'writing') {
+                if (q.part === 1) this.writingPart1Answers = saved && Array.isArray(saved)
+                    ? [...saved] : new Array(q.metadata.fields?.length || 0).fill('');
+                if (q.part === 2) this.writingPart2Answer = (saved && typeof saved === 'string') ? saved : '';
+                if (q.part === 3) this.writingPart3Answers = saved && Array.isArray(saved)
+                    ? [...saved] : new Array(q.metadata.questions?.length || 0).fill('');
+                if (q.part === 4) this.writingPart4Answers = saved && Array.isArray(saved)
+                    ? [...saved] : new Array(2).fill('');
+            }
+
+            if (q.skill === 'speaking') {
+                 // Stop any in-progress recordings when switching questions
+                if (this.speakingState === 'recording' || this.speakingState === 'prep') {
+                    if (window.activeMediaRecorder && window.activeMediaRecorder.state !== 'inactive') {
+                        window.activeMediaRecorder.stop();
+                    }
+                }
+                this.speakingState = 'idle';
+                
+                // Auto-start speaking part after a slight delay
+                setTimeout(() => {
+                    if (this.currentQuestion && this.currentQuestion.id === q.id && this.speakingState === 'idle') {
+                        this.startSpeakingPart();
+                    }
+                }, 1000);
+            }
+        },
+
+        hasAnswered(qId) {
+            // In mock test: NEVER lock answers or show feedback.
+            // Grading only happens server-side on final submit.
+            return false;
+        },
+
+        // Reading Part 1
+        submitPart1() {
+            const qId = this.currentQuestion.id;
+            const userAns = this.part1Answers[qId];
+            this.answers = { ...this.answers, [qId]: { ...userAns } };
+            this.feedback = { ...this.feedback, [qId]: { correct: null } };
+        },
+        getPart1SelectStyle(pIndex) { return ''; },
+
+        // Reading Part 2
+        p2PoolDragStart(event, poolIdx) {
+            if (this.hasAnswered(this.currentQuestion.id)) { event.preventDefault(); return; }
+            this.p2DraggingPoolIdx = poolIdx;
+            event.dataTransfer.effectAllowed = 'move';
+        },
+        dropToSlot(slotIdx) {
+            if (this.hasAnswered(this.currentQuestion.id)) return;
+            this.p2DragOverSlot = null;
+            if (this.p2DraggingPoolIdx === null) return;
+            if (this.part2Slots[slotIdx] !== null) this.part2Pool.push(this.part2Slots[slotIdx]);
+            const item = this.part2Pool.splice(this.p2DraggingPoolIdx, 1)[0];
+            this.part2Slots[slotIdx] = item;
+            this.part2Slots = [...this.part2Slots];
+            this.part2Pool = [...this.part2Pool];
+            this.p2DraggingPoolIdx = null;
+            this.p2SelectedPoolIdx = null;
+        },
+        selectP2Pool(poolIdx) {
+            if (this.hasAnswered(this.currentQuestion.id)) return;
+            if (this.p2SelectedPoolIdx === poolIdx) {
+                this.p2SelectedPoolIdx = null;
+            } else {
+                this.p2SelectedPoolIdx = poolIdx;
+            }
+        },
+        selectP2Slot(slotIdx) {
+            if (this.hasAnswered(this.currentQuestion.id)) return;
+            if (this.part2Slots[slotIdx] !== null) {
+                this.removeFromSlot(slotIdx);
+                return;
+            }
+            if (this.p2SelectedPoolIdx !== null) {
+                const item = this.part2Pool.splice(this.p2SelectedPoolIdx, 1)[0];
+                this.part2Slots[slotIdx] = item;
+                this.part2Slots = [...this.part2Slots];
+                this.part2Pool = [...this.part2Pool];
+                this.p2SelectedPoolIdx = null;
+            }
+        },
+        removeFromSlot(slotIdx) {
+            if (this.hasAnswered(this.currentQuestion.id)) return;
+            if (this.part2Slots[slotIdx] === null) return;
+            this.part2Pool.push(this.part2Slots[slotIdx]);
+            this.part2Slots[slotIdx] = null;
+            this.part2Slots = [...this.part2Slots];
+            this.part2Pool = [...this.part2Pool];
+        },
+        submitPart2() {
+            const qId = this.currentQuestion.id;
+            this.answers = { ...this.answers, [qId]: [...this.part2Slots] };
+            this.feedback = { ...this.feedback, [qId]: { correct: null } };
+        },
+
+        // Reading Part 3
+        selectPart3(qIdx, oIdx) {
+            if (this.hasAnswered(this.currentQuestion.id)) return;
+            const newAnswers = [...this.part3Answers];
+            newAnswers[qIdx] = oIdx;
+            this.part3Answers = newAnswers;
+        },
+        getPart3SelectStyle(qIdx) { return ''; },
+        getPart3ContainerClass(qIdx) { return 'border-gray-200'; },
+        submitPart3() {
+            const qId = this.currentQuestion.id;
+            this.answers = { ...this.answers, [qId]: [...this.part3Answers] };
+            this.feedback = { ...this.feedback, [qId]: { correct: null } };
+        },
+
+        // Reading Part 4
+        submitPart4() {
+            const qId = this.currentQuestion.id;
+            this.answers = { ...this.answers, [qId]: [...this.part4Answers] };
+            this.feedback = { ...this.feedback, [qId]: { correct: null } };
+        },
+        getPart4SelectStyle(pIdx) { return ''; },
+
+        // Listening Part 1
+        submitListeningPart1() {
+            const qId = this.currentQuestion.id;
+            this.answers = { ...this.answers, [qId]: this.listeningPart1Answer };
+            this.feedback = { ...this.feedback, [qId]: { correct: null } };
+        },
+        getLP1RadioClass(cIdx) {
+            const isSelected = this.listeningPart1Answer === cIdx;
+            return isSelected ? 'border-blue-500 bg-blue-50' : 'border-gray-200 hover:bg-gray-50';
+        },
+
+        // Listening Part 2
+        submitListeningPart2() {
+            const qId = this.currentQuestion.id;
+            this.answers = { ...this.answers, [qId]: [...this.listeningPart2Answers] };
+            this.feedback = { ...this.feedback, [qId]: { correct: null } };
+        },
+        getLP2SelectStyle(sIdx) { return ''; },
+        playAllSpeakers() {
+            const items = this.currentQuestion.metadata.items || [];
+            items.forEach((_, idx) => {
+                const el = document.getElementById('speaker_audio_' + idx);
+                if (el) { el.currentTime = 0; el.play(); }
+            });
+        },
+
+        // Listening Part 3
+        submitListeningPart3() {
+            const qId = this.currentQuestion.id;
+            this.answers = { ...this.answers, [qId]: [...this.listeningPart3Answers] };
+            this.feedback = { ...this.feedback, [qId]: { correct: null } };
+        },
+        getLP3SelectStyle(sIdx) { return ''; },
+
+        // Listening Part 4
+        submitListeningPart4() {
+            const qId = this.currentQuestion.id;
+            this.answers = { ...this.answers, [qId]: [...this.listeningPart4Answers] };
+            this.feedback = { ...this.feedback, [qId]: { correct: null } };
+        },
+        getLP4RadioClass(qIdx, cIdx) {
+            const isSelected = this.listeningPart4Answers[qIdx] === cIdx;
+            return isSelected ? 'border-indigo-500 bg-indigo-50' : 'border-gray-200 hover:bg-gray-50';
+        },
+
+        // Writing
+        submitWritingPart1() {
+            const qId = this.currentQuestion.id;
+            this.answers = { ...this.answers, [qId]: [...this.writingPart1Answers] };
+            this.feedback = { ...this.feedback, [qId]: { correct: null, pending: true } };
+        },
+        submitWritingPart2() {
+            const qId = this.currentQuestion.id;
+            this.answers = { ...this.answers, [qId]: this.writingPart2Answer };
+            this.feedback = { ...this.feedback, [qId]: { correct: null, pending: true } };
+        },
+        submitWritingPart3() {
+            const qId = this.currentQuestion.id;
+            this.answers = { ...this.answers, [qId]: [...this.writingPart3Answers] };
+            this.feedback = { ...this.feedback, [qId]: { correct: null, pending: true } };
+        },
+        submitWritingPart4() {
+            const qId = this.currentQuestion.id;
+            this.answers = { ...this.answers, [qId]: [...this.writingPart4Answers] };
+            this.feedback = { ...this.feedback, [qId]: { correct: null, pending: true } };
+        },
+
+        // --- Speaking Methods ---
+        playTTS(text, onComplete) {
+            if (!('speechSynthesis' in window)) {
+                console.warn("TTS not supported in this browser.");
+                onComplete();
+                return;
+            }
+
+            window.speechSynthesis.cancel();
+            
+            const utterance = new SpeechSynthesisUtterance(text);
+            utterance.lang = 'en-US';
+            utterance.rate = 1.0;
+            
+            utterance.onend = () => {
+                onComplete();
+            };
+            
+            utterance.onerror = (e) => {
+                console.error("TTS Error", e);
+                onComplete();
+            };
+            
+            window.speechSynthesis.speak(utterance);
+        },
+
+        async setupRecording() {
+            console.log('--- Speaking: setupRecording START ---');
+            try {
+                const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+                this.mediaRecorder = new MediaRecorder(stream);
+                console.log('--- Speaking: MediaRecorder created ---', this.mediaRecorder.state);
+                
+                this.mediaRecorder.ondataavailable = (event) => {
+                    console.log('--- Speaking: dataavailable ---', event.data.size);
+                    if (event.data.size > 0) this.audioChunks.push(event.data);
+                };
+
+                this.mediaRecorder.onstop = () => {
+                    console.log('--- Speaking: onstop fired ---', this.audioChunks.length, "chunks");
+                    const blob = new Blob(this.audioChunks, { type: 'audio/webm' });
+                    const qId = this.currentQuestion.id;
+                    this.speakingAnswers[qId] = this.speakingAnswers[qId] || [];
+                    this.speakingAnswers[qId].push(blob);
+                    console.log('--- Speaking: Blob saved to speakingAnswers ---', qId, blob.size);
+                };
+            } catch (err) {
+                console.error('--- Speaking: Microphone error ---', err);
+                alert('Không thể truy cập Microphone. Vui lòng cấp quyền.');
+            }
+        },
+
+        async startSpeakingPart() {
+            if (!this.mediaRecorder) {
+                await this.setupRecording();
+                if (!this.mediaRecorder) return;
+            }
+            
+            this.speakingSubIndex = 0;
+            this.audioChunks = [];
+            this.runSpeakingSubQuestion();
+        },
+
+        runSpeakingSubQuestion() {
+            const q = this.currentQuestion;
+            if (!q) return;
+
+            const meta = q.metadata;
+            const prepTime = meta.prep_time || 0;
+            const totalQs = meta.questions ? meta.questions.length : 1;
+            
+            let introText = "";
+            if (this.speakingSubIndex === 0) {
+                if (q.part === 1) introText = "Personal Information. Please answer the 3 questions below. You will have 30 seconds for each question. ";
+                else if (q.part === 2) introText = "Describe a Picture. Please describe the picture and answer the 2 questions below. You will have 45 seconds for each response. ";
+                else if (q.part === 3) introText = "Compare Two Pictures. Please compare the two pictures and answer the 3 questions below. You will have 45 seconds for each response. ";
+                else if (q.part === 4) introText = "Extended Discussion. Please look at the picture and answer the 3 questions. You have 1 minute to think and 2 minutes to talk. ";
+            }
+
+            let textToRead = "";
+            if (q.part === 4) {
+                textToRead = introText + meta.questions.join(". ");
+            } else {
+                textToRead = introText + meta.questions[this.speakingSubIndex];
+            }
+            
+            if (q.part === 4) {
+                if (this.speakingSubIndex > 0) return; 
+                
+                this.speakingState = 'playing_audio';
+                this.playTTS(textToRead, () => {
+                    this.startTimerState('prep', 61, () => { // +1s offset
+                        this.playBeepAndRecord(121, () => { // +1s offset
+                            this.finishSpeakingQuestion();
+                        });
+                    });
+                });
+            } else {
+                this.speakingState = 'playing_audio';
+                this.playTTS(textToRead, () => {
+                    const prepTime = 0; // standard speaking parts 1-3 usually have no individual prep unless specified
+                    const recordSeconds = q.part === 1 ? 31 : 46; // +1s offset
+                    
+                    this.playBeepAndRecord(recordSeconds, () => {
+                        this.speakingSubIndex++;
+                        if (this.speakingSubIndex < totalQs) {
+                            this.runSpeakingSubQuestion();
+                        } else {
+                            this.finishSpeakingQuestion();
+                        }
+                    });
+                });
+            }
+        },
+
+        startTimerState(stateName, seconds, onComplete) {
+            if (seconds <= 0) {
+                onComplete();
+                return;
+            }
+            this.speakingState = stateName;
+            this.speakingTimer = seconds;
+            
+            clearInterval(this.speakingInterval);
+            this.speakingInterval = setInterval(() => {
+                this.speakingTimer--;
+                if (this.speakingTimer <= 0) {
+                    clearInterval(this.speakingInterval);
+                    onComplete();
+                }
+            }, 1000);
+        },
+
+        playBeepAndRecord(recordSeconds, onComplete) {
+            // Web Audio API Beep
+            try {
+                const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+                if (audioCtx.state === 'suspended') audioCtx.resume();
+                const obj = audioCtx.createOscillator();
+                const gain = audioCtx.createGain();
+                obj.type = 'sine';
+                obj.frequency.value = 800;
+                gain.gain.setValueAtTime(0.1, audioCtx.currentTime);
+                obj.connect(gain);
+                gain.connect(audioCtx.destination);
+                obj.start();
+                setTimeout(() => obj.stop(), 200);
+            } catch (e) {
+                console.warn("Web Audio API beep blocked or unsupported");
+            }
+            
+            setTimeout(() => {
+                this.audioChunks = [];
+                this.speakingState = 'recording';
+                this.speakingTimer = recordSeconds;
+                console.log('--- Speaking: Recording timer started ---', recordSeconds, 's');
+                
+                try {
+                    if (this.mediaRecorder.state === 'inactive') {
+                        this.mediaRecorder.start();
+                        console.log('--- Speaking: mediaRecorder.start() called ---');
+                    }
+                } catch(e) { console.error('--- Speaking: mediaRecorder.start() FAILED ---', e); }
+
+                clearInterval(this.speakingInterval);
+                this.speakingInterval = setInterval(() => {
+                    this.speakingTimer--;
+                    if (this.speakingTimer <= 0) {
+                        clearInterval(this.speakingInterval);
+                        console.log('--- Speaking: Recording timer end ---');
+                        try {
+                            if (this.mediaRecorder.state !== 'inactive') {
+                                this.mediaRecorder.stop();
+                                console.log('--- Speaking: mediaRecorder.stop() called ---');
+                            }
+                        } catch(e) { console.error('--- Speaking: mediaRecorder.stop() FAILED ---', e); }
+                        
+                        // Give mediaRecorder.onstop a moment to fire and push chunks
+                        setTimeout(() => {
+                            console.log('--- Speaking: Calling onComplete ---');
+                            onComplete();
+                        }, 500); // Increased to 500ms
+                    }
+                }, 1000);
+            }, 600);
+        },
+
+        finishSpeakingQuestion() {
+            this.speakingState = 'saving';
+            const qId = this.currentQuestion.id;
+            
+            const blobs = this.speakingAnswers[qId] || [];
+            if (blobs.length > 0) {
+                this.answers = { ...this.answers, [qId]: 'recorded' };
+            }
+            
+            setTimeout(() => {
+                this.speakingState = 'idle';
+                if (this.currentSectionIndex < this.sections.length - 1) {
+                    this.nextSection();
+                } else {
+                    this.autoSubmit();
+                }
+            }, 1000);
+        },
+
+        // Word count helpers
+        countWords(text) {
+            if (!text || !text.trim()) return 0;
+            return text.trim().split(/\s+/).filter(w => w.length > 0).length;
+        },
+        getWordCountClass(text, limit) {
+            const count = this.countWords(text);
+            if (!limit) return 'text-gray-400';
+            if (count < (limit.min || 0)) return 'text-amber-500';
+            if (count > (limit.max || 999)) return 'text-red-500';
+            return 'text-green-500';
+        },
+        enforceWordLimit(text, max) {
+            if (!max) return text;
+            const words = text.split(/\s+/).filter(w => w.length > 0);
+            if (words.length > max) {
+                const isTrailingSpace = /\s$/.test(text);
+                const truncated = words.slice(0, max).join(' ');
+                return isTrailingSpace ? truncated + ' ' : truncated;
+            }
+            return text;
+        },
+
+        // Footer action (not used in mock test — no per-question submit)
+        handleFooterAction() {},
+        getFooterButtonText() { return ''; },
+        next() {},
+        prev() {},
+        jumpTo(index) {},
+        finish() {},
+        getNavCircleClass() { return ''; },
+        resetPractice() {},
+        calculateScore() { return 0; },
+
+        // --- Submit ---
+        confirmSubmit() {
+            this.saveSectionState();
+            this.showConfirmModal = true;
+        },
+
+        autoSubmit() {
+            if (this.timerInterval) clearInterval(this.timerInterval);
+            this.saveSectionState();
+            this.submitTest();
+        },
+
+        async submitTest() {
+            this.submitting = true;
+
+            // Build answers per section: { sectionIndex: { questionId: answer } }
+            // For speaking audio files, we need FormData
+            const isSpeaking = this.sections.some(section => section.questions && section.questions.length > 0 && section.questions[0].skill === 'speaking');
+            
+            if (isSpeaking) {
+                const formData = new FormData();
+                formData.append('_token', document.querySelector('meta[name="csrf-token"]').getAttribute('content'));
+
+                console.log('--- Speaking: submitTest INITIAL speakingAnswers state ---', this.speakingAnswers);
+
+                // Pack speaking audio blobs globally
+                for (const [qId, blobs] of Object.entries(this.speakingAnswers)) {
+                    console.log(`--- Speaking: submitTest packing qId ${qId}, blobs: ${blobs.length} ---`, blobs);
+                    
+                    if (Array.isArray(blobs)) {
+                        for (let j = 0; j < blobs.length; j++) {
+                            const blob = blobs[j];
+                            if (blob instanceof Blob) {
+                                formData.append(`speaking_audio[${qId}][${j}]`, blob, `speaking_${qId}_${j}.webm`);
+                                console.log(`----> Appended speaking_audio[${qId}][${j}] (size: ${blob.size})`);
+                            } else {
+                                console.warn(`----> blobs[${j}] is NOT a Blob!`, blob);
+                            }
+                        }
+                    } else if (blobs instanceof Blob) {
+                        formData.append(`speaking_audio[${qId}][0]`, blobs, `speaking_${qId}.webm`);
+                        console.log(`----> Appended speaking_audio[${qId}][0] (size: ${blobs.size})`);
+                    } else {
+                        console.warn(`----> blobs for ${qId} is neither Array nor Blob!`, blobs);
+                    }
+                }
+
+                // Debug: Print ALL formData entries before fetch
+                console.log('--- Speaking: FormData Entries BEFORE Fetch ---');
+                for (let pair of formData.entries()) {
+                    console.log(`[FormData] ${pair[0]} :`, pair[1] instanceof Blob ? `Blob(${pair[1].size} bytes)` : pair[1]);
+                }
+
+                try {
+                    const response = await fetch('https://milaedu.com/mock-test/119542/submit', {
+                        method: 'POST',
+                        body: formData // No Content-Type header so browser sets multipart/form-data with boundary
+                    });
+                    this.handleSubmitResponse(response);
+                } catch (error) {
+                    console.error('Submit error:', error);
+                    alert('Lỗi kết nối. Vui lòng thử lại.');
+                    this.submitting = false;
+                }
+            } else {
+                const allAnswers = {};
+                for (let i = 0; i < this.sections.length; i++) {
+                    allAnswers[i] = this.sectionAnswers[i] || {};
+                }
+
+                try {
+                    const response = await fetch('https://milaedu.com/mock-test/119542/submit', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                        },
+                        body: JSON.stringify({ answers: allAnswers })
+                    });
+                    this.handleSubmitResponse(response);
+                } catch (error) {
+                    console.error('Submit error:', error);
+                    alert('Lỗi kết nối. Vui lòng thử lại.');
+                    this.submitting = false;
+                }
+            }
+        },
+        
+        async handleSubmitResponse(response) {
+            // Handle non-JSON responses (e.g. 500 HTML error pages)
+            const contentType = response.headers.get('content-type') || '';
+            if (!contentType.includes('application/json')) {
+                alert('Có lỗi máy chủ xảy ra (HTTP ' + response.status + '). Vui lòng thử lại hoặc liên hệ quản trị viên.');
+                this.submitting = false;
+                return;
+            }
+
+            const data = await response.json();
+
+            if (data.success && data.redirect) {
+                this.clearStorage();
+                window.location.href = data.redirect;
+            } else if (!response.ok && data.errors) {
+                // Validation errors (422)
+                const messages = Object.values(data.errors).flat().join('\n');
+                alert('Lỗi xác thực:\n' + messages);
+                this.submitting = false;
+            } else {
+                alert(data.message || 'Có lỗi xảy ra. Vui lòng thử lại.');
+                this.submitting = false;
+            }
+        }
+    };
+}
+</script>
+    </main>
+
+    
+    
+
+</body></html>
