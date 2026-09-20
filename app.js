@@ -47,7 +47,10 @@ function renderHTML(s){
             if(src&&!/^(https?:|\/)/i.test(src))el.setAttribute('src',base+src.replace(/^\.\//,''));
         }
     });
-    return template.innerHTML;
+    let finalHtml = template.innerHTML;
+    finalHtml = finalHtml.replace(/_{2,}/g, match => `<span style="color:var(--primary); font-weight:700; letter-spacing:2px;">${match}</span>`);
+    finalHtml = finalHtml.replace(/\[BLANK\]/g, `<span style="color:var(--primary); font-weight:700; letter-spacing:2px;">_______</span>`);
+    return finalHtml;
 }
 
 function select(label,choices,key){
@@ -219,7 +222,7 @@ function practice(){
         navHTML += `<button data-jump="${i}" class="${i===qi?'active':answered(x)?'done':''}" aria-label="Đến câu ${i+1}">${i+1}</button>`;
     });
 
-    app.innerHTML=`<div class="practice-top"><div><div class="eyebrow">${(info[q.skill]?.name||'THI THỬ').toUpperCase()} · PART ${q.part||1}</div><h1>${esc(groupTitle(activeGroup))}</h1></div><a class="secondary" href="${mockTestMode?'#':'#'+q.skill}" style="display:inline-flex; align-items:center; gap:6px; font-size:14px; padding: 8px 16px;"><span>←</span> ${mockTestMode?'Thoát':'Quay lại'}</a></div><div class="workspace"><section class="question-panel"><div style="display:flex;justify-content:space-between;align-items:center"><span class="muted">Câu ${qi+1} / ${activeGroup.questions.length}</span>${mockTestMode?`<strong id="mock-timer" style="color:var(--error);font-variant-numeric:tabular-nums;font-size:24px">${Math.floor(mockTimeLeft/60).toString().padStart(2,'0')}:${(mockTimeLeft%60).toString().padStart(2,'0')}</strong>`:''}</div><h2>${renderHTML(q.title||q.stem)}</h2>${q.title&&q.stem!==q.title?`<p>${renderHTML(q.stem)}</p>`:''}${translateAsyncHTML(q.stem)}<div id="question-body">${questionBody(q)}</div><div id="feedback" aria-live="polite"></div><div class="question-actions"><button id="prev" class="secondary" ${qi===0?'disabled':''}>Câu trước</button>${mockTestMode?`<button id="submit-mock" class="primary">Nộp Bài</button>`:`<button id="check" class="secondary">Kiểm tra bài</button>`}<button id="next" class="primary">${qi===activeGroup.questions.length-1?'Hoàn thành':'Câu tiếp theo  '}</button></div></section><aside class="question-nav"><b style="font-size:14px; color:var(--text-main); display:block; margin-bottom:10px;">Tiến độ luyện tập</b><p class="muted" id="progress-label"></p><progress id="progress" max="${activeGroup.questions.length}"></progress><div class="numbers">${navHTML}</div><div class="settings-panel" style="margin-top:16px;padding-top:16px;border-top:1px solid var(--border-color)"><b>Tùy chỉnh:</b><label style="display:flex;align-items:center;gap:6px;margin-top:8px;font-size:13px;cursor:pointer"><input type="checkbox" id="set-sq" ${userSettings.shuffleQuestions?'checked':''}> Trộn câu (Cần chọn lại bài)</label><label style="display:flex;align-items:center;gap:6px;margin-top:8px;font-size:13px;cursor:pointer"><input type="checkbox" id="set-so" ${userSettings.shuffleOptions?'checked':''}> Đảo đáp án</label><label style="display:flex;align-items:center;gap:6px;margin-top:8px;font-size:13px;cursor:pointer"><input type="checkbox" id="set-mm" ${userSettings.memorizationMode?'checked':''}> Học thuộc lòng (Hiện đáp án)</label></div><p class="muted" style="margin-top:16px;font-size:12px">Câu trả lời tự động lưu trên trình duyệt này.</p><button id="export" class="secondary" style="width:100%;justify-content:center;margin-top:10px;">  Xuất bài làm</button></aside></div>`;
+    app.innerHTML=`<div class="practice-top" ${mockTestMode?'style="background: #fff1f0; border-bottom: 1px solid #ffa39e;"':''}><div>${mockTestMode ? `<div class="eyebrow" style="color:#cf1322; font-weight:bold;"><span style="display:inline-block;background:#ff4d4f;color:white;padding:2px 6px;border-radius:4px;margin-right:6px;">THI THỬ</span> PART ${q.part||1}</div>` : `<div class="eyebrow">${(info[q.skill]?.name||'THI THỬ').toUpperCase()} · PART ${q.part||1}</div>`}<h1 ${mockTestMode?'style="color:#cf1322;"':''}>${esc(groupTitle(activeGroup))}</h1></div><a class="secondary" href="${mockTestMode?'#':'#'+q.skill}" style="display:inline-flex; align-items:center; gap:6px; font-size:14px; padding: 8px 16px; ${mockTestMode?'color:#cf1322;border-color:#ffa39e;background:white;':''}"><span>←</span> ${mockTestMode?'Thoát thi thử':'Quay lại'}</a></div><div class="workspace"><section class="question-panel"><div style="display:flex;justify-content:space-between;align-items:center"><span class="muted">Câu ${qi+1} / ${activeGroup.questions.length}</span>${mockTestMode?`<strong id="mock-timer" style="color:#cf1322;font-variant-numeric:tabular-nums;font-size:24px;font-weight:900;">${Math.floor(mockTimeLeft/60).toString().padStart(2,'0')}:${(mockTimeLeft%60).toString().padStart(2,'0')}</strong>`:''}</div><h2>${renderHTML(q.title||q.stem)}</h2>${q.title&&q.stem!==q.title?`<p>${renderHTML(q.stem)}</p>`:''}${translateAsyncHTML(q.stem)}<div id="question-body">${questionBody(q)}</div><div id="feedback" aria-live="polite"></div><div class="question-actions"><button id="prev" class="secondary" ${qi===0?'disabled':''}>Câu trước</button>${mockTestMode?(qi===activeGroup.questions.length-1 ? `<button id="submit-mock" class="primary" style="background:#ff4d4f;border-color:#ff4d4f;color:white;">Nộp bài thi</button>` : `<button id="next" class="primary">Câu tiếp theo</button>`) : `<button id="check" class="secondary">Kiểm tra bài</button><button id="next" class="primary">${qi===activeGroup.questions.length-1?'Hoàn thành':'Câu tiếp theo'}</button>`}</div></section><aside class="question-nav"><b style="font-size:14px; color:var(--text-main); display:block; margin-bottom:10px;">${mockTestMode?'Tiến độ làm bài thi':'Tiến độ luyện tập'}</b><p class="muted" id="progress-label"></p><progress id="progress" max="${activeGroup.questions.length}"></progress><div class="numbers">${navHTML}</div>${mockTestMode ? `<button id="submit-mock-side" class="primary" style="width:100%;justify-content:center;margin-top:20px;background:#ff4d4f;border-color:#ff4d4f;color:white;padding:12px;font-size:16px;">Nộp bài thi</button>` : `<div class="settings-panel" style="margin-top:16px;padding-top:16px;border-top:1px solid var(--border-color)"><b>Tùy chỉnh:</b><label style="display:flex;align-items:center;gap:6px;margin-top:8px;font-size:13px;cursor:pointer"><input type="checkbox" id="set-sq" ${userSettings.shuffleQuestions?'checked':''}> Trộn câu (Cần chọn lại bài)</label><label style="display:flex;align-items:center;gap:6px;margin-top:8px;font-size:13px;cursor:pointer"><input type="checkbox" id="set-so" ${userSettings.shuffleOptions?'checked':''}> Đảo đáp án</label><label style="display:flex;align-items:center;gap:6px;margin-top:8px;font-size:13px;cursor:pointer"><input type="checkbox" id="set-mm" ${userSettings.memorizationMode?'checked':''}> Học thuộc lòng (Hiện đáp án)</label></div>`}<p class="muted" style="margin-top:16px;font-size:12px">Câu trả lời tự động lưu trên trình duyệt này.</p><button id="export" class="secondary" style="width:100%;justify-content:center;margin-top:10px;">  Xuất bài làm</button></aside></div>`;
     document.querySelectorAll('[data-key]').forEach(el=>{
         const value=saved[q.id]?.[el.dataset.key];
         if(el.type==='radio')el.checked=value===el.value;else el.value=value||'';
@@ -237,20 +240,26 @@ function practice(){
         if(mockTestMode){qi--;practice();}
         else location.hash=`lesson/${activeGroup.id}/${qi-1}`;
     };
-    document.querySelector('#next').onclick=()=>{
+    const nextBtn = document.querySelector('#next');
+    if(nextBtn) nextBtn.onclick=()=>{
         if(qi<activeGroup.questions.length-1){
             if(mockTestMode){qi++;practice();}
             else location.hash=`lesson/${activeGroup.id}/${qi+1}`;
         }
         else{
-            if(mockTestMode){checkAllMock();return}
-            const count=activeGroup.questions.filter(answered).length;
-            document.querySelector('#feedback').innerHTML=`<div class="notice">Đã lưu bài luyện tập: ${count}/${activeGroup.questions.length} câu có câu trả lời. Bạn có thể xem lại các câu và xuất bài làm.</div>`;
-            toast('Đã kết thúc lượt luyện tập.')
+            if(!mockTestMode) {
+                const count=activeGroup.questions.filter(answered).length;
+                document.querySelector('#feedback').innerHTML=`<div class="notice">Đã lưu bài luyện tập: ${count}/${activeGroup.questions.length} câu có câu trả lời. Bạn có thể xem lại các câu và xuất bài làm.</div>`;
+                toast('Đã kết thúc lượt luyện tập.')
+            }
         }
     };
-    if(!mockTestMode)document.querySelector('#check').onclick=()=>check(q);
-    else document.querySelector('#submit-mock').onclick=()=>checkAllMock();
+    const sub = document.querySelector('#submit-mock');
+    if(sub) sub.onclick = () => { if(confirm('Bạn chắc chắn nộp bài?')) checkAllMock() };
+    const subSide = document.querySelector('#submit-mock-side');
+    if(subSide) subSide.onclick = () => { if(confirm('Bạn chắc chắn nộp bài?')) checkAllMock() };
+    const ck = document.querySelector('#check');
+    if(ck) ck.onclick = () => check(q);
     document.querySelector('#export').onclick=exportWork;
     if(document.querySelector('#record'))document.querySelector('#record').onclick=record;
     
