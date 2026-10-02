@@ -8,6 +8,7 @@ var userSettings={shuffleQuestions:false,shuffleOptions:false,memorizationMode:f
 function persistSettings(){try{localStorage.setItem('aptis-settings',JSON.stringify(userSettings))}catch{toast('Không thể lưu tùy chỉnh trên trình duyệt này.')}}
 function shuffleArray(arr){const res=[...arr];for(let i=res.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[res[i],res[j]]=[res[j],res[i]]}return res;}
 let activeGroup,qi=0,mockTestMode=false,mockSubmitted=false,mockTimeLeft=0,mockTimer,timer,stream,recorder,objectUrls=[],audioChunks=[];
+let mockSections=[],mockCurrentSection=0;
 let practiceSaved=saved;
 const app=document.querySelector('#app');
 function persist(){if(mockTestMode)return true;try{localStorage.setItem('aptis-answers',JSON.stringify(saved));return true}catch{toast('Trình duyệt không lưu được dữ liệu.');return false}}
@@ -156,15 +157,53 @@ function questionBody(q){
 }
 
 function mockTestStart(){
-    practiceSaved=saved;saved={};mockTestMode=true;mockSubmitted=false;const tId=Date.now();const mockQs=[];
-    ['grammar','reading','listening','writing','speaking'].forEach(sk=>{
+    practiceSaved=saved;saved={};mockTestMode=true;mockSubmitted=false;clearInterval(mockTimer);
+    mockSections = [];
+    ['grammar','listening','reading','writing','speaking'].forEach(sk=>{
         const pools=COURSES.filter(g=>g.skill===sk);
-        if(pools.length){const p=pools[Math.floor(Math.random()*pools.length)];mockQs.push(...p.questions);}
+        if(pools.length){
+            const p=pools[Math.floor(Math.random()*pools.length)];
+            const parts = Array.from(new Set(p.questions.map(q=>q.part||1))).sort((a,b)=>a-b);
+            let qs = [];
+            parts.forEach(pt => {
+                let partQs = p.questions.filter(q=>(q.part||1)===pt);
+                qs.push(...shuffleArray(partQs));
+            });
+            mockSections.push({skill:sk, label:info[sk].name, questions:qs, parts:parts});
+        }
     });
-    activeGroup={id:'mock_'+tId,skill:'mock',title:'Đề Thi Thử Aptis',questions:mockQs};
-    if(userSettings.shuffleQuestions) activeGroup.questions=shuffleArray(activeGroup.questions);
-    qi=0;mockTimeLeft=120*60;
-    practice();
+    
+    app.innerHTML=`<div class="practice-top" style="background: #fff1f0; border-bottom: 1px solid #ffa39e;">
+        <div>
+            <div class="eyebrow" style="color:#cf1322; font-weight:bold;">
+                <span style="display:inline-block;background:#ff4d4f;color:white;padding:2px 6px;border-radius:4px;margin-right:6px;">THI THỬ</span> ĐỀ THI APTIS
+            </div>
+            <h1 style="color:#cf1322;">Bài thi mô phỏng</h1>
+        </div>
+        <a class="secondary" href="#" style="display:inline-flex; align-items:center; gap:6px; font-size:14px; padding: 8px 16px; color:#cf1322;border-color:#ffa39e;background:white;"><span>←</span> Thoát thi thử</a>
+    </div>
+    <div class="workspace" style="max-width: 800px; margin: 40px auto; display: block;">
+        <div style="background: white; border-radius: 12px; padding: 32px; box-shadow: 0 4px 12px rgba(0,0,0,0.05); text-align: center;">
+            <h2 style="font-size: 24px; margin-bottom: 16px; color: var(--text-main);">Cấu trúc đề thi</h2>
+            <p style="color: var(--text-muted); margin-bottom: 32px;">Bài thi gồm 5 phần. Tổng thời gian làm bài: 120 phút.</p>
+            <div style="display: grid; gap: 16px; text-align: left; margin-bottom: 32px;">
+                ${mockSections.map((sec, i) => `
+                <div style="padding: 16px; border: 1px solid var(--border-color); border-radius: 8px; display: flex; justify-content: space-between; align-items: center;">
+                    <div>
+                        <strong style="color: var(--primary-color); display: block; margin-bottom: 4px;">Phần ${i+1}: ${sec.label}</strong>
+                        <span class="muted" style="font-size: 13px;">${sec.questions.length} câu hỏi</span>
+                    </div>
+                </div>
+                `).join('')}
+            </div>
+            <button class="primary" style="font-size: 18px; padding: 12px 32px; border-radius: 30px;" onclick="window.mockTestBegin()">Bắt đầu làm bài thi →</button>
+        </div>
+    </div>`;
+}
+
+window.mockTestBegin = function() {
+    mockTimeLeft=120*60;
+    mockShowSection(0);
     mockTimer=setInterval(()=>{
         mockTimeLeft--;
         const mm=Math.floor(mockTimeLeft/60).toString().padStart(2,'0');
@@ -172,25 +211,144 @@ function mockTestStart(){
         const tl=document.querySelector('#mock-timer');if(tl)tl.textContent=mm+':'+ss;
         if(mockTimeLeft<=0){clearInterval(mockTimer);alert('Hết giờ làm bài!');checkAllMock();}
     },1000);
-}
+};
+
+window.mockShowSection = function(idx) {
+    mockCurrentSection = idx;
+    const sec = mockSections[idx];
+    activeGroup = {id:'mock_'+sec.skill, skill:sec.skill, title: `Phần ${idx+1}/5: ${sec.label}`, questions: sec.questions};
+    qi = 0;
+    practice();
+};
+
+window.mockNextSection = function() {
+    if(mockCurrentSection < mockSections.length - 1) {
+        mockShowSection(mockCurrentSection + 1);
+    } else {
+        if(confirm('Bạn chắc chắn muốn nộp toàn bộ bài thi?')) checkAllMock();
+    }
+};
+
+window.mockSectionSummary = function() {
+    const sec = mockSections[mockCurrentSection];
+    const answeredCount = sec.questions.filter(answered).length;
+    const isLast = mockCurrentSection === mockSections.length - 1;
+    
+    app.innerHTML=`<div class="practice-top" style="background: #fff1f0; border-bottom: 1px solid #ffa39e;">
+        <div>
+            <div class="eyebrow" style="color:#cf1322; font-weight:bold;">
+                <span style="display:inline-block;background:#ff4d4f;color:white;padding:2px 6px;border-radius:4px;margin-right:6px;">THI THỬ</span> ĐỀ THI APTIS
+            </div>
+            <h1 style="color:#cf1322;">Hoàn thành Phần ${mockCurrentSection+1}: ${sec.label}</h1>
+        </div>
+        <strong id="mock-timer" style="color:#cf1322;font-variant-numeric:tabular-nums;font-size:24px;font-weight:900;">${Math.floor(mockTimeLeft/60).toString().padStart(2,'0')}:${(mockTimeLeft%60).toString().padStart(2,'0')}</strong>
+    </div>
+    <div class="workspace" style="max-width: 800px; margin: 40px auto; display: block;">
+        <div style="background: white; border-radius: 12px; padding: 32px; box-shadow: 0 4px 12px rgba(0,0,0,0.05); text-align: center;">
+            <h2 style="font-size: 24px; margin-bottom: 16px; color: var(--text-main);">Tiến độ phần thi</h2>
+            <div style="font-size: 48px; font-weight: 800; color: ${answeredCount===sec.questions.length?'var(--success)':'var(--error)'}; margin-bottom: 16px;">
+                ${answeredCount} / ${sec.questions.length}
+            </div>
+            <p style="color: var(--text-muted); margin-bottom: 32px;">Số câu hỏi đã hoàn thành trong phần này.</p>
+            <div style="display: flex; gap: 16px; justify-content: center;">
+                <button class="secondary" style="padding: 12px 24px;" onclick="mockShowSection(mockCurrentSection)">← Xem lại phần này</button>
+                <button class="primary" style="padding: 12px 24px; ${isLast?'background:#ff4d4f;border-color:#ff4d4f;':''}" onclick="mockNextSection()">${isLast ? 'Nộp toàn bộ bài thi' : 'Chuyển sang phần tiếp theo →'}</button>
+            </div>
+        </div>
+    </div>`;
+};
 
 function checkAllMock(){
     clearInterval(mockTimer);
-    let score=0,totalScoreable=0;
-    activeGroup.questions.forEach(q=>{
-        if(q.review&&typeof gradeReading==='function'){
-            const result=gradeReading(q,saved[q.id]);
-            if(result){totalScoreable+=result.total;score+=result.correct;}
-        }else{
-            const m=q.metadata||{},key=m.correct_option??m.correct_answer??m.answer??m.key??q.correct_option??q.correct_answer??q.answer??q.key;
-            if(key!==undefined&&key!==null&&key!==''){
-                totalScoreable++;if(String(saved[q.id]?.a0)===String(key))score++;
-            }
-        }
-    });
-    document.querySelector('#feedback').innerHTML=`<div class="notice" style="background:#e8f4fd;border-color:#1877f2"><b>Kết quả Thi Thử:</b> Bạn đạt ${score} / ${totalScoreable} câu có đáp án tự động chấm. Vui lòng xuất bài làm để xem lại các câu tự luận/nói.</div>`;
     mockSubmitted=true;
-    document.querySelectorAll('[data-key],#submit-mock,#set-sq,#set-so,#set-mm').forEach(el=>el.disabled=true);
+    let totalScore = 0;
+    let totalMax = 0;
+    let sectionsHtml = '';
+    
+    mockSections.forEach((sec, idx) => {
+        let secScore = 0;
+        let secMax = 0;
+        let qsHtml = '';
+        
+        sec.questions.forEach((q, i) => {
+            let isCorrect = false;
+            let hasAutoCheck = false;
+            let uAns = Object.values(saved[q.id]||{}).filter(Boolean).join(', ');
+            
+            if(q.review&&typeof gradeReading==='function'){
+                const result=gradeReading(q,saved[q.id]);
+                if(result){
+                    secMax+=result.total;
+                    secScore+=result.correct;
+                    hasAutoCheck = true;
+                    isCorrect = result.correct === result.total;
+                }
+            }else{
+                const m=q.metadata||{},key=m.correct_option??m.correct_answer??m.answer??m.key??q.correct_option??q.correct_answer??q.answer??q.key;
+                if(key!==undefined&&key!==null&&key!==''){
+                    hasAutoCheck = true;
+                    secMax++;
+                    if(String(saved[q.id]?.a0)===String(key)){
+                        secScore++;
+                        isCorrect = true;
+                    }
+                }
+            }
+            
+            let statusIcon = !hasAutoCheck ? '<span style="color:var(--text-muted)">📝 Tự luận</span>' : (uAns ? (isCorrect ? '<span style="color:var(--success)">✓ Đúng</span>' : '<span style="color:var(--error)">✗ Sai</span>') : '<span style="color:var(--text-muted)">— Trống</span>');
+            
+            qsHtml += `<div style="padding: 12px; border-bottom: 1px solid var(--border-color); display: flex; justify-content: space-between; align-items: flex-start; gap: 16px;">
+                <div style="flex: 1;">
+                    <strong style="display:block;font-size:13px;color:var(--text-muted);margin-bottom:4px;">Câu ${i+1} (Part ${q.part||1})</strong>
+                    <div style="font-size:14px;color:var(--text-main);margin-bottom:8px;line-height:1.4;max-height:40px;overflow:hidden;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;">${plain(q.stem||q.title)}</div>
+                    <div style="font-size:13px;color:var(--text-muted);">Trả lời: <strong style="color:var(--text-main)">${esc(uAns||'(Không có)')}</strong></div>
+                </div>
+                <div style="white-space: nowrap; font-weight: bold; font-size: 14px;">
+                    ${statusIcon}
+                </div>
+            </div>`;
+        });
+        
+        totalScore += secScore;
+        totalMax += secMax;
+        let pct = secMax > 0 ? Math.round(secScore/secMax*100) : 0;
+        let color = pct >= 70 ? 'var(--success)' : (pct >= 50 ? '#f59e0b' : 'var(--error)');
+        if(secMax === 0) color = 'var(--text-muted)';
+        
+        sectionsHtml += `
+        <div style="margin-bottom: 32px; background: white; border: 1px solid var(--border-color); border-radius: 12px; overflow: hidden;">
+            <div style="background: #f8fafc; padding: 16px 20px; border-bottom: 1px solid var(--border-color); display: flex; justify-content: space-between; align-items: center;">
+                <strong style="font-size: 16px;">Phần ${idx+1}: ${sec.label}</strong>
+                <span style="font-weight: bold; color: ${color};">${secMax>0 ? secScore+'/'+secMax : 'Không chấm tự động'}</span>
+            </div>
+            <div style="padding: 0 20px;">
+                ${qsHtml}
+            </div>
+        </div>`;
+    });
+    
+    let overallPct = totalMax > 0 ? Math.round(totalScore/totalMax*100) : 0;
+    
+    app.innerHTML=`
+    <div class="practice-top">
+        <div>
+            <div class="eyebrow" style="color:var(--primary-color); font-weight:bold;">KẾT QUẢ THI THỬ</div>
+            <h1>Tổng kết bài làm</h1>
+        </div>
+        <div style="display:flex;gap:12px;">
+            <a class="primary" href="#">Quay về trang chủ</a>
+        </div>
+    </div>
+    <div class="workspace" style="max-width: 800px; margin: 0 auto; display: block;">
+        <div style="text-align: center; padding: 40px 20px; background: white; border-radius: 12px; border: 1px solid var(--border-color); margin-bottom: 32px; box-shadow: 0 4px 12px rgba(0,0,0,0.05);">
+            <h2 style="font-size: 18px; color: var(--text-muted); margin-bottom: 16px; font-weight: 500;">Điểm các phần chấm tự động</h2>
+            <div style="font-size: 64px; font-weight: 900; color: ${overallPct>=70?'var(--success)':overallPct>=50?'#f59e0b':'var(--error)'}; line-height: 1;">
+                ${totalScore}<span style="font-size: 32px; color: var(--text-muted);">/${totalMax}</span>
+            </div>
+            <div style="margin-top: 12px; color: var(--text-muted); font-size: 14px;">Các câu hỏi tự luận/nói cần được giáo viên chấm điểm.</div>
+        </div>
+        ${sectionsHtml}
+    </div>`;
 }
 
 function revealAnswers(q){
@@ -222,7 +380,7 @@ function practice(){
         navHTML += `<button data-jump="${i}" class="${i===qi?'active':answered(x)?'done':''}" aria-label="Đến câu ${i+1}">${i+1}</button>`;
     });
 
-    app.innerHTML=`<div class="practice-top" ${mockTestMode?'style="background: #fff1f0; border-bottom: 1px solid #ffa39e;"':''}><div>${mockTestMode ? `<div class="eyebrow" style="color:#cf1322; font-weight:bold;"><span style="display:inline-block;background:#ff4d4f;color:white;padding:2px 6px;border-radius:4px;margin-right:6px;">THI THỬ</span> PART ${q.part||1}</div>` : `<div class="eyebrow">${(info[q.skill]?.name||'THI THỬ').toUpperCase()} · PART ${q.part||1}</div>`}<h1 ${mockTestMode?'style="color:#cf1322;"':''}>${esc(groupTitle(activeGroup))}</h1></div><a class="secondary" href="${mockTestMode?'#':'#'+q.skill}" style="display:inline-flex; align-items:center; gap:6px; font-size:14px; padding: 8px 16px; ${mockTestMode?'color:#cf1322;border-color:#ffa39e;background:white;':''}"><span>←</span> ${mockTestMode?'Thoát thi thử':'Quay lại'}</a></div><div class="workspace"><section class="question-panel"><div style="display:flex;justify-content:space-between;align-items:center"><span class="muted">Câu ${qi+1} / ${activeGroup.questions.length}</span>${mockTestMode?`<strong id="mock-timer" style="color:#cf1322;font-variant-numeric:tabular-nums;font-size:24px;font-weight:900;">${Math.floor(mockTimeLeft/60).toString().padStart(2,'0')}:${(mockTimeLeft%60).toString().padStart(2,'0')}</strong>`:''}</div><h2>${renderHTML(q.title||q.stem)}</h2>${q.title&&q.stem!==q.title?`<p>${renderHTML(q.stem)}</p>`:''}${translateAsyncHTML(q.stem)}<div id="question-body">${questionBody(q)}</div><div id="feedback" aria-live="polite"></div><div class="question-actions"><button id="prev" class="secondary" ${qi===0?'disabled':''}>Câu trước</button>${mockTestMode?(qi===activeGroup.questions.length-1 ? `<button id="submit-mock" class="primary" style="background:#ff4d4f;border-color:#ff4d4f;color:white;">Nộp bài thi</button>` : `<button id="next" class="primary">Câu tiếp theo</button>`) : `<button id="check" class="secondary">Kiểm tra bài</button><button id="next" class="primary">${qi===activeGroup.questions.length-1?'Hoàn thành':'Câu tiếp theo'}</button>`}</div></section><button class="nav-toggle-btn" id="q-nav-toggle" title="Xem tiến độ">☰</button><div class="nav-backdrop" id="q-nav-backdrop"></div><aside class="question-nav drawer" id="q-nav-drawer"><button class="drawer-close-btn" id="q-nav-close">✕</button>${mockTestMode?'':`<div class="settings-panel" style="margin-bottom:20px;padding-bottom:16px;border-bottom:1px solid var(--border-color)"><b style="font-size:14px; color:var(--text-main); text-transform:uppercase;">Tùy chỉnh:</b><label style="display:flex;align-items:center;gap:8px;margin-top:12px;font-size:14px;cursor:pointer"><input type="checkbox" id="set-sq" ${userSettings.shuffleQuestions?'checked':''}> Trộn câu (Cần chọn lại bài)</label><label style="display:flex;align-items:center;gap:8px;margin-top:12px;font-size:14px;cursor:pointer"><input type="checkbox" id="set-so" ${userSettings.shuffleOptions?'checked':''}> Đảo đáp án</label><label style="display:flex;align-items:center;gap:8px;margin-top:12px;font-size:14px;cursor:pointer"><input type="checkbox" id="set-mm" ${userSettings.memorizationMode?'checked':''}> Học thuộc lòng (Hiện đáp án)</label></div>`}<b style="font-size:14px; color:var(--text-main); display:block; margin-bottom:10px;">${mockTestMode?'Tiến độ làm bài thi':'Tiến độ luyện tập'}</b><p class="muted" id="progress-label"></p><progress id="progress" max="${activeGroup.questions.length}"></progress><div class="numbers">${navHTML}</div>${mockTestMode ? `<button id="submit-mock-side" class="primary" style="width:100%;justify-content:center;margin-top:20px;background:#ff4d4f;border-color:#ff4d4f;color:white;padding:12px;font-size:16px;">Nộp bài thi</button>` : ''}<p class="muted" style="margin-top:16px;font-size:12px">Câu trả lời tự động lưu trên trình duyệt này.</p></aside></div>`;
+    app.innerHTML=`<div class="practice-top" ${mockTestMode?'style="background: #fff1f0; border-bottom: 1px solid #ffa39e;"':''}><div>${mockTestMode ? `<div class="eyebrow" style="color:#cf1322; font-weight:bold;"><span style="display:inline-block;background:#ff4d4f;color:white;padding:2px 6px;border-radius:4px;margin-right:6px;">THI THỬ</span> PART ${q.part||1}</div>` : `<div class="eyebrow">${(info[q.skill]?.name||'THI THỬ').toUpperCase()} · PART ${q.part||1}</div>`}<h1 ${mockTestMode?'style="color:#cf1322;"':''}>${esc(groupTitle(activeGroup))}</h1></div><a class="secondary" href="${mockTestMode?'#':'#'+q.skill}" style="display:inline-flex; align-items:center; gap:6px; font-size:14px; padding: 8px 16px; ${mockTestMode?'color:#cf1322;border-color:#ffa39e;background:white;':''}"><span>←</span> ${mockTestMode?'Thoát thi thử':'Quay lại'}</a></div><div class="workspace"><section class="question-panel"><div style="display:flex;justify-content:space-between;align-items:center"><span class="muted">Câu ${qi+1} / ${activeGroup.questions.length}</span>${mockTestMode?`<strong id="mock-timer" style="color:#cf1322;font-variant-numeric:tabular-nums;font-size:24px;font-weight:900;">${Math.floor(mockTimeLeft/60).toString().padStart(2,'0')}:${(mockTimeLeft%60).toString().padStart(2,'0')}</strong>`:''}</div><h2>${renderHTML(q.title||q.stem)}</h2>${q.title&&q.stem!==q.title?`<p>${renderHTML(q.stem)}</p>`:''}${translateAsyncHTML(q.stem)}<div id="question-body">${questionBody(q)}</div><div id="feedback" aria-live="polite"></div><div class="question-actions"><button id="prev" class="secondary" ${qi===0?'disabled':''}>Câu trước</button>${mockTestMode?(qi===activeGroup.questions.length-1 ? `<button id="next-mock-section" class="primary" style="background:#1890ff;border-color:#1890ff;color:white;">Phần tiếp theo</button>` : `<button id="next" class="primary">Câu tiếp theo</button>`) : `<button id="check" class="secondary">Kiểm tra bài</button><button id="next" class="primary">${qi===activeGroup.questions.length-1?'Hoàn thành':'Câu tiếp theo'}</button>`}</div></section><button class="nav-toggle-btn" id="q-nav-toggle" title="Xem tiến độ">☰</button><div class="nav-backdrop" id="q-nav-backdrop"></div><aside class="question-nav drawer" id="q-nav-drawer"><button class="drawer-close-btn" id="q-nav-close">✕</button>${mockTestMode?'':`<div class="settings-panel" style="margin-bottom:20px;padding-bottom:16px;border-bottom:1px solid var(--border-color)"><b style="font-size:14px; color:var(--text-main); text-transform:uppercase;">Tùy chỉnh:</b><label style="display:flex;align-items:center;gap:8px;margin-top:12px;font-size:14px;cursor:pointer"><input type="checkbox" id="set-sq" ${userSettings.shuffleQuestions?'checked':''}> Trộn câu (Cần chọn lại bài)</label><label style="display:flex;align-items:center;gap:8px;margin-top:12px;font-size:14px;cursor:pointer"><input type="checkbox" id="set-so" ${userSettings.shuffleOptions?'checked':''}> Đảo đáp án</label><label style="display:flex;align-items:center;gap:8px;margin-top:12px;font-size:14px;cursor:pointer"><input type="checkbox" id="set-mm" ${userSettings.memorizationMode?'checked':''}> Học thuộc lòng (Hiện đáp án)</label></div>`}<b style="font-size:14px; color:var(--text-main); display:block; margin-bottom:10px;">${mockTestMode?'Tiến độ làm bài thi':'Tiến độ luyện tập'}</b><p class="muted" id="progress-label"></p><progress id="progress" max="${activeGroup.questions.length}"></progress><div class="numbers">${navHTML}</div>${mockTestMode ? `<button id="submit-mock-side" class="primary" style="width:100%;justify-content:center;margin-top:20px;background:#ff4d4f;border-color:#ff4d4f;color:white;padding:12px;font-size:16px;">Nộp bài thi</button>` : ''}<p class="muted" style="margin-top:16px;font-size:12px">Câu trả lời tự động lưu trên trình duyệt này.</p></aside></div>`;
     document.querySelectorAll('[data-key]').forEach(el=>{
         const value=saved[q.id]?.[el.dataset.key];
         if(el.type==='radio')el.checked=value===el.value;else el.value=value||'';
@@ -261,8 +419,15 @@ function practice(){
             }
         }
     };
-    const sub = document.querySelector('#submit-mock');
-    if(sub) sub.onclick = () => { if(confirm('Bạn chắc chắn nộp bài?')) checkAllMock() };
+    const nextMockSecBtn = document.querySelector('#next-mock-section');
+    if(nextMockSecBtn) {
+        nextMockSecBtn.onclick = () => window.mockSectionSummary();
+        if(mockCurrentSection === mockSections.length - 1) {
+             nextMockSecBtn.textContent = 'Nộp bài thi';
+             nextMockSecBtn.style.background = '#ff4d4f';
+             nextMockSecBtn.style.borderColor = '#ff4d4f';
+        }
+    }
     const subSide = document.querySelector('#submit-mock-side');
     if(subSide) subSide.onclick = () => { if(confirm('Bạn chắc chắn nộp bài?')) checkAllMock() };
     const ck = document.querySelector('#check');
