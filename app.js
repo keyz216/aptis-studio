@@ -169,7 +169,7 @@ function mockTestStart(){
                 let partQs = p.questions.filter(q=>(q.part||1)===pt);
                 qs.push(...shuffleArray(partQs));
             });
-            mockSections.push({skill:sk, label:info[sk].name, questions:qs, parts:parts});
+            mockSections.push({skill:sk, label:info[sk].name, questions:qs, parts:parts, sourceId: p.id});
         }
     });
     
@@ -185,32 +185,39 @@ function mockTestStart(){
     <div class="workspace" style="max-width: 800px; margin: 40px auto; display: block;">
         <div style="background: white; border-radius: 12px; padding: 32px; box-shadow: 0 4px 12px rgba(0,0,0,0.05); text-align: center;">
             <h2 style="font-size: 24px; margin-bottom: 16px; color: var(--text-main);">Cấu trúc đề thi</h2>
-            <p style="color: var(--text-muted); margin-bottom: 32px;">Bài thi gồm 5 phần. Tổng thời gian làm bài: 120 phút.</p>
+            <p style="color: var(--text-muted); margin-bottom: 32px;">Bạn có thể chọn phần thi bất kỳ để bắt đầu. Nên canh thời gian tổng khoảng 120 phút.</p>
             <div style="display: grid; gap: 16px; text-align: left; margin-bottom: 32px;">
                 ${mockSections.map((sec, i) => `
-                <div style="padding: 16px; border: 1px solid var(--border-color); border-radius: 8px; display: flex; justify-content: space-between; align-items: center;">
+                <button onclick="window.mockShowSection(${i})" style="padding: 16px; border: 1px solid var(--border-color); border-radius: 8px; display: flex; justify-content: space-between; align-items: center; background: white; text-align: left; cursor: pointer; width: 100%; box-shadow: 0 2px 4px rgba(0,0,0,0.02); transition: all 0.2s ease;" onmouseover="this.style.borderColor='var(--primary-color)'; this.style.boxShadow='0 4px 8px rgba(0,0,0,0.08)'" onmouseout="this.style.borderColor='var(--border-color)'; this.style.boxShadow='0 2px 4px rgba(0,0,0,0.02)'">
                     <div>
-                        <strong style="color: var(--primary-color); display: block; margin-bottom: 4px;">Phần ${i+1}: ${sec.label}</strong>
-                        <span class="muted" style="font-size: 13px;">${sec.questions.length} câu hỏi</span>
+                        <strong style="color: var(--primary-color); display: block; margin-bottom: 4px; font-size: 16px;">Phần ${i+1}: ${sec.label}</strong>
+                        <span class="muted" style="font-size: 14px;">${sec.questions.length} câu hỏi</span>
                     </div>
-                </div>
+                    <div style="background: var(--primary-color); color: white; padding: 8px 16px; border-radius: 20px; font-size: 14px; font-weight: bold;">
+                        Làm bài →
+                    </div>
+                </button>
                 `).join('')}
             </div>
-            <button class="primary" style="font-size: 18px; padding: 12px 32px; border-radius: 30px;" onclick="window.mockTestBegin()">Bắt đầu làm bài thi →</button>
+            <button class="primary" style="font-size: 16px; padding: 12px 32px; border-radius: 8px; background: #ff4d4f; border-color: #ff4d4f;" onclick="if(confirm('Bạn có chắc chắn muốn nộp bài thi ngay?')) checkAllMock()">Nộp bài thi</button>
         </div>
     </div>`;
+    
+    // Start global timer if not started
+    if(!mockTimer) {
+        mockTimeLeft=120*60;
+        mockTimer=setInterval(()=>{
+            mockTimeLeft--;
+            const mm=Math.floor(mockTimeLeft/60).toString().padStart(2,'0');
+            const ss=(mockTimeLeft%60).toString().padStart(2,'0');
+            const tl=document.querySelector('#mock-timer');if(tl)tl.textContent=mm+':'+ss;
+            if(mockTimeLeft<=0){clearInterval(mockTimer);alert('Hết giờ làm bài!');checkAllMock();}
+        },1000);
+    }
 }
 
 window.mockTestBegin = function() {
-    mockTimeLeft=120*60;
     mockShowSection(0);
-    mockTimer=setInterval(()=>{
-        mockTimeLeft--;
-        const mm=Math.floor(mockTimeLeft/60).toString().padStart(2,'0');
-        const ss=(mockTimeLeft%60).toString().padStart(2,'0');
-        const tl=document.querySelector('#mock-timer');if(tl)tl.textContent=mm+':'+ss;
-        if(mockTimeLeft<=0){clearInterval(mockTimer);alert('Hết giờ làm bài!');checkAllMock();}
-    },1000);
 };
 
 window.mockShowSection = function(idx) {
@@ -222,11 +229,7 @@ window.mockShowSection = function(idx) {
 };
 
 window.mockNextSection = function() {
-    if(mockCurrentSection < mockSections.length - 1) {
-        mockShowSection(mockCurrentSection + 1);
-    } else {
-        if(confirm('Bạn chắc chắn muốn nộp toàn bộ bài thi?')) checkAllMock();
-    }
+    mockTestStart();
 };
 
 window.mockSectionSummary = function() {
@@ -252,7 +255,7 @@ window.mockSectionSummary = function() {
             <p style="color: var(--text-muted); margin-bottom: 32px;">Số câu hỏi đã hoàn thành trong phần này.</p>
             <div style="display: flex; gap: 16px; justify-content: center;">
                 <button class="secondary" style="padding: 12px 24px;" onclick="mockShowSection(mockCurrentSection)">← Xem lại phần này</button>
-                <button class="primary" style="padding: 12px 24px; ${isLast?'background:#ff4d4f;border-color:#ff4d4f;':''}" onclick="mockNextSection()">${isLast ? 'Nộp toàn bộ bài thi' : 'Chuyển sang phần tiếp theo →'}</button>
+                <button class="primary" style="padding: 12px 24px;" onclick="mockTestStart()">Về danh sách phần thi →</button>
             </div>
         </div>
     </div>`;
