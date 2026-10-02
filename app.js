@@ -12,7 +12,14 @@ let mockSections=[],mockCurrentSection=0;
 let practiceSaved=saved;
 const app=document.querySelector('#app');
 function persist(){if(mockTestMode)return true;try{localStorage.setItem('aptis-answers',JSON.stringify(saved));return true}catch{toast('Trình duyệt không lưu được dữ liệu.');return false}}
-function toast(s){const t=document.querySelector('#toast');t.textContent=s;t.style.display='block';clearTimeout(timer);timer=setTimeout(()=>t.style.display='none',4200)}
+function toast(s, type=''){
+    const t=document.querySelector('#toast');
+    t.innerHTML = (type==='success'?'✅ ':(type==='error'?'❌ ':'')) + esc(s);
+    t.className = type;
+    t.classList.add('show');
+    clearTimeout(timer);
+    timer=setTimeout(()=>{t.classList.remove('show'); setTimeout(()=>t.style.display='none',400);}, 4000);
+}
 function answered(q){return Object.values(saved[q.id]||{}).some(x=>String(x).trim())}
 function route(){if(recorder?.state==='recording')recorder.stop();stream?.getTracks().forEach(t=>t.stop());objectUrls.forEach(URL.revokeObjectURL);objectUrls=[];const [view,id,n]=location.hash.slice(1).split('/');if(mockTestMode&&view!=='mocktest'){clearInterval(mockTimer);mockTimer=null;saved=practiceSaved;mockTestMode=false;mockSections=[];mockCurrentSection=0;}if(view!=='lesson')activeGroup=null;const skill=view==='lesson'?COURSES[Number(id)]?.skill:view;document.querySelector('#nav').innerHTML=`<a href="#" class="${!view?'active':''}">${svg('home')}Tổng quan</a><a href="#mocktest" class="${view==='mocktest'?'active':''}">${svg('reading')}Thi thử Aptis</a>`+Object.entries(info).map(([k,v])=>`<a href="#${k}" class="${skill===k?'active':''}">${svg(k)}${v.name}</a>`).join('');document.querySelector('#breadcrumb').textContent='Góc học tập / '+(view==='mocktest'?'Thi thử Aptis':info[skill]?.name||'Tổng quan');if(view==='mocktest')mockTestStart();else if(view==='lesson'&&COURSES[Number(id)]){
     mockTestMode=false;
@@ -23,7 +30,58 @@ function route(){if(recorder?.state==='recording')recorder.stop();stream?.getTra
     qi=Math.max(0,Math.min(activeGroup.questions.length-1,Number(n)||0));
     practice()
 }else if(info[view])library(view);else home();window.scrollTo(0,0)}
-function home(){const total=new Set(COURSES.flatMap(g=>g.questions.map(q=>q.id))).size,done=new Set(COURSES.flatMap(g=>g.questions.filter(answered).map(q=>q.id))).size;let last;try{last=localStorage.getItem('aptis-last')}catch{}app.innerHTML=`<div class="welcome"><div><div class="eyebrow">YOUR LEARNING SPACE</div><h1>Hôm nay, mình học gì?</h1><div class="muted">Dành một chút thời gian để tiếng Anh tiến bộ mỗi ngày.</div></div><span class="date-tag">${new Intl.DateTimeFormat('vi-VN',{day:'numeric',month:'long'}).format(new Date())}</span></div><section class="banner"><div><div class="eyebrow">TỪNG BƯỚC CHINH PHỤC APTIS</div><h2>Một mục tiêu. Năm kỹ năng.<br>Bắt đầu từ bài tập hôm nay.</h2><p>Thư viện bài tập của bạn đã sẵn sàng.</p><a class="primary" href="${last&&/^#lesson\/\d+\/\d+$/.test(last)?last:'#reading'}">${last?'Tiếp tục học':'Bắt đầu luyện tập'} <span>↗</span></a></div><div class="book-art" aria-hidden="true"><div class="book back">ABC<br>↗</div><div class="book front">English<small>ONE STEP A DAY</small></div></div></section><div class="stats"><div class="stat"><span class="stat-icon">▤</span><div><strong>${COURSES.length}</strong><small>Bộ bài luyện tập</small></div></div><div class="stat"><span class="stat-icon">◎</span><div><strong>${total}</strong><small>Câu hỏi trong thư viện</small></div></div><div class="stat"><span class="stat-icon">✓</span><div><strong>${done}</strong><small>Câu đã luyện tập</small></div></div></div><div class="section-head"><h2>Luyện tập theo kỹ năng</h2><span>Chọn kỹ năng bạn muốn cải thiện</span></div><div class="skills">${Object.entries(info).map(([k,v])=>{const groups=COURSES.filter(g=>g.skill===k);return `<a class="skill-card" style="--accent:${v.color};--tint:${v.tint}" href="#${k}"><div class="card-top"><span class="tile-icon">${svg(k)}</span><span class="part-tag">${v.vi}</span></div><h3>${v.name}</h3><p>${v.desc}</p><div class="card-bottom"><span>${groups.length} bộ bài</span><b>Luyện tập ↗</b></div></a>`}).join('')}<div class="skill-card note-card"><div class="eyebrow">A LITTLE, EVERY DAY</div><h3>“Practice makes<br>progress.”</h3><p>Không cần hoàn hảo.<br>Chỉ cần tốt hơn hôm qua một chút.</p></div></div>`}
+function home(){
+    let last;try{last=localStorage.getItem('aptis-last')}catch{}
+    let continueHtml = '';
+    if(last && /^#lesson\/\d+\/\d+$/.test(last)) {
+        const parts = last.split('/');
+        const g = COURSES[Number(parts[1])];
+        if(g) {
+            continueHtml = `<div style="margin-bottom: 32px; background: white; padding: 16px 24px; border-radius: 12px; border: 1px solid var(--border-color); display: flex; justify-content: space-between; align-items: center; box-shadow: var(--shadow-sm);">
+                <div>
+                    <span style="font-size: 13px; color: var(--text-muted); text-transform: uppercase; font-weight: bold; letter-spacing: 0.5px;">Tiếp tục học</span>
+                    <h3 style="margin: 4px 0 0; font-size: 16px;">${esc(groupTitle(g))}</h3>
+                </div>
+                <a href="${last}" class="primary" style="padding: 8px 16px; font-size: 14px; border-radius: 20px;">Học tiếp →</a>
+            </div>`;
+        }
+    }
+    
+    app.innerHTML=`
+    <div style="max-width: 700px; margin: 40px auto; padding: 0 24px;" class="animated-content">
+        <h1 style="font-size: 28px; margin-bottom: 8px; color: var(--text-main);">Góc học tập</h1>
+        <p style="color: var(--text-muted); margin-bottom: 32px; font-size: 15px;">Chọn một kỹ năng bên dưới để bắt đầu luyện tập.</p>
+        
+        ${continueHtml}
+        
+        <div style="display: flex; flex-direction: column; gap: 12px;">
+            ${Object.entries(info).map(([k,v])=>{
+                const groups=COURSES.filter(g=>g.skill===k);
+                return \`<a href="#${k}" style="display: flex; align-items: center; padding: 16px 20px; background: white; border: 1px solid var(--border-color); border-radius: 12px; text-decoration: none; color: var(--text-main); transition: all 0.2s; box-shadow: var(--shadow-sm);" onmouseover="this.style.borderColor='var(--primary-color)'; this.style.transform='translateY(-2px)';" onmouseout="this.style.borderColor='var(--border-color)'; this.style.transform='translateY(0)';">
+                    <div style="width: 44px; height: 44px; border-radius: 10px; background: ${v.tint}; color: ${v.color}; display: flex; align-items: center; justify-content: center; margin-right: 20px; font-size: 22px;">
+                        ${svg(k)}
+                    </div>
+                    <div style="flex: 1;">
+                        <h3 style="margin: 0 0 2px; font-size: 16px;">${v.name}</h3>
+                        <div style="color: var(--text-muted); font-size: 13px;">${groups.length} bộ bài luyện tập</div>
+                    </div>
+                    <div style="color: var(--primary-color); font-weight: 500; font-size: 14px;">Bắt đầu →</div>
+                </a>\`;
+            }).join('')}
+            
+            <a href="#mocktest" style="display: flex; align-items: center; padding: 16px 20px; background: #fff1f0; border: 1px solid #ffa39e; border-radius: 12px; text-decoration: none; color: #cf1322; transition: all 0.2s; margin-top: 16px;" onmouseover="this.style.transform='translateY(-2px)';" onmouseout="this.style.transform='translateY(0)';">
+                <div style="width: 44px; height: 44px; border-radius: 10px; background: #ff4d4f; color: white; display: flex; align-items: center; justify-content: center; margin-right: 20px; font-size: 22px;">
+                    ${svg('reading')}
+                </div>
+                <div style="flex: 1;">
+                    <h3 style="margin: 0 0 2px; font-size: 16px;">Thi thử Aptis</h3>
+                    <div style="color: #cf1322; opacity: 0.8; font-size: 13px;">Làm bài thi mô phỏng 5 kỹ năng</div>
+                </div>
+                <div style="font-weight: 600; font-size: 14px;">Vào thi →</div>
+            </a>
+        </div>
+    </div>`;
+}).join('')}<div class="skill-card note-card"><div class="eyebrow">A LITTLE, EVERY DAY</div><h3>“Practice makes<br>progress.”</h3><p>Không cần hoàn hảo.<br>Chỉ cần tốt hơn hôm qua một chút.</p></div></div>`}
 function library(skill){const meta=info[skill];app.innerHTML=`<a class="secondary" href="#" style="display:inline-flex; align-items:center; gap:6px; margin-bottom: 20px; font-size:14px; padding: 8px 16px;"><span>←</span> Quay lại Tổng quan</a><div class="eyebrow">THƯ VIỆN BÀI TẬP</div><h1>${meta.name}</h1><p class="muted">${meta.desc} Chọn một bộ bài để bắt đầu.</p><div class="toolbar"><input id="search" type="search" aria-label="Tìm bài tập" placeholder="Tìm theo tên bài, chủ đề hoặc phần thi…"></div><div id="lessons" class="lessons"></div>`;const render=()=>{const term=document.querySelector('#search').value.toLocaleLowerCase('vi');const groups=COURSES.filter(g=>g.skill===skill&&`${g.title} ${g.questions.map(q=>q.title+' '+q.stem).join(' ')}`.toLocaleLowerCase('vi').includes(term));document.querySelector('#lessons').innerHTML=groups.map(g=>{const title=groupTitle(g);return `<a class="lesson" href="#lesson/${g.id}/0"><small>${info[g.skill].vi} · ${g.questions.length} câu</small><h3>${esc(title)}</h3><p>${g.questions.filter(answered).length}/${g.questions.length} câu đã luyện tập <span style="float:right;color:var(--primary-color)">Mở bài →</span></p></a>`}).join('')||'<div class="empty">Không tìm thấy bài phù hợp. Thử một từ khóa khác.</div>'};document.querySelector('#search').addEventListener('input',render);render()}
 function groupTitle(g){if(g.skill==='writing')return (g.questions[0].title||`Đề ${g.title}`).replace(/ - Part \d+/,'');if(g.skill==='speaking')return `Speaking · Đề ${g.title.replace('Đề ','')}`;return g.title}
 
@@ -311,14 +369,15 @@ function checkAllMock(){
             }
             
             let statusIcon = !hasAutoCheck ? '<span style="color:var(--text-muted)">📝 Tự luận</span>' : (uAns ? (isCorrect ? '<span style="color:var(--success)">✓ Đúng</span>' : '<span style="color:var(--error)">✗ Sai</span>') : '<span style="color:var(--text-muted)">— Trống</span>');
+            let bgColor = !hasAutoCheck ? 'transparent' : (uAns ? (isCorrect ? 'var(--success-bg)' : 'var(--error-bg)') : 'transparent');
             
-            qsHtml += `<div style="padding: 12px; border-bottom: 1px solid var(--border-color); display: flex; justify-content: space-between; align-items: flex-start; gap: 16px;">
+            qsHtml += `<div style="padding: 16px; border-bottom: 1px solid var(--border-color); display: flex; justify-content: space-between; align-items: flex-start; gap: 16px; background: ${bgColor}; transition: background 0.2s;">
                 <div style="flex: 1;">
                     <strong style="display:block;font-size:13px;color:var(--text-muted);margin-bottom:4px;">Câu ${i+1} (Part ${q.part||1})</strong>
-                    <div style="font-size:14px;color:var(--text-main);margin-bottom:8px;line-height:1.4;max-height:40px;overflow:hidden;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;">${plain(q.stem||q.title)}</div>
-                    <div style="font-size:13px;color:var(--text-muted);">Trả lời: <strong style="color:var(--text-main)">${esc(uAns||'(Không có)')}</strong></div>
+                    <div style="font-size:15px;color:var(--text-main);margin-bottom:8px;line-height:1.5;">${plain(q.stem||q.title)}</div>
+                    <div style="font-size:14px;color:var(--text-muted);">Trả lời của bạn: <strong style="color:var(--text-main); background: white; padding: 2px 6px; border-radius: 4px; border: 1px solid var(--border-color);">${esc(uAns||'(Không có)')}</strong></div>
                 </div>
-                <div style="white-space: nowrap; font-weight: bold; font-size: 14px;">
+                <div style="white-space: nowrap; font-weight: bold; font-size: 14px; background: white; padding: 4px 12px; border-radius: 20px; box-shadow: var(--shadow-sm);">
                     ${statusIcon}
                 </div>
             </div>`;
@@ -331,18 +390,19 @@ function checkAllMock(){
         if(secMax === 0) color = 'var(--text-muted)';
         
         sectionsHtml += `
-        <div style="margin-bottom: 32px; background: white; border: 1px solid var(--border-color); border-radius: 12px; overflow: hidden;">
+        <div style="margin-bottom: 32px; background: white; border: 1px solid var(--border-color); border-radius: 12px; overflow: hidden; box-shadow: var(--shadow-md);">
             <div style="background: #f8fafc; padding: 16px 20px; border-bottom: 1px solid var(--border-color); display: flex; justify-content: space-between; align-items: center;">
                 <strong style="font-size: 16px;">Phần ${idx+1}: ${sec.label}</strong>
-                <span style="font-weight: bold; color: ${color};">${secMax>0 ? secScore+'/'+secMax : 'Không chấm tự động'}</span>
+                <span style="font-weight: bold; color: ${color}; background: white; padding: 4px 12px; border-radius: 20px; box-shadow: var(--shadow-sm);">${secMax>0 ? secScore+'/'+secMax : 'Không chấm tự động'}</span>
             </div>
-            <div style="padding: 0 20px;">
+            <div>
                 ${qsHtml}
             </div>
         </div>`;
     });
     
     let overallPct = totalMax > 0 ? Math.round(totalScore/totalMax*100) : 0;
+    let mainColor = overallPct>=70?'var(--success)':overallPct>=50?'#f59e0b':'var(--error)';
     
     app.innerHTML=`
     <div class="practice-top">
@@ -351,16 +411,24 @@ function checkAllMock(){
             <h1>Tổng kết bài làm</h1>
         </div>
         <div style="display:flex;gap:12px;">
-            <a class="primary" href="#">Quay về trang chủ</a>
+            <a class="secondary" href="#mocktest" onclick="mockSections=[];">↻ Thi lại đề khác</a>
+            <a class="primary" href="#">🏠 Về trang chủ</a>
         </div>
     </div>
     <div class="workspace" style="max-width: 800px; margin: 0 auto; display: block;">
-        <div style="text-align: center; padding: 40px 20px; background: white; border-radius: 12px; border: 1px solid var(--border-color); margin-bottom: 32px; box-shadow: 0 4px 12px rgba(0,0,0,0.05);">
-            <h2 style="font-size: 18px; color: var(--text-muted); margin-bottom: 16px; font-weight: 500;">Điểm các phần chấm tự động</h2>
-            <div style="font-size: 64px; font-weight: 900; color: ${overallPct>=70?'var(--success)':overallPct>=50?'#f59e0b':'var(--error)'}; line-height: 1;">
-                ${totalScore}<span style="font-size: 32px; color: var(--text-muted);">/${totalMax}</span>
+        <div style="text-align: center; padding: 40px 20px; background: white; border-radius: 16px; border: 1px solid var(--border-color); margin-bottom: 40px; box-shadow: var(--shadow-lg); display: flex; flex-direction: column; align-items: center;">
+            <h2 style="font-size: 20px; color: var(--text-muted); margin-bottom: 24px; font-weight: 600;">Điểm các phần trắc nghiệm</h2>
+            
+            <svg viewBox="0 0 36 36" class="circular-chart" style="stroke: ${mainColor};">
+              <path class="circle-bg" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
+              <path class="circle" stroke-dasharray="${overallPct}, 100" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
+              <text x="18" y="20.35" class="percentage">${overallPct}%</text>
+            </svg>
+            
+            <div style="font-size: 24px; font-weight: 800; color: var(--text-main); margin-top: 24px;">
+                ${totalScore} <span style="font-size: 16px; color: var(--text-muted); font-weight: 500;">/ ${totalMax} câu đúng</span>
             </div>
-            <div style="margin-top: 12px; color: var(--text-muted); font-size: 14px;">Các câu hỏi tự luận/nói cần được giáo viên chấm điểm.</div>
+            <div style="margin-top: 12px; color: var(--text-muted); font-size: 14px; max-width: 400px;">Phần thi Tự luận & Nói sẽ được giáo viên chấm điểm thủ công.</div>
         </div>
         ${sectionsHtml}
     </div>`;
@@ -395,7 +463,7 @@ function practice(){
         navHTML += `<button data-jump="${i}" class="${i===qi?'active':answered(x)?'done':''}" aria-label="Đến câu ${i+1}">${i+1}</button>`;
     });
 
-    app.innerHTML=`<div class="practice-top" ${mockTestMode?'style="background: #fff1f0; border-bottom: 1px solid #ffa39e;"':''}><div>${mockTestMode ? `<div class="eyebrow" style="color:#cf1322; font-weight:bold;"><span style="display:inline-block;background:#ff4d4f;color:white;padding:2px 6px;border-radius:4px;margin-right:6px;">THI THỬ</span> PART ${q.part||1}</div>` : `<div class="eyebrow">${(info[q.skill]?.name||'THI THỬ').toUpperCase()} · PART ${q.part||1}</div>`}<h1 ${mockTestMode?'style="color:#cf1322;"':''}>${esc(groupTitle(activeGroup))}</h1></div><a class="secondary" href="${mockTestMode?'#':'#'+q.skill}" style="display:inline-flex; align-items:center; gap:6px; font-size:14px; padding: 8px 16px; ${mockTestMode?'color:#cf1322;border-color:#ffa39e;background:white;':''}"><span>←</span> ${mockTestMode?'Thoát thi thử':'Quay lại'}</a></div><div class="workspace"><section class="question-panel"><div style="display:flex;justify-content:space-between;align-items:center"><span class="muted">Câu ${qi+1} / ${activeGroup.questions.length}</span>${mockTestMode?`<strong id="mock-timer" style="color:#cf1322;font-variant-numeric:tabular-nums;font-size:24px;font-weight:900;">${Math.floor(mockTimeLeft/60).toString().padStart(2,'0')}:${(mockTimeLeft%60).toString().padStart(2,'0')}</strong>`:''}</div><h2>${renderHTML(q.title||q.stem)}</h2>${q.title&&q.stem!==q.title?`<p>${renderHTML(q.stem)}</p>`:''}${translateAsyncHTML(q.stem)}<div id="question-body">${questionBody(q)}</div><div id="feedback" aria-live="polite"></div><div class="question-actions"><button id="prev" class="secondary" ${qi===0?'disabled':''}>Câu trước</button>${mockTestMode?(qi===activeGroup.questions.length-1 ? `<button id="next-mock-section" class="primary" style="background:#1890ff;border-color:#1890ff;color:white;">Phần tiếp theo</button>` : `<button id="next" class="primary">Câu tiếp theo</button>`) : `<button id="check" class="secondary">Kiểm tra bài</button><button id="next" class="primary">${qi===activeGroup.questions.length-1?'Hoàn thành':'Câu tiếp theo'}</button>`}</div></section><button class="nav-toggle-btn" id="q-nav-toggle" title="Xem tiến độ">☰</button><div class="nav-backdrop" id="q-nav-backdrop"></div><aside class="question-nav drawer" id="q-nav-drawer"><button class="drawer-close-btn" id="q-nav-close">✕</button>${mockTestMode?'':`<div class="settings-panel" style="margin-bottom:20px;padding-bottom:16px;border-bottom:1px solid var(--border-color)"><b style="font-size:14px; color:var(--text-main); text-transform:uppercase;">Tùy chỉnh:</b><label style="display:flex;align-items:center;gap:8px;margin-top:12px;font-size:14px;cursor:pointer"><input type="checkbox" id="set-sq" ${userSettings.shuffleQuestions?'checked':''}> Trộn câu (Cần chọn lại bài)</label><label style="display:flex;align-items:center;gap:8px;margin-top:12px;font-size:14px;cursor:pointer"><input type="checkbox" id="set-so" ${userSettings.shuffleOptions?'checked':''}> Đảo đáp án</label><label style="display:flex;align-items:center;gap:8px;margin-top:12px;font-size:14px;cursor:pointer"><input type="checkbox" id="set-mm" ${userSettings.memorizationMode?'checked':''}> Học thuộc lòng (Hiện đáp án)</label></div>`}<b style="font-size:14px; color:var(--text-main); display:block; margin-bottom:10px;">${mockTestMode?'Tiến độ làm bài thi':'Tiến độ luyện tập'}</b><p class="muted" id="progress-label"></p><progress id="progress" max="${activeGroup.questions.length}"></progress><div class="numbers">${navHTML}</div>${mockTestMode ? `<button id="submit-mock-side" class="primary" style="width:100%;justify-content:center;margin-top:20px;background:#ff4d4f;border-color:#ff4d4f;color:white;padding:12px;font-size:16px;">Nộp bài thi</button>` : ''}<p class="muted" style="margin-top:16px;font-size:12px">Câu trả lời tự động lưu trên trình duyệt này.</p></aside></div>`;
+    app.innerHTML=`<div class="practice-top" ${mockTestMode?'style="background: #fff1f0; border-bottom: 1px solid #ffa39e;"':''}><div>${mockTestMode ? `<div class="eyebrow" style="color:#cf1322; font-weight:bold;"><span style="display:inline-block;background:#ff4d4f;color:white;padding:2px 6px;border-radius:4px;margin-right:6px;">THI THỬ</span> PART ${q.part||1}</div>` : `<div class="eyebrow">${(info[q.skill]?.name||'THI THỬ').toUpperCase()} · PART ${q.part||1}</div>`}<h1 ${mockTestMode?'style="color:#cf1322;"':''}>${esc(groupTitle(activeGroup))}</h1></div><a class="secondary" href="${mockTestMode?'#':'#'+q.skill}" style="display:inline-flex; align-items:center; gap:6px; font-size:14px; padding: 8px 16px; ${mockTestMode?'color:#cf1322;border-color:#ffa39e;background:white;':''}"><span>←</span> ${mockTestMode?'Thoát thi thử':'Quay lại'}</a></div><div class="workspace"><section class="question-panel"><div style="display:flex;justify-content:space-between;align-items:center"><span class="muted" style="display:flex;align-items:center;gap:12px;">Câu ${qi+1} / ${activeGroup.questions.length} <div class="font-controls"><button onclick="document.getElementById('q-anim').style.fontSize='0.9em'" title="Thu nhỏ chữ">A-</button><button onclick="document.getElementById('q-anim').style.fontSize='1.1em'" title="Phóng to chữ">A+</button></div></span>${mockTestMode?`<strong id="mock-timer" style="color:#cf1322;font-variant-numeric:tabular-nums;font-size:24px;font-weight:900;">${Math.floor(mockTimeLeft/60).toString().padStart(2,'0')}:${(mockTimeLeft%60).toString().padStart(2,'0')}</strong>`:''}</div><div id="q-anim" class="animated-content" style="transition: font-size 0.2s"><h2>${renderHTML(q.title||q.stem)}</h2>${q.title&&q.stem!==q.title?`<p>${renderHTML(q.stem)}</p>`:''}${translateAsyncHTML(q.stem)}<div id="question-body">${questionBody(q)}</div></div><div id="feedback" aria-live="polite"></div><div class="question-actions"><button id="prev" class="secondary" ${qi===0?'disabled':''}>Câu trước</button>${mockTestMode?(qi===activeGroup.questions.length-1 ? `<button id="next-mock-section" class="primary" style="background:#1890ff;border-color:#1890ff;color:white;">Phần tiếp theo</button>` : `<button id="next" class="primary">Câu tiếp theo</button>`) : `<button id="check" class="secondary">Kiểm tra bài</button><button id="next" class="primary">${qi===activeGroup.questions.length-1?'Hoàn thành':'Câu tiếp theo'}</button>`}</div></section><button class="nav-toggle-btn" id="q-nav-toggle" title="Xem tiến độ">☰</button><div class="nav-backdrop" id="q-nav-backdrop"></div><aside class="question-nav drawer" id="q-nav-drawer"><button class="drawer-close-btn" id="q-nav-close">✕</button>${mockTestMode?'':`<div class="settings-panel" style="margin-bottom:20px;padding-bottom:16px;border-bottom:1px solid var(--border-color)"><b style="font-size:14px; color:var(--text-main); text-transform:uppercase;">Tùy chỉnh:</b><label style="display:flex;align-items:center;gap:8px;margin-top:12px;font-size:14px;cursor:pointer"><input type="checkbox" id="set-sq" ${userSettings.shuffleQuestions?'checked':''}> Trộn câu (Cần chọn lại bài)</label><label style="display:flex;align-items:center;gap:8px;margin-top:12px;font-size:14px;cursor:pointer"><input type="checkbox" id="set-so" ${userSettings.shuffleOptions?'checked':''}> Đảo đáp án</label><label style="display:flex;align-items:center;gap:8px;margin-top:12px;font-size:14px;cursor:pointer"><input type="checkbox" id="set-mm" ${userSettings.memorizationMode?'checked':''}> Học thuộc lòng (Hiện đáp án)</label></div>`}<b style="font-size:14px; color:var(--text-main); display:block; margin-bottom:10px;">${mockTestMode?'Tiến độ làm bài thi':'Tiến độ luyện tập'}</b><p class="muted" id="progress-label"></p><progress id="progress" max="${activeGroup.questions.length}"></progress><div class="numbers">${navHTML}</div>${mockTestMode ? `<button id="submit-mock-side" class="primary" style="width:100%;justify-content:center;margin-top:20px;background:#ff4d4f;border-color:#ff4d4f;color:white;padding:12px;font-size:16px;">Nộp bài thi</button>` : ''}<p class="muted" style="margin-top:16px;font-size:12px">Câu trả lời tự động lưu trên trình duyệt này.</p></aside></div>`;
     document.querySelectorAll('[data-key]').forEach(el=>{
         const value=saved[q.id]?.[el.dataset.key];
         if(el.type==='radio')el.checked=value===el.value;else el.value=value||'';
