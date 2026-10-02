@@ -36,6 +36,10 @@ function showReadingReview(q) {
   const result = gradeReading(q, saved[q.id]);
   if (!result) return;
   clearReadingMarks();
+  if (result.unanswered) {
+    document.querySelector('#feedback').innerHTML = '<div class="notice">Hãy trả lời đầy đủ các ý rồi bấm “Kiểm tra bài” để xem đáp án và giải thích.</div>';
+    return;
+  }
   for (const row of result.rows) {
     const inputs = Array.from(document.querySelectorAll(`[data-key="${row.key}"]`));
     if (!inputs.length) continue;

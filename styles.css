@@ -1115,3 +1115,81 @@ button:active, .skill-card:active {
     background: var(--border-color);
     color: var(--text-main);
 }
+/* Compact home shortcut, below navigation overlays. */
+.quick-study {
+  position: fixed;
+  right: max(24px, env(safe-area-inset-right));
+  bottom: max(24px, env(safe-area-inset-bottom));
+  z-index: 60;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  min-height: 48px;
+  padding: 10px 18px 10px 12px;
+  border: 1px solid #2563eb;
+  border-radius: 999px;
+  background: #0755ce;
+  color: #fff;
+  font-size: 14px;
+  font-weight: 600;
+  text-decoration: none;
+  box-shadow: 0 6px 20px #0755ce33;
+}
+.quick-study:hover { background: #0646aa; color: #fff; }
+.quick-study:focus-visible { outline: 3px solid #60a5fa; outline-offset: 4px; }
+.quick-study-icon { display: flex; }
+.quick-study-icon svg { width: 20px; height: 20px; }
+#app:has(.quick-study) { padding-bottom: 88px; }
+@media (max-width: 768px) {
+  .quick-study { right: 16px; bottom: max(16px, env(safe-area-inset-bottom)); }
+}
+/* Study controls: desktop card and mobile bottom sheet. */
+.question-nav.drawer { border: 1px solid #dce5f1; border-radius: 18px; padding: 20px; background: #fff; }
+.study-panel-heading { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 18px; }
+.study-panel-heading strong { display: block; font-size: 16px; color: #172b4d; }
+.study-panel-heading small { display: block; margin-top: 4px; color: #64748b; font-size: 12px; }
+.question-nav .settings-panel { border: 1px solid #e2e8f0; border-radius: 12px; padding: 12px; margin-bottom: 20px; background: #f8fafc; }
+.settings-panel summary { cursor: pointer; font-size: 14px; font-weight: 600; min-height: 24px; }
+.question-nav .settings-panel label { padding: 10px 8px; min-height: 44px; border: 0; background: transparent; }
+.settings-panel label small { display: block; color: #64748b; font-size: 11px; margin-top: 3px; }
+.settings-panel input { width: 18px; height: 18px; flex-shrink: 0; accent-color: #0755ce; }
+.question-nav .numbers { gap: 8px; }
+.question-nav .numbers button { min-width: 44px; min-height: 44px; }
+.question-nav #progress-label { margin: 6px 0 12px; font-size: 13px; }
+.question-nav progress { height: 6px; }
+@media (max-width: 991px) {
+  body.study-panel-open { overflow: hidden; }
+  .workspace { display: flex; flex-direction: column; }
+  .workspace > .question-panel { width: 100%; min-width: 0; }
+  .nav-toggle-btn {
+    position: static; order: -1; transform: none; align-self: flex-end;
+    width: auto; min-height: 44px; padding: 10px 14px; gap: 8px;
+    margin-bottom: 14px; border: 1px solid #d4e1f4; border-radius: 12px;
+    background: #eff6ff; color: #0755ce; font-size: 13px; font-weight: 600;
+    opacity: 1; box-shadow: none; z-index: auto;
+  }
+  .nav-toggle-btn:hover { background: #dbeafe; color: #0755ce; }
+  .nav-count { background: #fff; border-radius: 6px; padding: 2px 6px; font-size: 12px; }
+  .question-nav.drawer {
+    position: fixed; top: auto; left: 0; right: 0; bottom: 0;
+    width: 100%; height: auto; max-height: 82vh; max-height: 82dvh;
+    padding: 20px 20px max(20px, env(safe-area-inset-bottom));
+    border-radius: 22px 22px 0 0; overflow-y: auto; overscroll-behavior: contain;
+    transform: translateY(100%); visibility: hidden;
+    transition: transform .2s ease, visibility .2s;
+    box-shadow: 0 -8px 32px #0f172a26; z-index: 2000;
+  }
+  .question-nav.drawer.open { transform: translateY(0); visibility: visible; }
+  .study-panel-heading { position: sticky; top: -20px; background: #fff; padding: 12px 0; z-index: 2; }
+  .drawer-close-btn { position: static; min-width: 44px; min-height: 44px; border-radius: 50%; background: #f1f5f9; color: #334155; }
+}
+@media (min-width: 992px) {
+  .question-nav.drawer { position: sticky; top: 110px; max-height: calc(100vh - 130px); overflow-y: auto; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .question-nav.drawer, .nav-backdrop { transition: none; }
+}
+
+@media (max-width: 991px) {
+  .question-nav.drawer.open { transition: transform .2s ease; }
+}
