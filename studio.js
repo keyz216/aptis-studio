@@ -82,12 +82,35 @@ const Studio = (() => {
     const button=document.querySelector('#focus-study');
     if(button) { button.setAttribute('aria-pressed',String(document.body.classList.contains('focus-mode'))); button.textContent=document.body.classList.contains('focus-mode')?'Thoát tập trung':'Tập trung'; }
   };
+  const resetLesson = () => {
+    if(mockTestMode || !activeGroup)return;
+    const group=activeGroup,ids=new Set(group.questions.map(q=>q.id));
+    const shared=COURSES.some(other=>other.id!==group.id&&other.questions.some(q=>ids.has(q.id)));
+    const message=`Làm lại “${groupTitle(group)}”?\n\nXóa lựa chọn và kết quả kiểm tra của ${ids.size} câu trong bộ này.${shared?' Các câu trùng trong bộ khác cũng sẽ được đặt lại.':''}`;
+    if(!window.confirm(message))return;
+    const nextAnswers={...saved},nextReviews={...reviewedReading};
+    ids.forEach(id=>{delete nextAnswers[id];delete nextReviews[id]});
+    if(!write('aptis-answers',nextAnswers)){
+      toast('Không thể đặt lại bài trên trình duyệt này.','error');return;
+    }
+    if(!write('aptis-reading-reviews',nextReviews)){
+      write('aptis-answers',saved);
+      toast('Không thể xóa kết quả cũ. Hãy thử lại.','error');return;
+    }
+    saved=nextAnswers;practiceSaved=saved;reviewedReading=nextReviews;
+    try{sessionStorage.removeItem('aptis-order-'+group.id)}catch{}
+    activeGroup=null;
+    const target=`#lesson/${group.id}/0`;
+    if(location.hash===target)route();else location.hash=target;
+    toast('Đã làm mới bộ đề. Bạn có thể bắt đầu lại từ câu 1.','success');
+  };
   const bindPractice = () => {
     scale();
     const button=document.querySelector('#focus-study');
     if(button) { button.onclick=focus; button.setAttribute('aria-pressed',String(document.body.classList.contains('focus-mode'))); button.textContent=document.body.classList.contains('focus-mode')?'Thoát tập trung':'Tập trung'; }
     document.querySelector('#font-smaller')?.addEventListener('click',()=>scale(-1));
     document.querySelector('#font-larger')?.addEventListener('click',()=>scale(1));
+    document.querySelector('#reset-lesson')?.addEventListener('click',resetLesson);
   };
   const savedStatus = success => {
     const label=document.querySelector('#save-status');

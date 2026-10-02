@@ -134,6 +134,10 @@ progress::-moz-progress-bar { background:var(--accent,var(--primary-color)); bor
 #save-status.save-error { color:#d14a47; }
 .focus-button { min-height:32px; font-size:11px; padding:5px 10px; border:1px solid #dfe7f2; background:#fff; color:#526986; border-radius:8px; }
 .focus-button[aria-pressed="true"] { color:#2159d6; background:#edf3ff; }
+.study-tools { display:flex; align-items:center; flex-wrap:wrap; justify-content:flex-end; gap:8px; }
+.reset-lesson-button { display:inline-flex; align-items:center; gap:6px; min-height:36px; padding:6px 10px; border:1px solid #dfe7f2; border-radius:8px; background:#fff; color:#526986; font-size:11px; }
+.reset-lesson-button:hover { background:#fff5f2; border-color:#f1cec3; color:#ab4e37; }
+.reset-lesson-button span { font-size:16px; }
 .field { gap:10px; padding:16px; margin-bottom:12px; border-radius:12px; background:#f8fafc; border:1px solid #e6edf5; line-height:1.7; }
 .field select,.field input,.field textarea { margin-top:10px; min-height:46px; border:1px solid #d9e3f0; border-radius:9px; padding:10px 12px; font-size:16px; background:#fff; }
 .field textarea { min-height:150px; resize:vertical; line-height:1.7; }
