@@ -31,56 +31,26 @@ function route(){if(recorder?.state==='recording')recorder.stop();stream?.getTra
     practice()
 }else if(info[view])library(view);else home();window.scrollTo(0,0)}
 function home(){
+    const total=new Set(COURSES.flatMap(g=>g.questions.map(q=>q.id))).size,done=new Set(COURSES.flatMap(g=>g.questions.filter(answered).map(q=>q.id))).size;
     let last;try{last=localStorage.getItem('aptis-last')}catch{}
-    let continueHtml = '';
+    let continueCard = '';
     if(last && /^#lesson\/\d+\/\d+$/.test(last)) {
         const parts = last.split('/');
         const g = COURSES[Number(parts[1])];
         if(g) {
-            continueHtml = `<div style="margin-bottom: 32px; background: white; padding: 16px 24px; border-radius: 12px; border: 1px solid var(--border-color); display: flex; justify-content: space-between; align-items: center; box-shadow: var(--shadow-sm);">
+            const gDone = g.questions.filter(answered).length;
+            const pct = Math.round(gDone / g.questions.length * 100);
+            continueCard = `<div class="continue-card">
                 <div>
-                    <span style="font-size: 13px; color: var(--text-muted); text-transform: uppercase; font-weight: bold; letter-spacing: 0.5px;">Tiếp tục học</span>
-                    <h3 style="margin: 4px 0 0; font-size: 16px;">${esc(groupTitle(g))}</h3>
+                    <div style="font-size: 12px; text-transform: uppercase; letter-spacing: 1px; color: #94a3b8; margin-bottom: 4px;">Tiếp tục bài đang học</div>
+                    <h3 style="margin: 0; font-size: 20px;">${esc(groupTitle(g))}</h3>
+                    <div class="progress-track"><div class="progress-fill" style="width: ${pct}%"></div></div>
                 </div>
-                <a href="${last}" class="primary" style="padding: 8px 16px; font-size: 14px; border-radius: 20px;">Học tiếp →</a>
+                <a href="${last}" class="primary" style="background: #38bdf8; border-color: #38bdf8; color: #0f172a;">Học tiếp →</a>
             </div>`;
         }
     }
-    
-    app.innerHTML=`
-    <div style="max-width: 700px; margin: 40px auto; padding: 0 24px;" class="animated-content">
-        <h1 style="font-size: 28px; margin-bottom: 8px; color: var(--text-main);">Góc học tập</h1>
-        <p style="color: var(--text-muted); margin-bottom: 32px; font-size: 15px;">Chọn một kỹ năng bên dưới để bắt đầu luyện tập.</p>
-        
-        ${continueHtml}
-        
-        <div style="display: flex; flex-direction: column; gap: 12px;">
-            ${Object.entries(info).map(([k,v])=>{
-                const groups=COURSES.filter(g=>g.skill===k);
-                return \`<a href="#${k}" style="display: flex; align-items: center; padding: 16px 20px; background: white; border: 1px solid var(--border-color); border-radius: 12px; text-decoration: none; color: var(--text-main); transition: all 0.2s; box-shadow: var(--shadow-sm);" onmouseover="this.style.borderColor='var(--primary-color)'; this.style.transform='translateY(-2px)';" onmouseout="this.style.borderColor='var(--border-color)'; this.style.transform='translateY(0)';">
-                    <div style="width: 44px; height: 44px; border-radius: 10px; background: ${v.tint}; color: ${v.color}; display: flex; align-items: center; justify-content: center; margin-right: 20px; font-size: 22px;">
-                        ${svg(k)}
-                    </div>
-                    <div style="flex: 1;">
-                        <h3 style="margin: 0 0 2px; font-size: 16px;">${v.name}</h3>
-                        <div style="color: var(--text-muted); font-size: 13px;">${groups.length} bộ bài luyện tập</div>
-                    </div>
-                    <div style="color: var(--primary-color); font-weight: 500; font-size: 14px;">Bắt đầu →</div>
-                </a>\`;
-            }).join('')}
-            
-            <a href="#mocktest" style="display: flex; align-items: center; padding: 16px 20px; background: #fff1f0; border: 1px solid #ffa39e; border-radius: 12px; text-decoration: none; color: #cf1322; transition: all 0.2s; margin-top: 16px;" onmouseover="this.style.transform='translateY(-2px)';" onmouseout="this.style.transform='translateY(0)';">
-                <div style="width: 44px; height: 44px; border-radius: 10px; background: #ff4d4f; color: white; display: flex; align-items: center; justify-content: center; margin-right: 20px; font-size: 22px;">
-                    ${svg('reading')}
-                </div>
-                <div style="flex: 1;">
-                    <h3 style="margin: 0 0 2px; font-size: 16px;">Thi thử Aptis</h3>
-                    <div style="color: #cf1322; opacity: 0.8; font-size: 13px;">Làm bài thi mô phỏng 5 kỹ năng</div>
-                </div>
-                <div style="font-weight: 600; font-size: 14px;">Vào thi →</div>
-            </a>
-        </div>
-    </div>`;
+    app.innerHTML=`<div class="welcome"><div><div class="eyebrow">YOUR LEARNING SPACE</div><h1>Hôm nay, mình học gì?</h1><div class="muted">Dành một chút thời gian để tiếng Anh tiến bộ mỗi ngày.</div></div><span class="date-tag">${new Intl.DateTimeFormat('vi-VN',{day:'numeric',month:'long'}).format(new Date())}</span></div>${continueCard}<section class="banner"><div><div class="eyebrow">TỪNG BƯỚC CHINH PHỤC APTIS</div><h2>Một mục tiêu. Năm kỹ năng.<br>Bắt đầu từ bài tập hôm nay.</h2><p>Thư viện bài tập của bạn đã sẵn sàng.</p><a class="primary" href="${last&&/^#lesson\/\d+\/\d+$/.test(last)?last:'#reading'}">${last?'Tiếp tục học':'Bắt đầu luyện tập'} <span>↗</span></a></div><div class="book-art" aria-hidden="true"><div class="book back">ABC<br>↗</div><div class="book front">English<small>ONE STEP A DAY</small></div></div></section><div class="stats"><div class="stat"><span class="stat-icon">▤</span><div><strong style="font-size:24px;display:block;line-height:1;">${COURSES.length}</strong><small class="muted">Bộ bài luyện tập</small></div></div><div class="stat"><span class="stat-icon">◎</span><div><strong style="font-size:24px;display:block;line-height:1;">${total}</strong><small class="muted">Câu hỏi thư viện</small></div></div><div class="stat"><span class="stat-icon">✓</span><div><strong style="font-size:24px;display:block;line-height:1;">${done}</strong><small class="muted">Câu đã luyện tập</small></div></div></div><div class="section-head"><h2>Luyện tập theo kỹ năng</h2><span>Chọn kỹ năng bạn muốn cải thiện</span></div><div class="skills">${Object.entries(info).map(([k,v])=>{const groups=COURSES.filter(g=>g.skill===k);return \`<a class="skill-card" style="--accent:${v.color};--tint:${v.tint}" href="#${k}"><div class="card-top"><span class="tile-icon">${svg(k)}</span><span class="part-tag">${v.vi}</span></div><h3>${v.name}</h3><p>${v.desc}</p><div class="card-bottom"><span>${groups.length} bộ bài</span><b>Luyện tập ↗</b></div></a>\`}).join('')}<div class="skill-card note-card"><div class="eyebrow">A LITTLE, EVERY DAY</div><h3>“Practice makes<br>progress.”</h3><p>Không cần hoàn hảo.<br>Chỉ cần tốt hơn hôm qua một chút.</p></div></div>`
 }).join('')}<div class="skill-card note-card"><div class="eyebrow">A LITTLE, EVERY DAY</div><h3>“Practice makes<br>progress.”</h3><p>Không cần hoàn hảo.<br>Chỉ cần tốt hơn hôm qua một chút.</p></div></div>`}
 function library(skill){const meta=info[skill];app.innerHTML=`<a class="secondary" href="#" style="display:inline-flex; align-items:center; gap:6px; margin-bottom: 20px; font-size:14px; padding: 8px 16px;"><span>←</span> Quay lại Tổng quan</a><div class="eyebrow">THƯ VIỆN BÀI TẬP</div><h1>${meta.name}</h1><p class="muted">${meta.desc} Chọn một bộ bài để bắt đầu.</p><div class="toolbar"><input id="search" type="search" aria-label="Tìm bài tập" placeholder="Tìm theo tên bài, chủ đề hoặc phần thi…"></div><div id="lessons" class="lessons"></div>`;const render=()=>{const term=document.querySelector('#search').value.toLocaleLowerCase('vi');const groups=COURSES.filter(g=>g.skill===skill&&`${g.title} ${g.questions.map(q=>q.title+' '+q.stem).join(' ')}`.toLocaleLowerCase('vi').includes(term));document.querySelector('#lessons').innerHTML=groups.map(g=>{const title=groupTitle(g);return `<a class="lesson" href="#lesson/${g.id}/0"><small>${info[g.skill].vi} · ${g.questions.length} câu</small><h3>${esc(title)}</h3><p>${g.questions.filter(answered).length}/${g.questions.length} câu đã luyện tập <span style="float:right;color:var(--primary-color)">Mở bài →</span></p></a>`}).join('')||'<div class="empty">Không tìm thấy bài phù hợp. Thử một từ khóa khác.</div>'};document.querySelector('#search').addEventListener('input',render);render()}
 function groupTitle(g){if(g.skill==='writing')return (g.questions[0].title||`Đề ${g.title}`).replace(/ - Part \d+/,'');if(g.skill==='speaking')return `Speaking · Đề ${g.title.replace('Đề ','')}`;return g.title}
