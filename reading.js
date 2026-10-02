@@ -85,7 +85,7 @@ function showReadingReview(q) {
   }
   const order = q.review.ordered_sentences;
   document.querySelector('#feedback').innerHTML = `
-    <section class="reading-result" aria-label="Kết quả Reading">
+    <section class="reading-result" aria-label="Kết quả ${q.skill==='listening'?'Listening':'Reading'}">
       <div class="score-row"><div><div class="eyebrow">KẾT QUẢ KIỂM TRA</div>
         <h3>${result.correct === result.total ? 'Chính xác tất cả các ý!' : 'Cùng xem lại bài làm nhé.'}</h3></div>
         <strong class="reading-score">${result.correct}/${result.total}<small>ý đúng</small></strong></div>
