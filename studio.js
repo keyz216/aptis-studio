@@ -21,7 +21,7 @@ const Studio = (() => {
   const normalize = text => String(text || '').normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/đ/g,'d').replace(/Đ/g,'D').toLowerCase();
   const complete = question => {
     const answers=saved[question.id]||{},m=question.metadata||{};
-    if(question.review)return gradeReading(question,answers)?.unanswered===0;
+    if(question.review){const result=gradeReading(question,answers);return result?.unanswered===0&&!result.invalidOrder;}
     let required=1;
     if(question.type==='fill_in_blanks_mc'||question.type==='matching_headings')required=m.paragraphs?.length||1;
     else if(question.type==='sentence_ordering')required=(m.sentences?.length||2)-1;

@@ -13,7 +13,11 @@ function gradeReading(q, answers = {}) {
     return { key, expected: String(expected), actual, correct: actual === String(expected) };
   });
   return { rows, correct: rows.filter(row => row.correct).length,
-    total: rows.length, unanswered: rows.filter(row => !row.actual).length };
+    total: rows.length, unanswered: rows.filter(row => !row.actual).length,
+    invalidOrder: q.type === 'sentence_ordering' && (() => {
+      const values=rows.map(row=>row.actual).filter(Boolean);
+      return new Set(values).size!==values.length || values.some(value=>!rows.some(row=>row.expected===value));
+    })() };
 }
 
 let reviewedReading = {};
@@ -39,6 +43,10 @@ function showReadingReview(q) {
   clearReadingMarks();
   if (result.unanswered) {
     document.querySelector('#feedback').innerHTML = '<div class="notice">Hãy trả lời đầy đủ các ý rồi bấm “Kiểm tra bài” để xem đáp án và giải thích.</div>';
+    return;
+  }
+  if (result.invalidOrder) {
+    document.querySelector('#feedback').innerHTML = '<div class="notice">Có vị trí bị trùng hoặc không hợp lệ. Hãy dùng mỗi vị trí một lần rồi kiểm tra lại.</div>';
     return;
   }
   for (const row of result.rows) {
@@ -91,10 +99,10 @@ function showReadingReview(q) {
         <strong class="reading-score">${result.correct}/${result.total}<small>ý đúng</small></strong></div>
       ${result.unanswered ? `<p class="muted">${result.unanswered} ý chưa trả lời được tính là chưa đúng.</p>` : ''}
       ${order?.length ? `<div class="correct-order"><b>Thứ tự câu đúng</b>
-        ${q.metadata.sentences[0] ? `<p>${esc(plain(q.metadata.sentences[0]))}</p>` : ''}
-        <ol>${order.map(s => `<li>${esc(plain(s))}</li>`).join('')}</ol></div>` : ''}
+        ${q.metadata.sentences[0] ? `<p>${esc(plain(q.metadata.sentences[0]))}${translateAsyncHTML(q.metadata.sentences[0])}</p>` : ''}
+        <ol>${order.map(s => `<li>${esc(plain(s))}${translateAsyncHTML(s)}</li>`).join('')}</ol></div>` : ''}
       <div class="explanation"><h3>Giải thích đáp án</h3>
-        ${q.review.explanation || '<p>File đáp án của bài này không có phần giải thích.</p>'}</div>
+        ${q.review.explanation ? explanationHTML(q.review.explanation) : '<p>File đáp án của bài này không có phần giải thích.</p>'}</div>
     </section>`;
   saveReadingReview(q);
 }
@@ -107,10 +115,15 @@ function restoreReadingReview() {
 
 function finishReading() {
   const results = activeGroup.questions.map(q => ({ q, result: gradeReading(q, saved[q.id]) }));
+  const invalid=results.filter(item=>item.result?.invalidOrder);
+  if(invalid.length){
+    document.querySelector('#feedback').innerHTML='<div class="notice">Hãy sửa các vị trí trùng trước khi hoàn thành bộ bài: '+invalid.map(item=>`<a href="#lesson/${activeGroup.id}/${results.indexOf(item)}">Câu ${results.indexOf(item)+1}</a>`).join(', ')+'.</div>';
+    return;
+  }
   const graded = results.filter(item => item.result);
   const correct = graded.reduce((sum, item) => sum + item.result.correct, 0);
   const total = graded.reduce((sum, item) => sum + item.result.total, 0);
-  graded.forEach(item => saveReadingReview(item.q));
+  graded.filter(item=>!item.result.unanswered).forEach(item => saveReadingReview(item.q));
   showReadingReview(activeGroup.questions[qi]);
   document.querySelector('#feedback').insertAdjacentHTML('afterbegin', `
     <section class="reading-result reading-summary" aria-label="Tổng kết bộ bài">

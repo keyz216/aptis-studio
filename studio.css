@@ -283,3 +283,10 @@ audio { width:100%; margin:12px 0; }
 @media (prefers-reduced-motion:reduce) {
   *,*::before,*::after { animation:none!important; transition:none!important; scroll-behavior:auto!important; }
 }
+/* Keep the original question and its Vietnamese companion together. */
+.vi-translation{display:block;margin:8px 0 12px;padding:10px 12px;border-left:3px solid #96b8ef;border-radius:0 8px 8px 0;background:#f0f5fd;color:#43546d;font-size:.92em;font-weight:400;line-height:1.65;overflow-wrap:anywhere;white-space:pre-line;}
+.vi-label{display:block;margin-bottom:4px;color:#5678a8;font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;}
+.choice .vi-translation{margin:6px 0 0;padding:6px 10px;font-size:.9em;}
+.field>select{max-width:100%;min-width:0;text-overflow:ellipsis;}
+.speaker-name{margin-top:20px;font-weight:700;color:var(--text-main);}
+@media(max-width:600px){.vi-translation{padding:8px 10px;font-size:.9em;}.field>select{width:100%;}}

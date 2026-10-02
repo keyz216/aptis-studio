@@ -87,7 +87,7 @@ function library(skill){
     document.querySelectorAll('[data-filter]').forEach(button=>button.onclick=()=>setFilter(button.dataset.filter));
     document.querySelector('#search').oninput=render;document.querySelector('#lesson-sort').onchange=render;render();
 }
-function groupTitle(g){if(g.skill==='writing')return (g.questions[0].title||`Đề ${g.title}`).replace(/ - Part \d+/,'');if(g.skill==='speaking')return `Speaking · Đề ${g.title.replace('Đề ','')}`;return g.title}
+function groupTitle(g){if(g.skill==='reading'){const part=g.questions[0]?.part;return `Reading · Part ${part} — ${({1:'Điền từ',2:'Sắp xếp câu',3:'Ghép thông tin',4:'Ghép tiêu đề'})[part]||'Đọc hiểu'}`}if(g.skill==='writing')return (g.questions[0].title||`Đề ${g.title}`).replace(/ - Part \d+/,'');if(g.skill==='speaking')return `Speaking · Đề ${g.title.replace('Đề ','')}`;return g.title}
 
 // SAFE HTML RENDERING
 function renderHTML(s){
@@ -119,25 +119,22 @@ function renderHTML(s){
 function select(label,choices,key){
     let cList=choices.map((c,origI)=>({c,origI}));
     if(userSettings.shuffleOptions)cList=shuffleArray(cList);
-    return `<label class="field">${renderHTML(label)}<select data-key="${key}" aria-label="${esc(plain(label))}"><option value="">Chọn đáp án</option>${cList.map(({c,origI})=>{const val=typeof c==='object'?c.id??origI:c,text=typeof c==='object'?c.text??c.label??c.id:c;return `<option value="${esc(val)}">${esc(plain(text))}</option>`}).join('')}</select></label>`;
+    return `<label class="field">${renderHTML(label)}${translateAsyncHTML(label)}<select data-key="${key}" aria-label="${esc(plain(label))}"><option value="">Chọn đáp án</option>${cList.map(({c,origI})=>{const val=typeof c==='object'?c.id??origI:c,text=typeof c==='object'?c.text??c.label??c.id:c,vi=viCompanion(text);return `<option value="${esc(val)}">${esc(plain(text))}${vi?' — '+esc(vi):''}</option>`}).join('')}</select></label>`;
 }
 function translateAsyncHTML(text) {
-    if(!window.translateToVi || !text) return '';
-    let id = 'vi-' + Math.random().toString(36).substr(2, 9);
-    Promise.resolve(translateToVi(text)).then(vi => {
-        let el = document.getElementById(id);
-        if(el) {
-            if (vi) el.innerHTML = renderHTML(vi);
-            else el.style.display = 'none';
-        }
-    }).catch(()=>{});
-    return `<div id="${id}" class="vi-translation" style="color:var(--text-muted);font-size:14px;margin-top:6px;font-style:italic;"></div>`;
+    const vi=viCompanion(text);
+    return vi?`<span class="vi-translation" lang="vi"><span class="vi-label">Tiếng Việt</span>${esc(vi).replace(/\[BLANK\]/g,'_______')}</span>`:'';
 }
 function writing(label,key,limit,short=false){
     let labelHtml = renderHTML(label) + translateAsyncHTML(label);
     return `<label class="field">${labelHtml}${short?`<input data-key="${key}" placeholder="Nhập câu trả lời…">`:`<textarea data-key="${key}" placeholder="Viết câu trả lời của bạn…"></textarea>`}<span class="count">0 từ${limit?` · Gợi ý ${limit.min}–${limit.max} từ`:''}</span></label>`;
 }
-function passage(s){return `<div class="passage">${renderHTML(s)}</div>`}
+function passage(s){return `<div class="passage">${renderHTML(s)}${translateAsyncHTML(s)}</div>`}
+function explanationHTML(s){
+    // Source explanations already pair English examples with Vietnamese prose.
+    // Retain these translations; add a companion for explanations in English.
+    return renderHTML(s)+(/[À-ỹĐđ]/.test(plain(s))?'':translateAsyncHTML(s));
+}
 function reference(s){return s?`<details class="reference-details"><summary>Xem nội dung tham khảo</summary>${passage(s)}</details>`:''}
 
 function readingInstructions(q){
@@ -173,16 +170,17 @@ function questionBody(q){
             return `<audio controls preload="none" ${fallbackAttr} src="${esc(initial)}"></audio>`;
         }).join(''):'<div class="notice">Chưa có file audio cho bài này.</div>';
     }
-    if(m.instructions&&q.skill!=='reading'){out+=passage(m.instructions);out+=translateAsyncHTML(m.instructions);}
-    if(m.instruction&&q.skill!=='reading'){out+=passage(m.instruction);out+=translateAsyncHTML(m.instruction);}
+    if(m.instructions&&q.skill!=='reading')out+=passage(m.instructions);
+    if(m.instruction&&q.skill!=='reading')out+=passage(m.instruction);
+    if(m.context)out+=passage(m.context);
     
     if(q.type==='fill_in_blanks_mc')out+=m.paragraphs.map((p,i)=>select(`${i+1}. ${p}`,m.choices[i],`a${i}`)).join('');
-    else if(q.type==='sentence_ordering'){if(m.sentences[0])out+=`<div class="passage"><b>Câu mở đầu (cố định)</b><br>${esc(plain(m.sentences[0]))}</div>`;const rows=m.sentences.slice(1);out+=rows.map((s,i)=>select(s,rows.map((_,j)=>j+1),readingAnswerKey(q,i))).join('');}
+    else if(q.type==='sentence_ordering'){if(m.sentences[0])out+=`<div class="passage"><b>Câu mở đầu (cố định)</b><br>${esc(plain(m.sentences[0]))}${translateAsyncHTML(m.sentences[0])}</div>`;const rows=m.sentences.slice(1);out+=rows.map((s,i)=>select(s,rows.map((_,j)=>j+1),readingAnswerKey(q,i))).join('');}
     else if(q.type==='matching_headings')out+=m.paragraphs.map((p,i)=>passage(p)+select(`Tiêu đề đoạn ${i+1}`,m.headings,`a${i}`)).join('');
-    else if(q.type==='text_question_match'){out+=m.options.map((p,i)=>passage(`${m.names[i]}\n${p}`)).join('');out+=m.questions.map((s,i)=>select(s,m.names,`a${i}`)).join('');}
+    else if(q.type==='text_question_match'){out+=m.options.map((p,i)=>`<div class="speaker-name">${esc(m.names[i])}</div>`+passage(p)).join('');out+=m.questions.map((s,i)=>select(s,m.names,`a${i}`)).join('');}
     else if(m.pairs)out+=m.pairs.map((p,i)=>select(`${p.prompt||p.prefix||''} ${p.after||p.suffix||''}`,m.dropdown_pool||[],`a${i}`)).join('');
     else if(m.fields)out+=m.fields.map((f,i)=>writing(f.label,`a${i}`,null,true)).join('');
-    else if(m.email){out+=passage([m.email.greeting,m.email.body,m.email.sign_off].join('\n\n'));out+=[m.task1,m.task2].filter(Boolean).map((t,i)=>writing(t.instruction,`a${i}`,t.word_limit)+reference(t.sample_answer || (window.generateSampleAnswer ? generateSampleAnswer(q.skill, q.part, i) : ''))).join('');}
+    else if(m.email){out+=[m.email.greeting,m.email.body,m.email.sign_off].filter(Boolean).map(passage).join('');out+=[m.task1,m.task2].filter(Boolean).map((t,i)=>writing(t.instruction,`a${i}`,t.word_limit)+reference(t.sample_answer || (window.generateSampleAnswer ? generateSampleAnswer(q.skill, q.part, i) : ''))).join('');}
     else if(m.scenario)out+=writing(m.scenario,'a0',m.word_limit);
     else if(m.statements)out+=m.statements.map((s,i)=>select(s,m.shared_choices||[],`a${i}`)).join('');
     else if(m.items)out+=m.items.map((s,i)=>select(s,m.choices||[],`a${i}`)).join('');
@@ -194,7 +192,7 @@ function questionBody(q){
         out+=cList.map(({c,origI},i)=>{
             const value=typeof c==='object'?c.id??origI:c;
             const text=typeof c==='object'?c.text:c;
-            return `<label class="choice"><input type="radio" name="answer" data-key="a0" value="${esc(value)}"><span>${String.fromCharCode(65+i)}. ${renderHTML(text)}</span></label>`;
+            return `<label class="choice"><input type="radio" name="answer" data-key="a0" value="${esc(value)}"><span>${String.fromCharCode(65+i)}. ${renderHTML(text)}${translateAsyncHTML(text)}</span></label>`;
         }).join('');
     }
     else out+=writing('Câu trả lời của bạn','a0');
@@ -203,21 +201,21 @@ function questionBody(q){
     
     let tips='';
     if(q.skill==='speaking'){
-        if(q.part===1) tips='<b>Part 1:</b> Trả lời trực tiếp trọng tâm (1 câu) và mở rộng 1-2 câu giải thích hoặc ví dụ. Đừng nói quá dài.<br><br><b>Form chung:</b> <i>"I really enjoy... because it helps me... For example..."</i>';
-        else if(q.part===2) tips='<b>Part 2:</b> Bắt đầu bằng 1 câu miêu tả tổng quan bức tranh. Sau đó nói chi tiết và kết thúc bằng việc đoán cảm xúc.<br><br><b>Form chung:</b> <i>"In the picture, I can see... They look... I think they are..."</i>';
-        else if(q.part===3) tips='<b>Part 3:</b> Tập trung vào sự so sánh thay vì chỉ miêu tả đơn thuần. Dùng từ nối: However, On the other hand.<br><br><b>Form chung:</b> <i>"Both pictures show... However, in the first picture... while in the second..."</i>';
-        else if(q.part===4) tips='<b>Part 4:</b> Dành 1 phút chuẩn bị để gạch đầu dòng 3 ý chính. Trả lời có mở bài, thân bài (Point - Reason - Example) và kết luận rõ ràng.<br><br><b>Form chung:</b> <i>"I would like to talk about... First of all... Secondly... Finally..."</i>';
+        if(q.part===1) tips='<b>Part 1:</b> Trả lời trực tiếp trọng tâm (1 câu) và mở rộng 1-2 câu giải thích hoặc ví dụ. Đừng nói quá dài.<br><br><b>Form chung:</b> <i>"I really enjoy... because it helps me... For example..."<br>Tôi rất thích... vì điều đó giúp tôi... Ví dụ...</i>';
+        else if(q.part===2) tips='<b>Part 2:</b> Bắt đầu bằng 1 câu miêu tả tổng quan bức tranh. Sau đó nói chi tiết và kết thúc bằng việc đoán cảm xúc.<br><br><b>Form chung:</b> <i>"In the picture, I can see... They look... I think they are..."<br>Trong ảnh, tôi thấy... Họ trông... Tôi nghĩ họ đang...</i>';
+        else if(q.part===3) tips='<b>Part 3:</b> Tập trung vào sự so sánh thay vì chỉ miêu tả đơn thuần. Dùng từ nối: However (tuy nhiên), On the other hand (mặt khác).<br><br><b>Form chung:</b> <i>"Both pictures show... However, in the first picture... while in the second..."<br>Cả hai ảnh đều thể hiện... Tuy nhiên, ở ảnh thứ nhất... trong khi ở ảnh thứ hai...</i>';
+        else if(q.part===4) tips='<b>Part 4:</b> Dành 1 phút chuẩn bị để gạch đầu dòng 3 ý chính. Trả lời có mở bài, thân bài (Point - Reason - Example (ý chính - lý do - ví dụ)) và kết luận rõ ràng.<br><br><b>Form chung:</b> <i>"I would like to talk about... First of all... Secondly... Finally..."<br>Tôi muốn nói về... Trước hết... Thứ hai... Cuối cùng...</i>';
     } else if(q.skill==='writing'){
-        if(q.part===1) tips='<b>Part 1 (Điền từ):</b> Chỉ viết ngắn gọn 1-5 từ. Rất cẩn thận lỗi chính tả và viết hoa đúng chữ.<br><br><b>Form chung:</b> <i>Trả lời trực tiếp (vd: "twice a week", "pop music").</i>';
-        else if(q.part===2) tips='<b>Part 2 (Viết câu):</b> Viết đúng số từ yêu cầu (20-30 từ). Dùng 1-2 liên từ cơ bản (because, so, but) để câu có chiều sâu.<br><br><b>Form chung:</b> <i>"I am very interested in... because I want to..."</i>';
-        else if(q.part===3) tips='<b>Part 3 (Mạng xã hội):</b> Trả lời đủ 3 câu hỏi. Dùng giọng văn thân mật. Nên tỏ thái độ đồng tình hoặc hào hứng.<br><br><b>Form chung:</b> <i>"I completely agree with you. It is a great idea because..."</i>';
-        else if(q.part===4) tips='<b>Part 4 (Viết Email):</b> Cần thể hiện rõ 2 sắc thái. Email 1 (cho bạn): Thân mật (Hi, How are you). Email 2 (cho quản lý): Trang trọng (Dear Sir/Madam, I am writing to...).';
+        if(q.part===1) tips='<b>Part 1 (Điền từ):</b> Chỉ viết ngắn gọn 1-5 từ. Rất cẩn thận lỗi chính tả và viết hoa đúng chữ.<br><br><b>Form chung:</b> <i>Trả lời trực tiếp (vd: "twice a week" (hai lần mỗi tuần), "pop music" (nhạc pop)).</i>';
+        else if(q.part===2) tips='<b>Part 2 (Viết câu):</b> Viết đúng số từ yêu cầu (20-30 từ). Dùng 1-2 liên từ cơ bản (because: bởi vì; so: vì vậy; but: nhưng) để câu có chiều sâu.<br><br><b>Form chung:</b> <i>"I am very interested in... because I want to..."<br>Tôi rất quan tâm đến... vì tôi muốn...</i>';
+        else if(q.part===3) tips='<b>Part 3 (Mạng xã hội):</b> Trả lời đủ 3 câu hỏi. Dùng giọng văn thân mật. Nên tỏ thái độ đồng tình hoặc hào hứng.<br><br><b>Form chung:</b> <i>"I completely agree with you. It is a great idea because..."<br>Tôi hoàn toàn đồng ý với bạn. Đó là một ý tưởng hay vì...</i>';
+        else if(q.part===4) tips='<b>Part 4 (Viết Email):</b> Cần thể hiện rõ 2 sắc thái. Email 1 (cho bạn): Thân mật (Hi: chào bạn; How are you: bạn có khỏe không?). Email 2 (cho quản lý): Trang trọng (Dear Sir/Madam: kính gửi ông/bà; I am writing to...: tôi viết thư để...).';
     }
     if(tips) out+=`<div class="tips-panel"><h3>💡 Mẹo trả lời ăn điểm & Form chung</h3><p>${tips}</p></div>`;
     
     let generatedSample = window.generateSampleAnswer ? generateSampleAnswer(q.skill, q.part) : '';
     let sampleHtml = m.sample_answer || generatedSample;
-    out+=reference(m.description)+reference((m.descriptions||[]).join('\n\n'))+reference(sampleHtml);
+    out+=reference(m.description)+(m.descriptions||[]).map(reference).join('')+reference(sampleHtml);
     return out;
 }
 
@@ -442,7 +440,7 @@ function checkAllMock(){
 
 function revealAnswers(q){
     if(!answered(q)) return;
-    if(q.review && (gradeReading(q, saved[q.id]).unanswered || reviewedReading[q.id] !== JSON.stringify(saved[q.id] || {}))) return;
+    if(q.review && (gradeReading(q, saved[q.id]).unanswered || gradeReading(q, saved[q.id]).invalidOrder || reviewedReading[q.id] !== JSON.stringify(saved[q.id] || {}))) return;
     const m=q.metadata||{};
     let answers=q.review?.answers;
     if(!answers){
@@ -452,7 +450,7 @@ function revealAnswers(q){
             answers=[option?.text??key];
         }
     }
-    document.querySelector('#feedback').innerHTML=answers?`<div class="notice"><b>Đáp án để học</b><ol>${answers.map(a=>`<li>${esc(a)}</li>`).join('')}</ol>${q.review?.explanation?`<div class="explanation">${renderHTML(q.review.explanation)}</div>`:''}<p>Phần này không thay đổi câu trả lời của bạn.</p></div>`:'<div class="notice">Bài này chưa có đáp án để hiển thị.</div>';
+    document.querySelector('#feedback').innerHTML=answers?`<div class="notice"><b>Đáp án để học</b><ol>${answers.map(a=>`<li>${esc(a)}${translateAsyncHTML(a)}</li>`).join('')}</ol>${q.review?.explanation?`<div class="explanation">${explanationHTML(q.review.explanation)}</div>`:''}<p>Phần này không thay đổi câu trả lời của bạn.</p></div>`:'<div class="notice">Bài này chưa có đáp án để hiển thị.</div>';
     document.querySelectorAll('details.reference-details').forEach(d=>d.open=true);
 }
 
@@ -472,7 +470,7 @@ function practice(){
         navHTML += `<button data-jump="${i}" class="${i===qi?'active':Studio.complete(x)?'done':answered(x)?'partial':''}" ${i===qi?'aria-current="step"':''} aria-label="Đến câu ${i+1}, ${Studio.complete(x)?'đã làm đủ':answered(x)?'đang làm':'chưa làm'}">${i+1}</button>`;
     });
 
-    app.innerHTML=`<div class="practice-top" ${mockTestMode?'style="background: #fff1f0; border-bottom: 1px solid #ffa39e;"':''}><div>${mockTestMode ? `<div class="eyebrow" style="color:#cf1322; font-weight:bold;"><span style="display:inline-block;background:#ff4d4f;color:white;padding:2px 6px;border-radius:4px;margin-right:6px;">THI THỬ</span> PART ${q.part||1}</div>` : `<div class="eyebrow">${(info[q.skill]?.name||'THI THỬ').toUpperCase()} · PART ${q.part||1}</div>`}<h1 ${mockTestMode?'style="color:#cf1322;"':''}>${esc(groupTitle(activeGroup))}</h1></div><a class="secondary" href="${mockTestMode?'#':'#'+q.skill}" style="display:inline-flex; align-items:center; gap:6px; font-size:14px; padding: 8px 16px; ${mockTestMode?'color:#cf1322;border-color:#ffa39e;background:white;':''}"><span>←</span> ${mockTestMode?'Thoát thi thử':'Quay lại'}</a></div><div class="workspace"><section class="question-panel"><div style="display:flex;justify-content:space-between;align-items:center"><span class="muted" style="display:flex;align-items:center;gap:12px;">Câu ${qi+1} / ${activeGroup.questions.length} <div class="font-controls"><button id="font-smaller" aria-label="Thu nhỏ chữ">A−</button><span id="font-scale">100%</span><button id="font-larger" aria-label="Phóng to chữ">A+</button></div></span>${mockTestMode?`<strong id="mock-timer" style="color:#cf1322;font-variant-numeric:tabular-nums;font-size:24px;font-weight:900;">${Math.floor(mockTimeLeft/60).toString().padStart(2,'0')}:${(mockTimeLeft%60).toString().padStart(2,'0')}</strong>`:''}</div><div class="study-toolbar"><span id="save-status" role="status">${mockTestMode?'Trong phiên thi':'Đã lưu'}</span><div class="study-tools">${mockTestMode?'':'<button id="reset-lesson" class="reset-lesson-button" title="Xóa lựa chọn và kết quả cũ của bộ đề này"><span aria-hidden="true">↻</span> Làm lại đề</button>'}<button id="focus-study" class="focus-button" aria-pressed="false">Tập trung</button></div></div><div id="q-anim" class="animated-content"><h2>${renderHTML(q.title||q.stem)}</h2>${q.title&&(q.skill==='reading'||q.stem!==q.title)?`<p class="question-instruction">${renderHTML(q.skill==='reading'?readingInstructions(q):q.stem)}</p>`:''}${q.skill==='reading'?'':translateAsyncHTML(q.stem)}<div id="question-body">${questionBody(q)}</div></div><div id="feedback" aria-live="polite"></div><div class="question-actions"><button id="prev" class="secondary" ${qi===0?'disabled':''}>Câu trước</button>${mockTestMode?(qi===activeGroup.questions.length-1 ? `<button id="next-mock-section" class="primary" style="background:#1890ff;border-color:#1890ff;color:white;">Phần tiếp theo</button>` : `<button id="next" class="primary">Câu tiếp theo</button>`) : `<button id="check" class="secondary">Kiểm tra bài</button><button id="next" class="primary">${qi===activeGroup.questions.length-1?'Hoàn thành':'Câu tiếp theo'}</button>`}</div></section><button class="nav-toggle-btn" id="q-nav-toggle" aria-controls="q-nav-drawer" aria-expanded="false"><span aria-hidden="true">☷</span> Tùy chỉnh & tiến độ <span class="nav-count">${qi+1}/${activeGroup.questions.length}</span></button><div class="nav-backdrop" id="q-nav-backdrop"></div><aside class="question-nav drawer" id="q-nav-drawer" aria-labelledby="study-panel-title"><div class="study-panel-heading"><div><strong id="study-panel-title">Bảng luyện tập</strong><small>Tùy chỉnh và chuyển câu nhanh</small></div><button class="drawer-close-btn" id="q-nav-close" aria-label="Đóng bảng luyện tập">✕</button></div>${mockTestMode?'':`<details class="settings-panel"><summary>Tùy chỉnh bài tập</summary><label style="display:flex;align-items:center;gap:8px;margin-top:12px;font-size:14px;cursor:pointer"><input type="checkbox" id="set-sq" ${userSettings.shuffleQuestions?'checked':''}> <span>Trộn câu<small>Áp dụng khi mở lại bộ bài</small></span></label><label style="display:flex;align-items:center;gap:8px;margin-top:12px;font-size:14px;cursor:pointer"><input type="checkbox" id="set-so" ${userSettings.shuffleOptions?'checked':''}> Đảo đáp án</label><label style="display:flex;align-items:center;gap:8px;margin-top:12px;font-size:14px;cursor:pointer"><input type="checkbox" id="set-mm" ${userSettings.memorizationMode?'checked':''}> <span>Học thuộc lòng<small>Ôn đáp án sau khi làm và kiểm tra bài</small></span></label></details>`}<b style="font-size:14px; color:var(--text-main); display:block; margin-bottom:10px;">${mockTestMode?'Tiến độ làm bài thi':'Tiến độ luyện tập'}</b><p class="muted" id="progress-label"></p><progress id="progress" max="${activeGroup.questions.length}"></progress><div class="nav-legend"><span>○ Chưa làm</span><span>◐ Đang làm</span><span>● Đã làm đủ</span></div><div class="numbers">${navHTML}</div>${mockTestMode ? `<button id="submit-mock-side" class="primary" style="width:100%;justify-content:center;margin-top:20px;background:#ff4d4f;border-color:#ff4d4f;color:white;padding:12px;font-size:16px;">Nộp bài thi</button>` : ''}<p class="muted" style="margin-top:16px;font-size:12px">Câu trả lời tự động lưu trên trình duyệt này.</p></aside></div>`;
+    app.innerHTML=`<div class="practice-top" ${mockTestMode?'style="background: #fff1f0; border-bottom: 1px solid #ffa39e;"':''}><div>${mockTestMode ? `<div class="eyebrow" style="color:#cf1322; font-weight:bold;"><span style="display:inline-block;background:#ff4d4f;color:white;padding:2px 6px;border-radius:4px;margin-right:6px;">THI THỬ</span> PART ${q.part||1}</div>` : `<div class="eyebrow">${(info[q.skill]?.name||'THI THỬ').toUpperCase()} · PART ${q.part||1}</div>`}<h1 ${mockTestMode?'style="color:#cf1322;"':''}>${esc(groupTitle(activeGroup))}</h1></div><a class="secondary" href="${mockTestMode?'#':'#'+q.skill}" style="display:inline-flex; align-items:center; gap:6px; font-size:14px; padding: 8px 16px; ${mockTestMode?'color:#cf1322;border-color:#ffa39e;background:white;':''}"><span>←</span> ${mockTestMode?'Thoát thi thử':'Quay lại'}</a></div><div class="workspace"><section class="question-panel"><div style="display:flex;justify-content:space-between;align-items:center"><span class="muted" style="display:flex;align-items:center;gap:12px;">Câu ${qi+1} / ${activeGroup.questions.length} <div class="font-controls"><button id="font-smaller" aria-label="Thu nhỏ chữ">A−</button><span id="font-scale">100%</span><button id="font-larger" aria-label="Phóng to chữ">A+</button></div></span>${mockTestMode?`<strong id="mock-timer" style="color:#cf1322;font-variant-numeric:tabular-nums;font-size:24px;font-weight:900;">${Math.floor(mockTimeLeft/60).toString().padStart(2,'0')}:${(mockTimeLeft%60).toString().padStart(2,'0')}</strong>`:''}</div><div class="study-toolbar"><span id="save-status" role="status">${mockTestMode?'Trong phiên thi':'Đã lưu'}</span><div class="study-tools">${mockTestMode?'':'<button id="reset-lesson" class="reset-lesson-button" title="Xóa lựa chọn và kết quả cũ của bộ đề này"><span aria-hidden="true">↻</span> Làm lại đề</button>'}<button id="focus-study" class="focus-button" aria-pressed="false">Tập trung</button></div></div><div id="q-anim" class="animated-content"><h2>${renderHTML(q.title||q.stem)}</h2>${translateAsyncHTML(q.title||q.stem)}${q.title&&(q.skill==='reading'||q.stem!==q.title)?`<p class="question-instruction">${renderHTML(q.skill==='reading'?readingInstructions(q):q.stem)}</p>`:''}${q.title&&q.stem!==q.title&&q.skill!=='reading'?translateAsyncHTML(q.stem):''}<div id="question-body">${questionBody(q)}</div></div><div id="feedback" aria-live="polite"></div><div class="question-actions"><button id="prev" class="secondary" ${qi===0?'disabled':''}>Câu trước</button>${mockTestMode?(qi===activeGroup.questions.length-1 ? `<button id="next-mock-section" class="primary" style="background:#1890ff;border-color:#1890ff;color:white;">Phần tiếp theo</button>` : `<button id="next" class="primary">Câu tiếp theo</button>`) : `<button id="check" class="secondary">Kiểm tra bài</button><button id="next" class="primary">${qi===activeGroup.questions.length-1?'Hoàn thành':'Câu tiếp theo'}</button>`}</div></section><button class="nav-toggle-btn" id="q-nav-toggle" aria-controls="q-nav-drawer" aria-expanded="false"><span aria-hidden="true">☷</span> Tùy chỉnh & tiến độ <span class="nav-count">${qi+1}/${activeGroup.questions.length}</span></button><div class="nav-backdrop" id="q-nav-backdrop"></div><aside class="question-nav drawer" id="q-nav-drawer" aria-labelledby="study-panel-title"><div class="study-panel-heading"><div><strong id="study-panel-title">Bảng luyện tập</strong><small>Tùy chỉnh và chuyển câu nhanh</small></div><button class="drawer-close-btn" id="q-nav-close" aria-label="Đóng bảng luyện tập">✕</button></div>${mockTestMode?'':`<details class="settings-panel"><summary>Tùy chỉnh bài tập</summary><label style="display:flex;align-items:center;gap:8px;margin-top:12px;font-size:14px;cursor:pointer"><input type="checkbox" id="set-sq" ${userSettings.shuffleQuestions?'checked':''}> <span>Trộn câu<small>Áp dụng khi mở lại bộ bài</small></span></label><label style="display:flex;align-items:center;gap:8px;margin-top:12px;font-size:14px;cursor:pointer"><input type="checkbox" id="set-so" ${userSettings.shuffleOptions?'checked':''}> Đảo đáp án</label><label style="display:flex;align-items:center;gap:8px;margin-top:12px;font-size:14px;cursor:pointer"><input type="checkbox" id="set-mm" ${userSettings.memorizationMode?'checked':''}> <span>Học thuộc lòng<small>Ôn đáp án sau khi làm và kiểm tra bài</small></span></label></details>`}<b style="font-size:14px; color:var(--text-main); display:block; margin-bottom:10px;">${mockTestMode?'Tiến độ làm bài thi':'Tiến độ luyện tập'}</b><p class="muted" id="progress-label"></p><progress id="progress" max="${activeGroup.questions.length}"></progress><div class="nav-legend"><span>○ Chưa làm</span><span>◐ Đang làm</span><span>● Đã làm đủ</span></div><div class="numbers">${navHTML}</div>${mockTestMode ? `<button id="submit-mock-side" class="primary" style="width:100%;justify-content:center;margin-top:20px;background:#ff4d4f;border-color:#ff4d4f;color:white;padding:12px;font-size:16px;">Nộp bài thi</button>` : ''}<p class="muted" style="margin-top:16px;font-size:12px">Câu trả lời tự động lưu trên trình duyệt này.</p></aside></div>`;
     document.querySelectorAll('[data-key]').forEach(el=>{
         const value=saved[q.id]?.[el.dataset.key];
         if(el.type==='radio')el.checked=value===el.value;else el.value=value||'';
