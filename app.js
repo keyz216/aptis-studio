@@ -14,7 +14,7 @@ const app=document.querySelector('#app');
 function persist(){if(mockTestMode)return true;try{localStorage.setItem('aptis-answers',JSON.stringify(saved));return true}catch{toast('Trình duyệt không lưu được dữ liệu.');return false}}
 function toast(s){const t=document.querySelector('#toast');t.textContent=s;t.style.display='block';clearTimeout(timer);timer=setTimeout(()=>t.style.display='none',4200)}
 function answered(q){return Object.values(saved[q.id]||{}).some(x=>String(x).trim())}
-function route(){if(recorder?.state==='recording')recorder.stop();stream?.getTracks().forEach(t=>t.stop());objectUrls.forEach(URL.revokeObjectURL);objectUrls=[];clearInterval(mockTimer);const [view,id,n]=location.hash.slice(1).split('/');if(mockTestMode){saved=practiceSaved;mockTestMode=false;}if(view!=='lesson')activeGroup=null;const skill=view==='lesson'?COURSES[Number(id)]?.skill:view;document.querySelector('#nav').innerHTML=`<a href="#" class="${!view?'active':''}">${svg('home')}Tổng quan</a><a href="#mocktest" class="${view==='mocktest'?'active':''}">${svg('reading')}Thi thử Aptis</a>`+Object.entries(info).map(([k,v])=>`<a href="#${k}" class="${skill===k?'active':''}">${svg(k)}${v.name}</a>`).join('');document.querySelector('#breadcrumb').textContent='Góc học tập / '+(view==='mocktest'?'Thi thử Aptis':info[skill]?.name||'Tổng quan');if(view==='mocktest')mockTestStart();else if(view==='lesson'&&COURSES[Number(id)]){
+function route(){if(recorder?.state==='recording')recorder.stop();stream?.getTracks().forEach(t=>t.stop());objectUrls.forEach(URL.revokeObjectURL);objectUrls=[];const [view,id,n]=location.hash.slice(1).split('/');if(mockTestMode&&view!=='mocktest'){clearInterval(mockTimer);mockTimer=null;saved=practiceSaved;mockTestMode=false;mockSections=[];mockCurrentSection=0;}if(view!=='lesson')activeGroup=null;const skill=view==='lesson'?COURSES[Number(id)]?.skill:view;document.querySelector('#nav').innerHTML=`<a href="#" class="${!view?'active':''}">${svg('home')}Tổng quan</a><a href="#mocktest" class="${view==='mocktest'?'active':''}">${svg('reading')}Thi thử Aptis</a>`+Object.entries(info).map(([k,v])=>`<a href="#${k}" class="${skill===k?'active':''}">${svg(k)}${v.name}</a>`).join('');document.querySelector('#breadcrumb').textContent='Góc học tập / '+(view==='mocktest'?'Thi thử Aptis':info[skill]?.name||'Tổng quan');if(view==='mocktest')mockTestStart();else if(view==='lesson'&&COURSES[Number(id)]){
     mockTestMode=false;
     if(activeGroup?.id !== COURSES[Number(id)].id) {
         activeGroup={...COURSES[Number(id)]};
@@ -157,21 +157,32 @@ function questionBody(q){
 }
 
 function mockTestStart(){
-    practiceSaved=saved;saved={};mockTestMode=true;mockSubmitted=false;clearInterval(mockTimer);
-    mockSections = [];
-    ['grammar','listening','reading','writing','speaking'].forEach(sk=>{
-        const pools=COURSES.filter(g=>g.skill===sk);
-        if(pools.length){
-            const p=pools[Math.floor(Math.random()*pools.length)];
-            const parts = Array.from(new Set(p.questions.map(q=>q.part||1))).sort((a,b)=>a-b);
-            let qs = [];
-            parts.forEach(pt => {
-                let partQs = p.questions.filter(q=>(q.part||1)===pt);
-                qs.push(...shuffleArray(partQs));
-            });
-            mockSections.push({skill:sk, label:info[sk].name, questions:qs, parts:parts, sourceId: p.id});
-        }
+    if(mockSections.length === 0) {
+        // First entry: save practice answers, create new mock test
+        practiceSaved=saved;saved={};mockSubmitted=false;
+        ['grammar','listening','reading','writing','speaking'].forEach(sk=>{
+            const pools=COURSES.filter(g=>g.skill===sk);
+            if(pools.length){
+                const p=pools[Math.floor(Math.random()*pools.length)];
+                const parts = Array.from(new Set(p.questions.map(q=>q.part||1))).sort((a,b)=>a-b);
+                let qs = [];
+                parts.forEach(pt => {
+                    let partQs = p.questions.filter(q=>(q.part||1)===pt);
+                    qs.push(...shuffleArray(partQs));
+                });
+                mockSections.push({skill:sk, label:info[sk].name, questions:qs, parts:parts, sourceId: p.id});
+            }
+        });
+    }
+    mockTestMode=true;clearInterval(mockTimer);
+    
+    // Count answered questions per section
+    const sectionStatus = mockSections.map(sec => {
+        const done = sec.questions.filter(answered).length;
+        return {done, total: sec.questions.length, pct: Math.round(done/sec.questions.length*100)};
     });
+    const totalAnswered = sectionStatus.reduce((s,x) => s+x.done, 0);
+    const totalQuestions = sectionStatus.reduce((s,x) => s+x.total, 0);
     
     app.innerHTML=`<div class="practice-top" style="background: #fff1f0; border-bottom: 1px solid #ffa39e;">
         <div>
@@ -183,23 +194,32 @@ function mockTestStart(){
         <a class="secondary" href="#" style="display:inline-flex; align-items:center; gap:6px; font-size:14px; padding: 8px 16px; color:#cf1322;border-color:#ffa39e;background:white;"><span>←</span> Thoát thi thử</a>
     </div>
     <div class="workspace" style="max-width: 800px; margin: 40px auto; display: block;">
-        <div style="background: white; border-radius: 12px; padding: 32px; box-shadow: 0 4px 12px rgba(0,0,0,0.05); text-align: center;">
-            <h2 style="font-size: 24px; margin-bottom: 16px; color: var(--text-main);">Cấu trúc đề thi</h2>
-            <p style="color: var(--text-muted); margin-bottom: 32px;">Bạn có thể chọn phần thi bất kỳ để bắt đầu. Nên canh thời gian tổng khoảng 120 phút.</p>
-            <div style="display: grid; gap: 16px; text-align: left; margin-bottom: 32px;">
-                ${mockSections.map((sec, i) => `
-                <button onclick="window.mockShowSection(${i})" style="padding: 16px; border: 1px solid var(--border-color); border-radius: 8px; display: flex; justify-content: space-between; align-items: center; background: white; text-align: left; cursor: pointer; width: 100%; box-shadow: 0 2px 4px rgba(0,0,0,0.02); transition: all 0.2s ease;" onmouseover="this.style.borderColor='var(--primary-color)'; this.style.boxShadow='0 4px 8px rgba(0,0,0,0.08)'" onmouseout="this.style.borderColor='var(--border-color)'; this.style.boxShadow='0 2px 4px rgba(0,0,0,0.02)'">
+        <div style="background: white; border-radius: 12px; padding: 32px; box-shadow: 0 4px 12px rgba(0,0,0,0.05);">
+            <div style="text-align: center; margin-bottom: 24px;">
+                <h2 style="font-size: 24px; margin-bottom: 8px; color: var(--text-main);">Cấu trúc đề thi</h2>
+                <p style="color: var(--text-muted); margin-bottom: 8px;">Chọn phần thi bất kỳ để bắt đầu. Thời gian: 120 phút.</p>
+                <p style="color: var(--text-muted); font-size: 14px;">Đã làm: <strong style="color: var(--primary-color);">${totalAnswered}/${totalQuestions}</strong> câu</p>
+            </div>
+            <div style="display: grid; gap: 12px; margin-bottom: 24px;">
+                ${mockSections.map((sec, i) => {
+                    const st = sectionStatus[i];
+                    const statusColor = st.done === 0 ? 'var(--text-muted)' : st.done === st.total ? 'var(--success)' : '#f59e0b';
+                    const statusText = st.done === 0 ? 'Chưa làm' : st.done === st.total ? '✓ Hoàn thành' : st.done + '/' + st.total + ' câu';
+                    return `
+                <button onclick="window.mockShowSection(${i})" style="padding: 16px; border: 1px solid var(--border-color); border-radius: 8px; display: flex; justify-content: space-between; align-items: center; background: white; text-align: left; cursor: pointer; width: 100%; transition: all 0.2s ease;" onmouseover="this.style.borderColor='var(--primary-color)'; this.style.boxShadow='0 4px 8px rgba(0,0,0,0.08)'" onmouseout="this.style.borderColor='var(--border-color)'; this.style.boxShadow='none'">
                     <div>
                         <strong style="color: var(--primary-color); display: block; margin-bottom: 4px; font-size: 16px;">Phần ${i+1}: ${sec.label}</strong>
-                        <span class="muted" style="font-size: 14px;">${sec.questions.length} câu hỏi</span>
+                        <span style="font-size: 13px; color: ${statusColor}; font-weight: 600;">${statusText}</span>
                     </div>
                     <div style="background: var(--primary-color); color: white; padding: 8px 16px; border-radius: 20px; font-size: 14px; font-weight: bold;">
-                        Làm bài →
+                        ${st.done > 0 ? 'Tiếp tục →' : 'Làm bài →'}
                     </div>
-                </button>
-                `).join('')}
+                </button>`;
+                }).join('')}
             </div>
-            <button class="primary" style="font-size: 16px; padding: 12px 32px; border-radius: 8px; background: #ff4d4f; border-color: #ff4d4f;" onclick="if(confirm('Bạn có chắc chắn muốn nộp bài thi ngay?')) checkAllMock()">Nộp bài thi</button>
+            <div style="text-align: center;">
+                <button class="primary" style="font-size: 16px; padding: 12px 32px; border-radius: 8px; background: #ff4d4f; border-color: #ff4d4f;" onclick="if(confirm('Bạn có chắc chắn muốn nộp bài thi ngay?')) checkAllMock()">Nộp toàn bộ bài thi</button>
+            </div>
         </div>
     </div>`;
     
@@ -211,14 +231,10 @@ function mockTestStart(){
             const mm=Math.floor(mockTimeLeft/60).toString().padStart(2,'0');
             const ss=(mockTimeLeft%60).toString().padStart(2,'0');
             const tl=document.querySelector('#mock-timer');if(tl)tl.textContent=mm+':'+ss;
-            if(mockTimeLeft<=0){clearInterval(mockTimer);alert('Hết giờ làm bài!');checkAllMock();}
+            if(mockTimeLeft<=0){clearInterval(mockTimer);mockTimer=null;alert('Hết giờ làm bài!');checkAllMock();}
         },1000);
     }
 }
-
-window.mockTestBegin = function() {
-    mockShowSection(0);
-};
 
 window.mockShowSection = function(idx) {
     mockCurrentSection = idx;
@@ -226,10 +242,6 @@ window.mockShowSection = function(idx) {
     activeGroup = {id:'mock_'+sec.skill, skill:sec.skill, title: `Phần ${idx+1}/5: ${sec.label}`, questions: sec.questions};
     qi = 0;
     practice();
-};
-
-window.mockNextSection = function() {
-    mockTestStart();
 };
 
 window.mockSectionSummary = function() {
@@ -456,7 +468,7 @@ function practice(){
             else practice();
         }
     });
-    if(mockTestMode){document.querySelector('#set-mm').disabled=true;document.querySelector('#set-sq').disabled=true;}
+    if(mockTestMode){const smm=document.querySelector('#set-mm');const ssq=document.querySelector('#set-sq');if(smm)smm.disabled=true;if(ssq)ssq.disabled=true;}
     if(mockSubmitted&&mockTestMode)checkAllMock();
     else if(userSettings.memorizationMode&&!mockTestMode)revealAnswers(q);
 }
@@ -487,17 +499,6 @@ function check(q){
         else message='Đã lưu câu trả lời. Dữ liệu gốc chưa có đáp án chấm tự động cho câu này. Hãy đối chiếu nội dung tham khảo nếu có.'
     }
     document.querySelector('#feedback').innerHTML=`<div class="notice">${esc(message)}</div>`;
-}
-
-function exportWork(){
-    const content={
-        title:groupTitle(activeGroup),
-        exportedAt:new Date().toISOString(),
-        questions:activeGroup.questions.map(q=>({id:q.id,part:q.part,title:q.title,question:q.stem,answers:saved[q.id]||{}}))
-    };
-    const url=URL.createObjectURL(new Blob([JSON.stringify(content,null,2)],{type:'application/json'}));
-    const a=document.createElement('a');a.href=url;a.download=`aptis-${activeGroup.skill}-${activeGroup.id}.json`;
-    a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);
 }
 
 async function record(){
