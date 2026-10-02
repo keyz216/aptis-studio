@@ -6,6 +6,7 @@ function readingAnswerKey(q, index) {
 
 function gradeReading(q, answers = {}) {
   if (!q.review?.answers?.length) return null;
+  if(!answers || typeof answers!=='object')answers={};
   const rows = q.review.answers.map((expected, index) => {
     const key = readingAnswerKey(q, index);
     const actual = String(answers[key] ?? '');
@@ -16,7 +17,7 @@ function gradeReading(q, answers = {}) {
 }
 
 let reviewedReading = {};
-try { reviewedReading = JSON.parse(localStorage.getItem('aptis-reading-reviews') || '{}'); } catch {}
+try { const stored=JSON.parse(localStorage.getItem('aptis-reading-reviews') || '{}'); if(stored&&typeof stored==='object'&&!Array.isArray(stored))reviewedReading=stored; } catch {}
 
 function saveReadingReview(q) {
   reviewedReading[q.id] = JSON.stringify(saved[q.id] || {});
@@ -94,7 +95,6 @@ function showReadingReview(q) {
         <ol>${order.map(s => `<li>${esc(plain(s))}</li>`).join('')}</ol></div>` : ''}
       <div class="explanation"><h3>Giải thích đáp án</h3>
         ${q.review.explanation || '<p>File đáp án của bài này không có phần giải thích.</p>'}</div>
-      <p class="answer-source">Nguồn: <a href="${esc(q.review.source)}" target="_blank" rel="noopener">${esc(q.review.source)}</a></p>
     </section>`;
   saveReadingReview(q);
 }
@@ -131,7 +131,7 @@ document.querySelector('#app').addEventListener('change', event => {
   if (event.target.matches('[data-key]')) clearReadingMarks();
 });
 document.querySelector('#app').addEventListener('click', event => {
-  if (event.target.closest('#next') && true && qi === activeGroup.questions.length - 1) {
+  if (event.target.closest('#next') && !mockTestMode && activeGroup?.skill==='reading' && qi === activeGroup.questions.length - 1) {
     // The normal navigation handler changes the hash before the next route render.
     // Finish only when the existing final question is still on screen.
     const hashIndex = Number(location.hash.split('/')[2]);

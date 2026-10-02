@@ -1,4 +1,45 @@
 <!doctype html>
 <html lang="vi">
-<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,maximum-scale=1,user-scalable=no"><title>Aptis Studio · Luyện tập tiếng Anh</title><meta name="description" content="Luyện tập Aptis với thư viện đề Reading, Listening, Writing, Speaking và Grammar."><link rel="icon" href="favicon.svg"><link rel="stylesheet" href="styles.css?v=41"><script src="data.js?v=41" defer></script><script src="reading.js?v=41" defer></script><script src="vi_helpers.js?v=41" defer></script><script src="app.js?v=41" defer></script></head>
-<body><div id="sidebar-backdrop" class="sidebar-backdrop"></div><aside class="sidebar"><div class="sidebar-header"><a class="brand" href="#"><span class="brand-icon">a</span>Aptis<span class="brand-light">studio</span></a><button id="sidebar-close" class="sidebar-close" aria-label="Đóng menu">✕</button></div><div class="nav-label">GÓC HỌC TẬP</div><nav id="nav" aria-label="Điều hướng"></nav></aside><div class="shell"><header><div class="header-left"><button id="menu-toggle" class="menu-btn" aria-label="Mở menu"><svg viewBox="0 0 24 24" width="22" height="22" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg></button><span id="breadcrumb">Góc học tập / Tổng quan</span></div><div class="profile"><span class="status">Luyện tập mỗi ngày</span><span class="avatar">HV</span></div></header><main id="app"></main><footer>Aptis studio <span>Mỗi bài tập, một bước tiến.</span></footer></div><div id="toast" role="status"></div></body></html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="theme-color" content="#f4f6fa">
+  <title>Aptis Studio · Luyện tập tiếng Anh</title>
+  <meta name="description" content="Không gian luyện tập Aptis: Reading, Listening, Writing, Speaking và Grammar. Học theo mục tiêu, theo dõi tiến độ, luyện tập mỗi ngày.">
+  <link rel="icon" href="favicon.svg">
+  <link rel="stylesheet" href="styles.css?v=42">
+  <link rel="stylesheet" href="studio.css?v=42">
+  <script src="data.js?v=42" defer></script>
+  <script src="reading.js?v=42" defer></script>
+  <script src="vi_helpers.js?v=42" defer></script>
+  <script src="studio.js?v=42" defer></script>
+  <script src="app.js?v=42" defer></script>
+</head>
+<body>
+  <a class="skip-link" href="#app">Đến nội dung</a>
+  <div id="sidebar-backdrop" class="sidebar-backdrop"></div>
+  <aside class="sidebar" id="main-sidebar">
+    <div class="sidebar-header"><a class="brand" href="#" aria-label="Aptis Studio · Tổng quan"><span class="brand-icon">a</span>Aptis<span class="brand-light">studio</span></a><button id="sidebar-close" class="sidebar-close" aria-label="Đóng menu">✕</button></div>
+    <div class="nav-label">KHÔNG GIAN LUYỆN TẬP</div>
+    <nav id="nav" aria-label="Điều hướng"></nav>
+  </aside>
+  <div class="shell">
+    <header>
+      <div class="header-left"><button id="menu-toggle" class="menu-btn" aria-label="Mở menu" aria-expanded="false" aria-controls="main-sidebar"><svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="1.8" fill="none" stroke-linecap="round"><path d="M4 6h16M4 12h16M4 18h16"/></svg></button><span id="breadcrumb">Góc học tập / Tổng quan</span></div>
+      <div class="header-tools"><button class="search-launch" id="open-search" aria-haspopup="dialog"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5"/><path d="m16 16 4.5 4.5"/></svg><span>Tìm bài tập</span><kbd>Ctrl K</kbd></button><span class="avatar" aria-label="Học viên">HV</span></div>
+    </header>
+    <main id="app" tabindex="-1"></main>
+    <footer><span>Aptis studio</span><span>Luyện tập đều đặn. Tiến bộ từng ngày.</span></footer>
+  </div>
+  <dialog id="search-dialog" class="search-dialog" aria-labelledby="search-title">
+    <div class="search-dialog-head"><h2 id="search-title">Tìm bài tập</h2><button id="close-search" class="icon-button" aria-label="Đóng tìm kiếm">✕</button></div>
+    <label class="sr-only" for="global-search">Tên bộ bài, kỹ năng hoặc chủ đề</label>
+    <input id="global-search" type="search" placeholder="Tên bộ bài, kỹ năng hoặc chủ đề…" autocomplete="off">
+    <p id="search-result-count" class="search-caption" aria-live="polite"></p>
+    <div id="search-results"></div>
+    <div class="search-dialog-foot">↓ Chọn kết quả <span>Esc để đóng</span></div>
+  </dialog>
+  <div id="toast" role="status" aria-live="polite"></div>
+  <noscript><p class="notice">Vui lòng bật JavaScript trong trình duyệt để mở bài luyện tập.</p></noscript>
+</body>
+</html>
