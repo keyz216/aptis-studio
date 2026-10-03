@@ -286,6 +286,14 @@ audio { width:100%; margin:12px 0; }
 /* Keep the original question and its Vietnamese companion together. */
 .vi-translation{display:block;margin:8px 0 12px;padding:10px 12px;border-left:3px solid #96b8ef;border-radius:0 8px 8px 0;background:#f0f5fd;color:#43546d;font-size:.92em;font-weight:400;line-height:1.65;overflow-wrap:anywhere;white-space:pre-line;}
 .vi-label{display:block;margin-bottom:4px;color:#5678a8;font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;}
+.vi-translation[hidden]{display:none;}
+.choice-translation-tools{display:flex;align-items:center;flex-wrap:wrap;gap:8px 12px;margin:14px 0;}
+.choice-translation-tools small{color:var(--text-muted);font-size:12px;}
+.translate-choices{min-height:40px;padding:8px 12px;border:1px solid #d6e2f6;border-radius:8px;background:#fff;color:#315da3;font:inherit;font-size:13px;cursor:pointer;}
+.translate-choices[aria-pressed="true"]{background:#edf4ff;}
+.mock-result-actions{display:flex;flex-wrap:wrap;gap:12px;}
+.circular-chart .percentage{stroke:none;fill:var(--text-main);}
+@media(max-width:600px){.mock-result-heading{align-items:flex-start;flex-direction:column;gap:16px;}.mock-result-actions{width:100%;}.mock-result-actions a{flex:1;text-align:center;justify-content:center;font-size:13px;padding:10px 12px;}.mock-result-heading h1{font-size:23px;}}
 .choice .vi-translation{margin:6px 0 0;padding:6px 10px;font-size:.9em;}
 .field>select{max-width:100%;min-width:0;text-overflow:ellipsis;}
 .speaker-name{margin-top:20px;font-weight:700;color:var(--text-main);}
