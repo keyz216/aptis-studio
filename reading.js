@@ -26,6 +26,7 @@ try { const stored=JSON.parse(localStorage.getItem('aptis-reading-reviews') || '
 function saveReadingReview(q) {
   reviewedReading[q.id] = JSON.stringify(saved[q.id] || {});
   try { localStorage.setItem('aptis-reading-reviews', JSON.stringify(reviewedReading)); } catch {}
+  if(activeGroup&&document.querySelector('#progress'))progress();
 }
 
 function clearReadingMarks() {

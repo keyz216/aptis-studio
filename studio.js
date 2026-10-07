@@ -33,6 +33,20 @@ const Studio = (() => {
     else if(m.questions)required=m.questions.length;
     return Array.from({length:required},(_,i)=>String(answers['a'+i]??'').trim()).every(Boolean);
   };
+  const navState = question => {
+    if(!answered(question))return '';
+    if(!mockTestMode && reviewedReading[question.id]===JSON.stringify(saved[question.id]||{})){
+      if(question.review){
+        const result=gradeReading(question,saved[question.id]);
+        if(result&&!result.unanswered&&!result.invalidOrder)return result.correct===result.total?'done':'incorrect';
+      }else{
+        const m=question.metadata||{},key=m.correct_option??m.correct_answer??m.answer??m.key??question.correct_option??question.correct_answer??question.answer??question.key;
+        if(key!==undefined&&key!==null&&key!=='')return String(saved[question.id]?.a0)===String(key)?'done':'incorrect';
+      }
+    }
+    return complete(question)?'answered':'partial';
+  };
+  const navLabel = question => ({done:'đúng tất cả các ý',incorrect:'có đáp án sai',answered:'đã trả lời, chưa chấm',partial:'đang làm'})[navState(question)]||'chưa làm';
   const groupStats = group => {
     const done = group.questions.filter(complete).length,started=group.questions.some(answered);
     return { done, total:group.questions.length, percent:Math.round(done/group.questions.length*100), state:!started?'new':done===group.questions.length?'done':'progress' };
@@ -147,5 +161,5 @@ const Studio = (() => {
     });
   }
   window.addEventListener('DOMContentLoaded',initSearch);
-  return {read,object,write,normalize,complete,groupStats,pins,pin,lessonLink,record,today,goal,scale,bindPractice,savedStatus};
+  return {read,object,write,normalize,complete,navState,navLabel,groupStats,pins,pin,lessonLink,record,today,goal,scale,bindPractice,savedStatus};
 })();

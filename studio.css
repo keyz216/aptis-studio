@@ -298,3 +298,13 @@ audio { width:100%; margin:12px 0; }
 .field>select{max-width:100%;min-width:0;text-overflow:ellipsis;}
 .speaker-name{margin-top:20px;font-weight:700;color:var(--text-main);}
 @media(max-width:600px){.vi-translation{padding:8px 10px;font-size:.9em;}.field>select{width:100%;}}
+
+/* Checking determines correctness; entering an answer alone is neutral. */
+.question-nav .numbers button.answered{background:#f1f5f9;color:#52647d;border-color:#d6e0ec;}
+.question-nav .numbers button.incorrect{background:#fff1f2;color:#c62828;border-color:#f3a6ad;box-shadow:none;}
+.question-nav .numbers button.done{background:#effbf3;color:#148347;border-color:#a7e4bd;}
+.question-nav .numbers button.active.incorrect,.question-nav .numbers button.active.done,.question-nav .numbers button.active.answered,.question-nav .numbers button.active.partial{outline:2px solid #2159d6;outline-offset:2px;}
+.question-nav .numbers button.active.partial{background:#fff9ee;color:#9b762d;border-color:#edcc8d;}
+.nav-legend span:nth-child(3){color:#52647d;}
+.nav-legend span:nth-child(4){color:#148347;}
+.nav-legend span:nth-child(5){color:#c62828;}
