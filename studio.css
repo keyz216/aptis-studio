@@ -308,3 +308,17 @@ audio { width:100%; margin:12px 0; }
 .nav-legend span:nth-child(3){color:#52647d;}
 .nav-legend span:nth-child(4){color:#148347;}
 .nav-legend span:nth-child(5){color:#c62828;}
+
+
+/* Reading Quiz as a native subsection of Aptis Studio */
+#nav a.nav-subitem{margin:-2px 0 7px 34px;padding:9px 13px;font-size:13px;font-weight:650;border-left:2px solid #dce6f4;border-radius:0 9px 9px 0}
+#nav a.nav-subitem.active{background:#eaf2ff;border-left-color:#2357d8;color:#2357d8}
+.reading-study-tabs{display:flex;gap:9px;flex-wrap:wrap;margin:0 0 19px}
+.reading-study-tabs a{display:inline-flex;align-items:center;justify-content:center;min-height:40px;padding:9px 16px;border:1px solid #dfe6f2;border-radius:11px;background:#fff;color:#4f627e;font-size:14px;font-weight:700}
+.reading-study-tabs a:hover{border-color:#9db8f3;color:#2357d8}
+.reading-study-tabs a.active{background:#eaf2ff;color:#2258d6;border-color:#b9cafa}
+.reading-quiz-framebox{border:1px solid #e3e9f3;border-radius:18px;background:#fff;padding:9px;min-width:0}
+.reading-quiz-frame{display:block;border:0;width:100%;min-height:720px;background:#fff;border-radius:12px;overflow:hidden}
+.reading-quiz-fallback{margin:10px 8px 3px;text-align:right;font-size:12px;color:#64748b}
+.reading-quiz-fallback a{color:#245dd1;text-decoration:underline}
+@media(max-width:600px){#nav a.nav-subitem{margin-left:32px}.reading-study-tabs{display:grid;grid-template-columns:1fr 1fr;gap:7px}.reading-study-tabs a{font-size:12px;padding:8px 7px}.reading-quiz-framebox{padding:4px;border-radius:13px}.reading-quiz-frame{border-radius:9px}.reading-quiz-fallback{font-size:11px}}
