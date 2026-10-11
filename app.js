@@ -15,6 +15,7 @@ let activeGroup,qi=0,mockTestMode=false,mockSubmitted=false,mockTimeLeft=0,mockT
 let mockSections=[],mockCurrentSection=0;
 let practiceSaved=saved;
 const app=document.querySelector('#app');
+let readingQuizObserver=null;
 function persist(){
     if(mockTestMode){Studio.savedStatus(true);return true;}
     const ok=Studio.write('aptis-answers',saved);Studio.savedStatus(ok);
@@ -41,7 +42,7 @@ function closeStudyOverlays(){
     document.querySelector('#menu-toggle')?.setAttribute('aria-expanded','false');
     document.querySelector('#search-dialog[open]')?.close();
 }
-function route(){closeStudyOverlays();if(recorder?.state==='recording')recorder.stop();stream?.getTracks().forEach(t=>t.stop());objectUrls.forEach(URL.revokeObjectURL);objectUrls=[];const [view,id,n]=location.hash.slice(1).split('/');if(mockTestMode&&view!=='mocktest'){clearInterval(mockTimer);mockTimer=null;saved=practiceSaved;mockTestMode=false;mockSections=[];mockCurrentSection=0;}if(view!=='lesson'){activeGroup=null;document.body.classList.remove('focus-mode');}const skill=view==='lesson'?COURSES[Number(id)]?.skill:view;document.querySelector('#nav').innerHTML=`<a href="#" class="${!view?'active':''}">${svg('home')}Tổng quan</a><a href="#mocktest" class="${view==='mocktest'?'active':''}">${svg('reading')}Thi thử Aptis</a>`+Object.entries(info).map(([k,v])=>`<a href="#${k}" class="${skill===k?'active':''}">${svg(k)}${v.name}</a>`).join('');document.querySelector('#breadcrumb').textContent='Góc học tập / '+(view==='mocktest'?'Thi thử Aptis':info[skill]?.name||'Tổng quan');if(view==='mocktest')mockTestStart();else if(view==='lesson'&&COURSES[Number(id)]){
+function route(){if(readingQuizObserver){readingQuizObserver.disconnect();readingQuizObserver=null;}closeStudyOverlays();if(recorder?.state==='recording')recorder.stop();stream?.getTracks().forEach(t=>t.stop());objectUrls.forEach(URL.revokeObjectURL);objectUrls=[];const [view,id,n]=location.hash.slice(1).split('/');if(mockTestMode&&view!=='mocktest'){clearInterval(mockTimer);mockTimer=null;saved=practiceSaved;mockTestMode=false;mockSections=[];mockCurrentSection=0;}if(view!=='lesson'){activeGroup=null;document.body.classList.remove('focus-mode');}const skill=view==='lesson'?COURSES[Number(id)]?.skill:(view==='reading-quiz'?'reading':view);document.querySelector('#nav').innerHTML=`<a href="#" class="${!view?'active':''}">${svg('home')}Tổng quan</a><a href="#mocktest" class="${view==='mocktest'?'active':''}">${svg('reading')}Thi thử Aptis</a>`+Object.entries(info).map(([k,v])=>`<a href="#${k}" class="${skill===k?'active':''}">${svg(k)}${v.name}</a>${k==='reading'?`<a href="#reading-quiz" class="nav-subitem ${view==='reading-quiz'?'active':''}">🧠 Quiz ghi nhớ</a>`:''}`).join('');document.querySelector('#breadcrumb').textContent='Góc học tập / '+(view==='reading-quiz'?'Reading / Quiz ghi nhớ':view==='mocktest'?'Thi thử Aptis':info[skill]?.name||'Tổng quan');if(view==='mocktest')mockTestStart();else if(view==='lesson'&&COURSES[Number(id)]){
     mockTestMode=false;
     if(activeGroup?.id !== COURSES[Number(id)].id) {
         activeGroup={...COURSES[Number(id)]};
@@ -55,7 +56,7 @@ function route(){closeStudyOverlays();if(recorder?.state==='recording')recorder.
     }
     qi=Math.max(0,Math.min(activeGroup.questions.length-1,Number(n)||0));
     practice()
-}else if(info[view])library(view);else home();document.querySelectorAll('#nav a').forEach(a=>{if(a.classList.contains('active'))a.setAttribute('aria-current','page')});window.scrollTo(0,0)}
+}else if(view==='reading-quiz')readingQuiz();else if(info[view])library(view);else home();document.querySelectorAll('#nav a').forEach(a=>{if(a.classList.contains('active'))a.setAttribute('aria-current','page')});window.scrollTo(0,0)}
 function home(){
     const unique=[...new Map(COURSES.flatMap(g=>g.questions).map(q=>[q.id,q])).values()];
     const done=unique.filter(Studio.complete).length;
@@ -80,7 +81,7 @@ function home(){
 function library(skill){
     const meta=info[skill],pool=COURSES.filter(g=>g.skill===skill);
     let status='all';
-    app.innerHTML=`<a class="back-link" href="#">← Tổng quan</a><div class="library-heading"><span class="tile-icon" style="--accent:${meta.color};--tint:${meta.tint}">${svg(skill)}</span><div><div class="eyebrow">THƯ VIỆN / ${meta.vi.toUpperCase()}</div><h1>${meta.name}</h1><p class="muted">${meta.desc}</p></div></div><div class="library-controls"><div class="search-field"><span aria-hidden="true">⌕</span><input id="search" type="search" aria-label="Tìm bài tập" placeholder="Tìm bộ bài hoặc chủ đề…"></div><label class="sort-control"><span class="sr-only">Sắp xếp bộ bài</span><select id="lesson-sort"><option value="default">Thứ tự bộ bài</option><option value="progress">Bài đang học trước</option><option value="name">Tên A → Z</option></select></label></div><div class="library-filter-row"><div class="filter-tabs" role="group" aria-label="Lọc theo tiến độ">${[['all','Tất cả'],['new','Chưa học'],['progress','Đang học'],['done','Đã làm hết'],['pinned','Đã ghim']].map(([id,label])=>`<button class="filter-tab ${id==='all'?'active':''}" data-filter="${id}" aria-pressed="${id==='all'}">${label}</button>`).join('')}</div><span id="result-count" aria-live="polite"></span></div><div id="lessons" class="lessons"></div>`;
+    app.innerHTML=`<a class="back-link" href="#">← Tổng quan</a><div class="library-heading"><span class="tile-icon" style="--accent:${meta.color};--tint:${meta.tint}">${svg(skill)}</span><div><div class="eyebrow">THƯ VIỆN / ${meta.vi.toUpperCase()}</div><h1>${meta.name}</h1><p class="muted">${meta.desc}</p></div></div>${skill==='reading'?`<div class="reading-study-tabs" role="group" aria-label="Chọn cách luyện Reading"><a class="active" href="#reading" aria-current="page">Ngân hàng đề</a><a href="#reading-quiz">🧠 Quiz ghi nhớ</a></div>`:''}<div class="library-controls"><div class="search-field"><span aria-hidden="true">⌕</span><input id="search" type="search" aria-label="Tìm bài tập" placeholder="Tìm bộ bài hoặc chủ đề…"></div><label class="sort-control"><span class="sr-only">Sắp xếp bộ bài</span><select id="lesson-sort"><option value="default">Thứ tự bộ bài</option><option value="progress">Bài đang học trước</option><option value="name">Tên A → Z</option></select></label></div><div class="library-filter-row"><div class="filter-tabs" role="group" aria-label="Lọc theo tiến độ">${[['all','Tất cả'],['new','Chưa học'],['progress','Đang học'],['done','Đã làm hết'],['pinned','Đã ghim']].map(([id,label])=>`<button class="filter-tab ${id==='all'?'active':''}" data-filter="${id}" aria-pressed="${id==='all'}">${label}</button>`).join('')}</div><span id="result-count" aria-live="polite"></span></div><div id="lessons" class="lessons"></div>`;
     const indexed=pool.map(g=>({g,text:Studio.normalize(`${groupTitle(g)} ${g.questions.map(q=>plain(q.title+' '+q.stem)).join(' ')}`)}));
     const render=()=>{
         const term=Studio.normalize(document.querySelector('#search').value.trim());
@@ -99,6 +100,22 @@ function library(skill){
     const setFilter=value=>{status=value;document.querySelectorAll('[data-filter]').forEach(button=>{const active=button.dataset.filter===value;button.classList.toggle('active',active);button.setAttribute('aria-pressed',String(active))});render()};
     document.querySelectorAll('[data-filter]').forEach(button=>button.onclick=()=>setFilter(button.dataset.filter));
     document.querySelector('#search').oninput=render;document.querySelector('#lesson-sort').onchange=render;render();
+}
+function readingQuiz(){
+    app.innerHTML=`<a class="back-link" href="#reading">← Trở về thư viện Reading</a><div class="library-heading"><span class="tile-icon" style="--accent:${info.reading.color};--tint:${info.reading.tint}">${svg('reading')}</span><div><div class="eyebrow">READING / ÔN TẬP TĂNG CƯỜNG</div><h1>Quiz ghi nhớ</h1><p class="muted">18 chủ đề Reading Part 2, 3, 4 · Học theo dấu vân tay nội dung, không thuộc máy móc đáp án.</p></div></div><div class="reading-study-tabs" role="group" aria-label="Chọn cách luyện Reading"><a href="#reading">Ngân hàng đề</a><a class="active" href="#reading-quiz" aria-current="page">🧠 Quiz ghi nhớ</a></div><div class="reading-quiz-framebox"><iframe id="reading-quiz-frame" class="reading-quiz-frame" src="reading-quiz/?embed=1" title="Dingdang Aptis Reading Quiz: Part 2, 3, 4" loading="eager" allow="fullscreen"></iframe><p class="reading-quiz-fallback"><a href="reading-quiz/" target="_blank" rel="noopener noreferrer">Mở quiz ở tab riêng ↗</a> nếu trình duyệt không hiển thị đầy đủ.</p></div>`;
+    const frame=app.querySelector('#reading-quiz-frame');
+    frame.addEventListener('load',()=>{
+        if(!frame.isConnected)return;
+        try{
+            const doc=frame.contentDocument;
+            const content=doc?.querySelector('.container')||doc?.body;
+            if(!content)return;
+            const resize=()=>{if(!frame.isConnected)return;const height=Math.ceil(content.scrollHeight||content.getBoundingClientRect().height);frame.style.height=Math.max(720,height+12)+'px';};
+            resize();
+            if(typeof ResizeObserver!=='undefined'){readingQuizObserver=new ResizeObserver(resize);readingQuizObserver.observe(content)}
+            frame.contentWindow?.addEventListener('resize',resize,{passive:true});
+        }catch{frame.style.height='1200px'}
+    },{once:true});
 }
 function groupTitle(g){if(g.skill==='reading'){const part=g.questions[0]?.part;return `Reading · Part ${part} — ${({1:'Điền từ',2:'Sắp xếp câu',3:'Ghép thông tin',4:'Ghép tiêu đề'})[part]||'Đọc hiểu'}`}if(g.skill==='writing')return (g.questions[0].title||`Đề ${g.title}`).replace(/ - Part \d+/,'');if(g.skill==='speaking')return `Speaking · Đề ${g.title.replace('Đề ','')}`;return g.title}
 
