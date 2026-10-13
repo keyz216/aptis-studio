@@ -50,9 +50,8 @@ function answerP4(id,formal){
  ];
  return [
  fix("Dear Sir or Madam,\n\nI am writing about "),slot(v[0]),
- fix(". Thank you for asking members to share their views.\n\nI believe the best approach would be to "),
- slot(v[2]),fix(". In my opinion, this would be a practical choice because it could help many members and make the situation easier for everyone.\n\nI would also suggest that the club should "),
- slot(v[3]),fix(". For example, it could ask members for their opinions before making a final decision. This would help the organisers understand what people really need.\n\nFinally, please explain the next steps clearly so that everyone has enough time to prepare. I hope these ideas will be useful.\n\nThank you for your time. I look forward to hearing from you.\n\nYours faithfully,\nAlex")
+ fix(". Thank you for informing us about this matter. My main suggestion is to "),slot(v[2]),
+ fix(". I would also like to suggest two simple ways to deal with this situation.\n\nFirst, I suggest organising a group meeting. If one person cannot solve a problem alone, the whole group can work together. We can discuss different ideas and choose the best solution.\n\nSecond, we could share the main information in our club's group chat or on its official social media page. This would allow more members to give their opinions and suggest helpful solutions.\n\nI hope you will consider these two ideas before making a final decision. Thank you for your time and support. I look forward to hearing from you.\n\nYours faithfully,\nAlex")
  ];
 }
 function current(){
@@ -63,11 +62,11 @@ function current(){
  if(S.part==='p4a'||S.part==='p4b')return {prompt:decode(p(4).email?.body),segments:answerP4(S.id,S.part==='p4b'),label:S.part==='p4a'?'Part 4A · Email to a friend':'Part 4B · Email to the manager',range:S.part==='p4a'?[40,50]:[120,150]};
  return {prompt:'',segments:null,label:'',range:[0,0]};
 }
-function key(){return S.id+'-'+S.part+'-'+S.qi+(S.slots?'-slots':'-full')}
+function key(){return S.id+'-'+S.part+'-'+S.qi+(S.part==='p4b'?'-collab2':'')+(S.slots?'-slots':'-full')}
 function save(){try{localStorage.setItem(STORAGE,JSON.stringify(persisted))}catch{}}
 function piecesText(segments){return segments.map(x=>x.t).join('')}
 function targetText(segments){return S.slots?segments.filter(x=>x.v).map(x=>x.t.trim()).filter(Boolean).join('\n'):piecesText(segments)}
-function completionCount(){return Object.entries(persisted.progress).filter(([k,v])=>!k.endsWith('-slots')&&v.best>=98).length}
+function completionCount(){return Object.entries(persisted.progress).filter(([k,v])=>!k.endsWith('-slots')&&!/-p4b-0-full$/.test(k)&&v.best>=98).length}
 function updateTop(){
  $('mastered').textContent=completionCount()+'/176';
  $('overallBar').style.width=Math.min(100,completionCount()/176*100)+'%';
