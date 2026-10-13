@@ -56,6 +56,8 @@ if(!store.progress)store.progress={};if(!store.mistakes)store.mistakes={};if(!st
 const TR_KEY='aptis-translation-enabled';
 let translationOn=localStorage.getItem(TR_KEY)!=='false';
 const VI_CHAR=/[ĂăĐđĨĩŨũƠơƯưẠ-ỹ]/;
+const originalListeningTexts=new WeakMap();
+function restoreListeningStatic(){const root=document.querySelector('.shell');if(!root)return;const w=document.createTreeWalker(root,NodeFilter.SHOW_TEXT);let n;while((n=w.nextNode())){if(originalListeningTexts.has(n))n.nodeValue=originalListeningTexts.get(n)}}
 const TRANSLATE_LABELS=[
  ['Câu 14','Item 14'],['Câu 15','Item 15'],['Câu 16','Item 16'],['Câu 17','Item 17'],
  ['Ghép 4 người','Match speakers'],['Ghép người nói','Match speakers'],['Nam / Nữ / Cả hai','Man / Woman / Both'],['Nhận diện ý','Identify ideas'],['Nhận diện 2 nhận định','Identify two opinions'],
@@ -74,11 +76,13 @@ function convertUI(root){
   for(const [vi,en] of TRANSLATE_LABELS)str=str.split(vi).join(en);
   if(VI_CHAR.test(str))str=str.replace(/[ĂăĐđĨĩŨũƠơƯưẠ-ỹ][^.!?]*(?:[.!?]|$)/g,'').trim();
   if(VI_CHAR.test(str))str='';
+  if(!originalListeningTexts.has(node))originalListeningTexts.set(node,node.nodeValue);
   node.nodeValue=str;
  }
 }
 function syncTranslationUI(){
  document.documentElement.classList.toggle('english-only',!translationOn);
+ if(translationOn)restoreListeningStatic();
  const button=$('translationSwitch');if(button){button.textContent=translationOn?'🌐 Dịch: Bật':'🌐 English only';button.setAttribute('aria-pressed',String(translationOn))}
  if(!translationOn){
   // Course and topic names remain in English. All Vietnamese translations and hints are hidden.
