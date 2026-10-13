@@ -329,3 +329,17 @@ audio { width:100%; margin:12px 0; }
 html.english-only .vi-translation,html.english-only .choice-translation-tools,html.english-only .choice .vi-translation{display:none!important}
 html.english-only .reference-details,html.english-only .explanation{display:none!important}
 @media(max-width:600px){.translation-toggle{font-size:11px;padding:7px 8px;max-width:190px;white-space:normal;line-height:1.2}}
+
+/* Exam-like practice simulator entry points */
+.nav-exam-simulator{background:#eaf2ff!important;border:1px solid #cadaf4!important;color:#20539b!important;font-weight:800!important}
+.exam-sim-banner{display:flex;align-items:center;gap:14px;background:linear-gradient(115deg,#eff5ff,#f9fbff);border:1px solid #c6d9f7;border-radius:16px;padding:17px 19px;margin:17px 0;color:#234b86;text-decoration:none}
+.exam-sim-banner:hover{border-color:#7badf3;box-shadow:0 4px 18px #1a5bb51c}
+.exam-sim-banner .exam-sim-icon{display:grid;place-items:center;background:#dceaff;width:43px;height:43px;border-radius:12px;font-size:22px;flex-shrink:0}
+.exam-sim-banner span:nth-child(2){flex:1;min-width:0}
+.exam-sim-banner strong{display:block;color:#164684;font-size:15px}
+.exam-sim-banner small{display:block;color:#60718b;margin-top:4px;font-size:12px}
+.exam-sim-banner b{font-size:12px;white-space:nowrap;color:#1b60bb}
+.simulation-entry{display:flex;justify-content:flex-start;margin:12px 0 16px}
+.simulation-entry a{display:inline-flex;align-items:center;gap:15px;border:1px solid #bdd2f5;background:#ecf4ff;border-radius:10px;padding:10px 13px;text-decoration:none;color:#2356a3;font-weight:800;font-size:13px}
+.simulation-entry a span{font-size:16px}
+@media(max-width:550px){.exam-sim-banner{padding:12px;gap:9px}.exam-sim-banner b{display:none}.exam-sim-banner strong{font-size:13px}.exam-sim-banner small{font-size:11px}}
