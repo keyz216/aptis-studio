@@ -89,7 +89,16 @@ function englishReadingScreen(){
  if(state.part==='p4'){
   const memo=sh.querySelector('.p4-memory-card'),rec=sh.querySelector('.p4-rec');
   if(memo)memo.innerHTML='<h3>English memory clues</h3><div class="p4-code">'+d.sections.map((p,i)=>'<b>'+(i+1)+'</b>').join('')+'</div><p>'+d.sections.map(p=>esc(p.heading)).join(' → ')+'</p>';
-  if(rec){rec.style.display='none'}
+  if(rec){
+    const sourceSteps=P4_HINTS[d.id]?.steps||[];
+    const labelToEnglish=vi=>{let i=sourceSteps.findIndex(x=>x===vi);return i>=0?d.sections[i].heading:vi};
+    const title=rec.querySelector('b');if(title)title.textContent='🎯 Recall: put the 7 English headings in order';
+    const note=rec.querySelector('p.tiny');if(note)note.textContent='Select all seven headings from first to last.';
+    rec.querySelectorAll('.p4-picks button').forEach(b=>b.textContent=labelToEnglish(b.textContent.trim()));
+    rec.querySelectorAll('.p4-picked span').forEach(b=>{const m=b.textContent.match(/^\\s*(\\d+)\\.\\s*(.+)$/);if(m)b.textContent=m[1]+'. '+labelToEnglish(m[2])});
+    const chosen=rec.querySelector('.p4-picked');if(chosen&&!chosen.querySelector('span'))chosen.textContent='Choose the first heading below';
+    rec.querySelectorAll('.feedback p').forEach(p=>p.textContent=d.sections.map((x,i)=>(i+1)+'. '+x.heading).join(' → '));
+   }
   sh.querySelectorAll('.learn-card').forEach((card,i)=>{const p=d.sections[i];const t=card.querySelector('strong');if(t&&p)t.textContent=p.heading});
   sh.querySelectorAll('.feedback .why').forEach(el=>{const p=d.sections[state.qOrder[state.cursor]];if(p)el.textContent=p.tags.join(' / ')});
  }
