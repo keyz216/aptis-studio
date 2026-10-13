@@ -67,7 +67,11 @@ function isAnswered(task){
   if(q.part===3)return (m.questions||[]).every((x,i)=>!!str(a[i]));
   if(q.part===4)return !!str(a.friend)&&!!str(a.formal);
  }
- if(q.type==='mcq3'||q.type==='listening_mcq')return !!str(a.value);
+ if(q.type==='sentence_ordering'){
+   const picks=Array.from({length:fieldCount(q)},(_,i)=>str(a[i]));
+   return picks.every(Boolean)&&new Set(picks).size===picks.length;
+  }
+  if(q.type==='mcq3'||q.type==='listening_mcq')return !!str(a.value);
  const expected=fieldCount(q);
  return expected>0&&Array.from({length:expected},(_,i)=>str(a[i])).every(Boolean);
 }
@@ -75,7 +79,7 @@ function fieldCount(q){
  const m=q.metadata||{};
  if(['synonym_match','definition_match','sentence_completion','collocation_match'].includes(q.type))return (m.pairs||[]).length;
  if(q.type==='fill_in_blanks_mc')return (m.paragraphs||[]).length;
- if(q.type==='sentence_ordering')return (m.sentences||[]).filter(Boolean).length;
+ if(q.type==='sentence_ordering')return (m.correct_answers||[]).length||(m.sentences||[]).filter(Boolean).length;
  if(q.type==='text_question_match')return (m.questions||[]).length;
  if(q.type==='matching_headings')return (m.paragraphs||[]).length;
  if(q.type==='listening_speaker_match')return (m.items||[]).length;
@@ -159,8 +163,12 @@ function renderReading(q){
   return `<div class="instruction">Read the short text. Select the word that best completes each sentence.</div><div class="answerrows">${paragraphs}</div>`;
  }
  if(q.type==='sentence_ordering'){
-  const sentences=(m.sentences||[]).filter(x=>x!=null),nums=sentences.map((_,i)=>String(i+1));
-  return `<h2>${esc(displayName(q))}</h2><div class="instruction">Put these sentences in the correct order. Choose a position for each sentence. Use each position only once.</div><div class="answerrows">${sentences.map((s,i)=>`<div class="answerrow"><div>${esc(s)}</div>${selectField(q,i,nums,a[i])}</div>`).join('')}</div><p class="microcopy">Make sure each position number is used only once.</p>`;
+  const allSentences=(m.sentences||[]).filter(Boolean);
+  const count=(m.correct_answers||[]).length||allSentences.length;
+  const fixedOpening=allSentences.length===count+1?allSentences[0]:null;
+  const sentences=fixedOpening?allSentences.slice(1):allSentences.slice(0,count);
+  const nums=sentences.map((_,i)=>String(i+1));
+  return `<h2>${esc(displayName(q))}</h2><div class="instruction">The first sentence is already in place. Put the remaining five sentences in order, using each position once.</div>${fixedOpening?`<div class="groupbox"><b>Opening sentence (fixed)</b><p>${esc(fixedOpening)}</p></div>`:'<p class="microcopy">The opening sentence is missing from this source set; arrange the five supplied sentences.</p>'}<div class="answerrows">${sentences.map((s,i)=>`<div class="answerrow"><div>${esc(s)}</div>${selectField(q,i,nums,a[i])}</div>`).join('')}</div><p class="microcopy">Choose five different positions (1–5).</p>`;
  }
  if(q.type==='text_question_match'){
   return `<h2>${esc(displayName(q))}</h2><div class="instruction">Read the four opinions and match each statement to the correct person.</div><div class="peoplebox">${(m.options||[]).map((p,i)=>`<div class="person"><h3>${esc(m.names?.[i]||'Person '+(i+1))}</h3><p>${esc(p)}</p></div>`).join('')}</div><div class="answerrows">${(m.questions||[]).map((t,i)=>`<div class="answerrow"><label>${i+1}. ${esc(t)}</label>${selectField(q,i,m.names||[],a[i])}</div>`).join('')}</div>`;
@@ -181,7 +189,7 @@ function playbackText(q){
 }
 function renderAudio(q){
  const played=S.plays[aid(q)]||0,src=q.audio?.[0],canSpeak=!!playbackText(q);
- const notice=src?'Original recording is available for this task; playback is limited to two times in practice.':canSpeak?'The original recording is missing. Optional text-to-speech is a synthetic practice aid, not the real Aptis recording.':'There is no original recording or verified transcript for this task in your current bank. Answers can still be selected for interface practice.';
+ const notice=src?'Audio from the question bank is available (up to two plays), but is not verified as an official Aptis recording.':canSpeak?'Source audio is missing. Text-to-speech is a synthetic practice aid, not the real Aptis recording.':'No source audio or verified transcript is available. This question can be used for interface practice only.';
  return `<div class="audioarea"><button type="button" class="button primary" data-action="audio" ${played>=2||(!src&&!canSpeak)?'disabled':''}>▶ ${src?'Play recording':canSpeak?'Play synthetic practice voice':'Recording unavailable'}</button><span class="counter">Played ${played} / 2</span><div class="audiomsg">${esc(notice)}</div></div>`;
 }
 function renderListening(q){
@@ -362,18 +370,27 @@ function playSource(){
  const q=tasks[S.index]?.q;if(!q)return;
  const src=q.audio?.[0],script=playbackText(q),n=S.plays[aid(q)]||0;if(n>=2)return;
  stopAudio();
- S.plays[aid(q)]=n+1;persist();render();
  if(src){
-  audio=new Audio(encodeURI('../'+src));audio.play().catch(()=>alert('This original audio could not be loaded. The source file may be unavailable.'));
+  const player=new Audio(encodeURI('../'+src));audio=player;
+  player.play().then(()=>{
+   S.plays[aid(q)]=n+1;persist();if(S.screen==='exam'&&tasks[S.index]?.q.id===q.id)render();
+  }).catch(()=>{if(audio===player)audio=null;alert('Source audio could not be played. The attempt was not counted.');});
  }else if(script&&'speechSynthesis' in window){
-  const utterance=new SpeechSynthesisUtterance(script);utterance.lang='en-GB';utterance.rate=.92;speechSynthesis.speak(utterance);
+  try{
+   const utterance=new SpeechSynthesisUtterance(script);utterance.lang='en-GB';utterance.rate=.92;
+   speechSynthesis.speak(utterance);S.plays[aid(q)]=n+1;persist();render();
+  }catch{alert('Synthetic speech is not available on this device. No play was counted.')}
  }
 }
 function requestFinish(){S.dialog='submit';renderDialog()}
 function handleAction(action){
  if(action==='start'){resetSession(S.skill,S.set,false);return}
  if(action==='startall'){resetSession('grammar',1,true,[...ORDER]);return}
- if(action==='resume'){const rec=load();if(rec?.screen==='exam'&&rec.deadline>Date.now()){Object.assign(S,rec);tasks=buildTasks(S.skill,S.set);render()}return}
+ if(action==='resume'){const rec=load();if(rec?.screen==='exam'&&rec.deadline>Date.now()){
+   Object.assign(S,rec);
+   if(S.skill==='speaking')for(const a of Object.values(S.answers)){if(a?.clips){a.clips={};a.done=false;}}
+   tasks=buildTasks(S.skill,S.set);render();
+  }return}
  if(action==='prev')return goto(S.index-1);
  if(action==='next')return goto(S.index+1);
  if(action==='flag'){const q=tasks[S.index].q;S.flags[aid(q)]=!S.flags[aid(q)];persist();render();return}
