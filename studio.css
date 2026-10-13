@@ -322,3 +322,10 @@ audio { width:100%; margin:12px 0; }
 .reading-quiz-fallback{margin:10px 8px 3px;text-align:right;font-size:12px;color:#64748b}
 .reading-quiz-fallback a{color:#245dd1;text-decoration:underline}
 @media(max-width:600px){#nav a.nav-subitem{margin-left:32px}.reading-study-tabs{display:grid;grid-template-columns:1fr 1fr;gap:7px}.reading-study-tabs a{font-size:12px;padding:8px 7px}.reading-quiz-framebox{padding:4px;border-radius:13px}.reading-quiz-frame{border-radius:9px}.reading-quiz-fallback{font-size:11px}}
+
+/* One persistent translation preference shared by Reading and Listening. */
+.translation-toggle{display:inline-flex;align-items:center;justify-content:center;white-space:nowrap;border:1px solid #bdd1f5;border-radius:10px;background:#ecf3ff;color:#2256b3;font-weight:800;font-size:12px;padding:9px 11px;min-height:37px;cursor:pointer;margin-right:8px}
+.translation-toggle[hidden]{display:none!important}
+html.english-only .vi-translation,html.english-only .choice-translation-tools,html.english-only .choice .vi-translation{display:none!important}
+html.english-only .reference-details,html.english-only .explanation{display:none!important}
+@media(max-width:600px){.translation-toggle{font-size:11px;padding:7px 8px;max-width:190px;white-space:normal;line-height:1.2}}
