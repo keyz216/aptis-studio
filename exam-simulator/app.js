@@ -339,14 +339,17 @@ async function recordNow(){
  try{
   stream=await navigator.mediaDevices.getUserMedia({audio:true});
   recChunks=[];
-  const key=aid(tasks[S.index].q)+'-'+S.speakIndex;
+  const recordedQuestion=tasks[S.index].q;
+  const recordedId=aid(recordedQuestion);
+  const recordedIndex=S.speakIndex;
+  const key=recordedId+'-'+recordedIndex;
   const media=new MediaRecorder(stream);
   media.ondataavailable=e=>{if(e.data.size)recChunks.push(e.data)};
   media.onstop=()=>{
    if(recChunks.length)recorded[key]=new Blob(recChunks,{type:media.mimeType||'audio/webm'});
    if(stream){stream.getTracks().forEach(t=>t.stop());stream=null}
-   const q=tasks[S.index]?.q;if(q){const a=ans(q);a.clips??={};a.clips[S.speakIndex]=true;if(q.part===4||Object.keys(a.clips).length>=3)a.done=true;persist()}
-   if(S.screen==='exam'&&S.skill==='speaking'){speakStatus='done';render()}
+   const a=ans(recordedQuestion);a.clips??={};a.clips[recordedIndex]=true;if(recordedQuestion.part===4||Object.keys(a.clips).length>=3)a.done=true;persist();
+   if(S.screen==='exam'&&S.skill==='speaking'&&tasks[S.index]?.q.id===recordedQuestion.id&&S.speakIndex===recordedIndex){speakStatus='done';render()}
   };
   recorder=media;media.start();speakStatus='recording';
   const q=tasks[S.index].q;
