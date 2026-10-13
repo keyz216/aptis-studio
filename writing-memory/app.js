@@ -31,7 +31,7 @@ return [{t:core,v:1},{t:' '+tail,v:0}];
 }
 function answerP2(id){
  const core=cores[id]?.[0]||"I like learning new things.";
- const past=/\\b(last|yesterday|this morning|I visited|I read a short book)\\b/i.test(core);
+ const past=/\b(last|yesterday|this morning|I visited|I read a short book)\b/i.test(core);
  const special=id===12?"It was not easy, but I was glad I arrived on time.":null;
  const choices=[special,past?"It was a good experience, and I felt happy about it.":null,
  "I like it because it is simple and useful. It also makes me feel happy.",
@@ -44,15 +44,15 @@ function answerP4(id,formal){
  const v=actions[id];if(!v)return null;
  const slot=t=>({t,v:1}),fix=t=>({t,v:0});
  if(!formal)return [
- fix("Hi Sam,\\n\\nHave you heard about "),slot(v[0]),
+ fix("Hi Sam,\n\nHave you heard about "),slot(v[0]),
  fix("? I feel "),slot(v[1]),fix(" about it. I think we should "),
- slot(v[2]),fix(". It may help our members. What do you think? Please write back soon. I hope we can discuss this together soon.\\n\\nBest,\\nAlex")
+ slot(v[2]),fix(". It may help our members. What do you think? Please write back soon. I hope we can discuss this together soon.\n\nBest,\nAlex")
  ];
  return [
- fix("Dear Sir or Madam,\\n\\nI am writing about "),slot(v[0]),
- fix(". Thank you for asking members to share their views.\\n\\nI believe the best approach would be to "),
- slot(v[2]),fix(". In my opinion, this would be a practical choice because it could help many members and make the situation easier for everyone.\\n\\nI would also suggest that the club should "),
- slot(v[3]),fix(". For example, it could ask members for their opinions before making a final decision. This would help the organisers understand what people really need.\\n\\nFinally, please explain the next steps clearly so that everyone has enough time to prepare. I hope these ideas will be useful.\\n\\nThank you for your time. I look forward to hearing from you.\\n\\nYours faithfully,\\nAlex")
+ fix("Dear Sir or Madam,\n\nI am writing about "),slot(v[0]),
+ fix(". Thank you for asking members to share their views.\n\nI believe the best approach would be to "),
+ slot(v[2]),fix(". In my opinion, this would be a practical choice because it could help many members and make the situation easier for everyone.\n\nI would also suggest that the club should "),
+ slot(v[3]),fix(". For example, it could ask members for their opinions before making a final decision. This would help the organisers understand what people really need.\n\nFinally, please explain the next steps clearly so that everyone has enough time to prepare. I hope these ideas will be useful.\n\nThank you for your time. I look forward to hearing from you.\n\nYours faithfully,\nAlex")
  ];
 }
 function current(){
@@ -66,7 +66,7 @@ function current(){
 function key(){return S.id+'-'+S.part+'-'+S.qi+(S.slots?'-slots':'-full')}
 function save(){try{localStorage.setItem(STORAGE,JSON.stringify(persisted))}catch{}}
 function piecesText(segments){return segments.map(x=>x.t).join('')}
-function targetText(segments){return S.slots?segments.filter(x=>x.v).map(x=>x.t.trim()).filter(Boolean).join('\\n'):piecesText(segments)}
+function targetText(segments){return S.slots?segments.filter(x=>x.v).map(x=>x.t.trim()).filter(Boolean).join('\n'):piecesText(segments)}
 function completionCount(){return Object.entries(persisted.progress).filter(([k,v])=>!k.endsWith('-slots')&&v.best>=98).length}
 function updateTop(){
  $('mastered').textContent=completionCount()+'/176';
@@ -149,7 +149,7 @@ function render(){
  if(S.mode!=='read'){
   const area=$('writer');
   const t=targetText(a),charsPerLine=Math.max(23,Math.floor((paper.clientWidth-55)/(window.innerWidth<620?9.0:9.8)));
-  const height=Math.max(235,t.split('\\n').reduce((n,l)=>n+Math.max(1,Math.ceil(l.length/charsPerLine)),0)*30+70);
+  const height=Math.max(235,t.split('\n').reduce((n,l)=>n+Math.max(1,Math.ceil(l.length/charsPerLine)),0)*30+70);
   area.style.height=height+'px';
   area.value=saved;
   area.addEventListener('input',mirrorUpdate);
