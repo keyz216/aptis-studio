@@ -123,7 +123,7 @@ function render(){
  const warn=score<d.range[0]||score>d.range[1];
  const heading=`<div class="topline"><span class="step">${escape(d.label)}</span><span class="wc" id="sampleCount">${a?(warn?'⚠ ':'✓ ')+score+' từ · mục tiêu '+d.range[0]+'–'+d.range[1]:''}</span></div>
  <h2>Đề ${S.id} · ${escape(names[S.id]||'Writing')}</h2>
- <p class="subnote">Luyện gõ đúng nguyên mẫu đã soạn sẵn. <b>Màu vàng</b> là phần thay theo đề; màu xanh là phần cố định.</p>`;
+ <p class="subnote">Luyện gõ đúng nguyên mẫu đã soạn sẵn. <b>Màu vàng</b> là phần thay theo đề; màu xanh là phần cố định.${S.part==='p4b'?' Mẫu Part 4B có 2 ý cố định: họp nhóm và chia sẻ qua group chat/mạng xã hội.':''}</p>`;
  const qbar=S.part==='p3'?`<div class="p3nav">${[0,1,2].map(i=>'<button type="button" class="'+(i===S.qi?'active':'')+'" data-q="'+i+'">Câu '+(i+1)+'</button>').join('')}</div>`:'';
  const prompt=`${qbar}<div class="source"><div class="source-label">NỘI DUNG ĐỀ GỐC TRÊN GITHUB</div>${escape(d.prompt||'Chưa có nội dung tình huống trong dữ liệu nguồn.')}</div>`;
  if(!a){paper.innerHTML=heading+prompt+'<div class="empty"><b>Đề này chưa có tình huống Part 4 trong GitHub.</b><p>Tôi không tự tạo tình huống thay cho nguồn đang trống. Bạn có thể luyện Part 2 hoặc Part 3 của đề này.</p></div><div class="actions"><button id="next" class="primary">Bài tiếp theo →</button></div>';paper.querySelector('#next').onclick=next;paper.querySelectorAll('[data-q]').forEach(b=>b.onclick=()=>{S.qi=Number(b.dataset.q);render()});return;}
