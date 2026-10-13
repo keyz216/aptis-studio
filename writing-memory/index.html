@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="vi"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Dingdang Aptis Writing Memory – Luyện gõ theo chữ mờ</title>
+<meta name="description" content="Học thuộc Writing Aptis Part 2 3 4 với chữ mờ, gõ đúng hiện sáng, mẫu cố định và nội dung thay theo đề.">
+<style>
+:root{--blue:#2b5ed6;--ink:#192944;--muted:#71809b;--line:#e2e9f5;--bg:#f5f8ff;--orange:#9b540f;--bluefade:#e9f0ff}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.6 Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif}
+button,select,input,textarea{font:inherit}button{cursor:pointer}button:disabled{cursor:not-allowed;opacity:.5}
+.wm-shell{max-width:1140px;margin:0 auto;padding:24px 19px 55px}
+.masthead{display:flex;align-items:center;gap:14px;margin-bottom:19px}.logo{display:grid;place-items:center;width:49px;height:49px;border-radius:15px;background:var(--blue);color:#fff;font-size:28px;font-weight:900;flex-shrink:0}.eyebrow{font-weight:850;font-size:11px;letter-spacing:.14em;color:#5476b8}.masthead h1{margin:1px 0 0;font-size:clamp(22px,3vw,29px);line-height:1.2}.masthead p{margin:3px 0;color:#5e7091;font-size:13px}
+.panel{border-radius:18px;background:white;border:1px solid var(--line);box-shadow:0 5px 24px rgba(30,64,120,.035)}
+.controls{padding:17px;display:grid;grid-template-columns:minmax(180px,1fr) 1fr;gap:14px;align-items:end}
+.control label{font-weight:800;font-size:12px;color:#405475;display:block;margin:0 0 6px}
+select{width:100%;height:44px;min-width:0;padding:8px 11px;border-radius:11px;color:#213c69;background:#fff;border:1px solid #ccd8e9}
+.partbar,.modebar{display:flex;gap:7px;flex-wrap:wrap}.partbar button,.modebar button{border:1px solid #d6e1f2;border-radius:10px;padding:9px 12px;background:#fff;color:#526785;font-size:13px;font-weight:800}
+.partbar button.active,.modebar button.active{color:#fff;border-color:#2b5ed6;background:#2b5ed6}
+.summary{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:9px;padding:12px 17px;border-top:1px solid var(--line);font-size:12px;color:#637490}
+.summary b{color:#234f9d}.track{height:6px;background:#e8eef9;flex:1;max-width:210px;min-width:70px;border-radius:99px;overflow:hidden}.track i{display:block;background:#3976e0;height:100%;width:0;transition:width .15s}
+.paper{margin-top:17px;padding:22px;min-height:560px}
+.topline{display:flex;justify-content:space-between;align-items:start;gap:12px}.step{display:inline-block;background:#e9f0ff;color:#2c59ac;border-radius:8px;padding:6px 9px;font-size:12px;font-weight:850}.wc{font-size:12px;color:#5d7091}
+.paper h2{font-size:23px;line-height:1.35;margin:10px 0 7px}.subnote{font-size:13px;color:var(--muted);margin:0 0 13px}
+.source{border-left:3px solid #7b9bde;background:#f7f9ff;padding:13px 15px;border-radius:0 12px 12px 0;margin:12px 0 17px;white-space:pre-wrap;line-height:1.65;color:#283959;font-size:14px}
+.source-label{font-size:11px;color:#6882b4;font-weight:850;letter-spacing:.07em;margin-bottom:4px}
+.p3nav{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:13px}.p3nav button{border:1px solid var(--line);background:#fff;color:#4c6284;padding:8px 13px;border-radius:9px;font-weight:750}.p3nav button.active{background:#e7efff;color:#2456af;border-color:#9cbcf2}
+.hint{display:flex;flex-wrap:wrap;align-items:center;gap:10px;background:#fffaf1;border:1px solid #f4dfbf;border-radius:12px;padding:11px 13px;margin-bottom:15px;font-size:12px;color:#75572f}
+.legend{display:inline-flex;align-items:center;gap:6px}.dot{height:10px;width:10px;border-radius:3px;background:#305fd2}.dot.slot{background:#d79540}
+.modebar{margin:14px 0}.modebar button{font-size:12px}
+.preview{padding:14px;border-radius:13px;background:#f9fbff;border:1px solid #e3e9f4;white-space:pre-wrap;line-height:1.8;font-size:15px;margin:12px 0}
+.preview .fixed{color:#335ba2;font-weight:650}.preview .variable{color:#af661c;background:#fff0d6;padding:1px 2px;border-radius:3px;font-weight:800}
+.ghostbox{position:relative;min-height:220px;background:#fff;border:2px solid #cbd9ef;border-radius:13px;overflow:hidden}
+.ghostbox:focus-within{border-color:#4784ea;box-shadow:0 0 0 3px #4d82da1f}
+.ghost,.writer{margin:0;width:100%;font:16px/1.85 ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;letter-spacing:0;tab-size:4;padding:16px 17px;white-space:pre-wrap;overflow-wrap:break-word;word-break:normal;border:0}
+.ghost{position:absolute;inset:0;z-index:1;pointer-events:none;color:#bec7d6}
+.ghost .good{color:#193a72;background:#e5efff;border-radius:2px}.ghost .bad{color:#d93e48;background:#ffe5e7;border-radius:2px;text-decoration:underline}.ghost .todo{color:#bfc7d5}.ghost .hidden-text{color:transparent}
+.writer{position:relative;z-index:2;display:block;background:transparent;resize:vertical;outline:0;color:transparent;-webkit-text-fill-color:transparent;caret-color:#175fdf;min-height:240px}
+.typestatus{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin:11px 0;color:#5a6c87;font-size:12px}
+.typestatus b{font-size:14px;color:#2558b3}.scorebar{height:8px;background:#e7eefb;border-radius:99px;overflow:hidden;flex:1;min-width:65px}.scorebar i{background:#275fda;height:100%;display:block;width:0;transition:width .15s}
+.slotbar{display:flex;align-items:center;gap:8px;padding:9px 0 3px;flex-wrap:wrap;font-size:13px;color:#536a8a}
+.slotbar input{width:18px;height:18px;accent-color:#235ee0}
+.actions{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px}.actions button{border:1px solid #cddaf0;background:#fff;color:#2956a8;padding:10px 14px;border-radius:11px;font-size:13px;font-weight:800;min-height:40px}
+.actions button.primary{background:var(--blue);color:#fff;border-color:var(--blue)}
+.actions button:hover:not(:disabled){filter:brightness(.97)}
+.footer-note{font-size:12px;color:#6d7b91;margin-top:18px}
+.empty{background:#fff7e6;border:1px solid #edd6a5;border-radius:13px;padding:20px;margin-top:13px}
+.toast{position:fixed;right:20px;bottom:24px;background:#1f365b;color:#fff;padding:11px 17px;border-radius:10px;box-shadow:0 12px 40px #10203c30;font-weight:700;font-size:13px;z-index:30}
+html.embed body{background:#fff}html.embed .wm-shell{padding:6px 3px 20px}html.embed .masthead{display:none}html.embed .panel{box-shadow:none}
+@media(max-width:680px){.wm-shell{padding:10px 9px 35px}.masthead{gap:9px}.logo{height:43px;width:43px}.controls{grid-template-columns:1fr;padding:12px;gap:10px}.paper{padding:13px;min-height:510px;border-radius:14px}.paper h2{font-size:20px}.partbar button{flex:1;padding:9px 6px;font-size:12px}.modebar button{flex:1;padding:9px 5px;font-size:11px}.ghost,.writer{font-size:15px;line-height:1.85;padding:12px 12px}.source{font-size:13px;padding:10px}.actions button{font-size:12px}.summary{padding:11px;font-size:11px}}
+@media(prefers-reduced-motion:reduce){.scorebar i,.track i{transition:none}}
+</style></head>
+<body><div class="wm-shell">
+<header class="masthead"><div class="logo">W</div><div><div class="eyebrow">DINGDANG · APTIS ESOL GENERAL</div><h1>Writing Memory</h1><p>Nhìn chữ mờ → gõ đúng → chữ sáng lên · Học một mẫu, luyện từng đề</p></div></header>
+<section class="panel"><div class="controls"><div class="control"><label for="topic">Chọn 1 trong 30 đề Writing</label><select id="topic"></select></div><div class="control"><label>Chọn phần luyện</label><div class="partbar" id="partbar"><button type="button" data-part="p2">Part 2</button><button data-part="p3">Part 3</button><button data-part="p4a">Part 4A</button><button data-part="p4b">Part 4B</button></div></div></div><div class="summary"><span id="bankCount">30 đề · 176 bài luyện</span><span>Tiến độ: <b id="mastered">0/176</b></span><div class="track"><i id="overallBar"></i></div></div></section>
+<section class="paper panel" id="paper" aria-live="polite"></section>
+<div class="footer-note">Mẫu luyện ghi nhớ biên soạn từ câu hỏi trong thư viện GitHub; không phải đáp án chính thức và không bảo đảm band cao. Tiến độ được lưu trên trình duyệt này, không đồng bộ lên máy khác.</div></div><div id="toast" class="toast" hidden></div>
+<script src="../data.js"></script><script src="./cores.js"></script><script src="./part4.js"></script><script src="./app.js"></script>
+</body></html>
