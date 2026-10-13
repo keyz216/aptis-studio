@@ -61,6 +61,8 @@ const EN_LABELS=[
  ['Ôn chủ đề chưa chắc','Review weak topics'],['Ôn chủ đề chưa chắc.','Review weak topics.'],['Ôn','Review'],['Tất cả','All'],['Đã làm hết','Completed'],['Đang học','In progress']
  ];
 const HAS_VI=/[ĂăĐđĨĩŨũƠơƯưẠ-ỹ]/;
+const originalReadingTexts=new WeakMap();
+function restoreReadingText(root){if(!root)return;const w=document.createTreeWalker(root,NodeFilter.SHOW_TEXT);let n;while((n=w.nextNode())){if(originalReadingTexts.has(n))n.nodeValue=originalReadingTexts.get(n)}}
 function englishNodeText(root){const walk=document.createTreeWalker(root,NodeFilter.SHOW_TEXT);let node;while((node=walk.nextNode())){let v=node.nodeValue;if(!v||!HAS_VI.test(v)||node.parentElement?.closest('script,style'))continue;
  for(const [vi,en] of EN_LABELS){v=v.split(vi).join(en)}
  if(HAS_VI.test(v)){
@@ -68,6 +70,7 @@ function englishNodeText(root){const walk=document.createTreeWalker(root,NodeFil
    v=v.replace(/[ĂăĐđĨĩŨũƠơƯưẠ-ỹ][^.!?]*(?:[.!?]|$)/g,'').trim();
    if(HAS_VI.test(v))v='';
  }
+ if(!originalReadingTexts.has(node))originalReadingTexts.set(node,node.nodeValue);
  node.nodeValue=v;
 }}
 function englishReadingScreen(){
@@ -97,7 +100,7 @@ function englishReadingScreen(){
  englishNodeText(document.querySelector('.toolbar'));
  englishNodeText(document.querySelector('.footer'));
 }
-function languageLabel(){const b=$('translationSwitch');if(b){b.textContent=translationOn?'🌐 Dịch: Bật':'🌐 English only';b.setAttribute('aria-pressed',String(translationOn))}document.documentElement.classList.toggle('english-only',!translationOn);}
+function languageLabel(){if(translationOn){['.header','.tabs','.toolbar','.footer'].forEach(s=>restoreReadingText(document.querySelector(s)))}const b=$('translationSwitch');if(b){b.textContent=translationOn?'🌐 Dịch: Bật':'🌐 English only';b.setAttribute('aria-pressed',String(translationOn))}document.documentElement.classList.toggle('english-only',!translationOn);}
 
 const KEY='dingdang_reading_universal_quiz_v101';
 let stored={stats:{},sound:false};try{const l=JSON.parse(localStorage.getItem(KEY)||'null');if(l&&typeof l==='object')stored={...stored,...l};}catch(e){}
