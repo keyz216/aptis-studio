@@ -7,6 +7,12 @@ var saved=Studio.read('aptis-answers',{});
 if(!Studio.object(saved))saved={};
 for(const [key,value] of Object.entries(saved))if(!Studio.object(value))delete saved[key];
 var userSettings={shuffleQuestions:false,shuffleOptions:false,memorizationMode:false};
+const TRANSLATION_KEY='aptis-translation-enabled';
+let translationsEnabled=localStorage.getItem(TRANSLATION_KEY)!=='false';
+function currentTranslationSkill(){const [v,id]=location.hash.slice(1).split('/');return v==='lesson'?COURSES[Number(id)]?.skill:(v==='reading-quiz'||v==='listening-quiz'?v.split('-')[0]:v)}
+function applyTranslationDisplay(){const skill=currentTranslationSkill();const active=['reading','listening'].includes(skill);document.documentElement.classList.toggle('english-only',active&&!translationsEnabled);const b=document.querySelector('#translation-toggle');if(b){b.hidden=!active;b.textContent=translationsEnabled?'🌐 Dịch: Bật':'🌐 Dịch: Tắt · English only';b.setAttribute('aria-pressed',String(translationsEnabled));b.title=translationsEnabled?'Turn off Vietnamese translations':'Show Vietnamese translations';}document.querySelectorAll('iframe.reading-quiz-frame').forEach(f=>{try{f.contentWindow?.postMessage({type:'aptis-translation',enabled:translationsEnabled},location.origin)}catch{}})}
+function toggleSiteTranslation(){translationsEnabled=!translationsEnabled;try{localStorage.setItem(TRANSLATION_KEY,String(translationsEnabled))}catch{}applyTranslationDisplay()}
+
 const storedSettings=Studio.read('aptis-settings',{});
 for(const key of Object.keys(userSettings))if(typeof storedSettings?.[key]==='boolean')userSettings[key]=storedSettings[key];
 function persistSettings(){try{localStorage.setItem('aptis-settings',JSON.stringify(userSettings))}catch{toast('Không thể lưu tùy chỉnh trên trình duyệt này.')}}
@@ -56,7 +62,7 @@ function route(){if(readingQuizObserver){readingQuizObserver.disconnect();readin
     }
     qi=Math.max(0,Math.min(activeGroup.questions.length-1,Number(n)||0));
     practice()
-}else if(view==='listening-quiz')listeningQuiz();else if(view==='reading-quiz')readingQuiz();else if(info[view])library(view);else home();document.querySelectorAll('#nav a').forEach(a=>{if(a.classList.contains('active'))a.setAttribute('aria-current','page')});window.scrollTo(0,0)}
+}else if(view==='listening-quiz')listeningQuiz();else if(view==='reading-quiz')readingQuiz();else if(info[view])library(view);else home();applyTranslationDisplay();document.querySelectorAll('#nav a').forEach(a=>{if(a.classList.contains('active'))a.setAttribute('aria-current','page')});window.scrollTo(0,0)}
 function home(){
     const unique=[...new Map(COURSES.flatMap(g=>g.questions).map(q=>[q.id,q])).values()];
     const done=unique.filter(Studio.complete).length;
@@ -104,7 +110,7 @@ function library(skill){
 function listeningQuiz(){
   app.innerHTML=`<a class="back-link" href="#listening">← Trở về thư viện Listening</a><div class="library-heading"><span class="tile-icon" style="--accent:${info.listening.color};--tint:${info.listening.tint}">${svg('listening')}</span><div><div class="eyebrow">LISTENING / ÔN TẬP TĂNG CƯỜNG</div><h1>${location.hash==="#listening-quiz/matrix"?"Ma trận Câu 15":"Listening Memory Quiz"}</h1><p class="muted">Luyện câu 14–17: nhận diện người nói, quan điểm và ý tương đương. Âm thanh luyện tập là mô phỏng, không phải audio đề gốc.</p></div></div><div class="reading-study-tabs" role="group" aria-label="Chọn cách luyện Listening"><a href="#listening">Ngân hàng đề</a><a href="#listening-quiz" class="${location.hash!=='#listening-quiz/matrix'?'active':''}">🧠 Quiz ghi nhớ</a><a href="#listening-quiz/matrix" class="${location.hash==='#listening-quiz/matrix'?'active':''}">▦ Ma trận Câu 15</a></div><div class="reading-quiz-framebox"><iframe id="listening-quiz-frame" class="reading-quiz-frame" src="listening-quiz/?embed=1&v=matrix-20261013-1${location.hash==="#listening-quiz/matrix"?"&mode=matrix":""}" title="Dingdang Aptis Listening Memory Quiz" loading="eager"></iframe><p class="reading-quiz-fallback"><a href="listening-quiz/" target="_blank" rel="noopener noreferrer">Mở quiz ở tab riêng ↗</a> nếu trình duyệt không hiển thị đầy đủ.</p></div>`;
   const frame=app.querySelector('#listening-quiz-frame');
-  frame.addEventListener('load',()=>{
+  frame.addEventListener('load',()=>{applyTranslationDisplay();
     if(!frame.isConnected)return;
     try{
       const doc=frame.contentDocument;
@@ -119,7 +125,7 @@ function listeningQuiz(){
 function readingQuiz(){
     app.innerHTML=`<a class="back-link" href="#reading">← Trở về thư viện Reading</a><div class="library-heading"><span class="tile-icon" style="--accent:${info.reading.color};--tint:${info.reading.tint}">${svg('reading')}</span><div><div class="eyebrow">READING / ÔN TẬP TĂNG CƯỜNG</div><h1>${location.hash==="#reading-quiz/p4-fixed"?"Part 4 – Học thứ tự gốc":"Quiz ghi nhớ"}</h1><p class="muted">18 chủ đề Reading Part 2, 3, 4 · Có thêm chế độ học thứ tự gốc Part 4 từ PDF.</p></div></div><div class="reading-study-tabs" role="group" aria-label="Chọn cách luyện Reading"><a href="#reading">Ngân hàng đề</a><a class="${location.hash!=="#reading-quiz/p4-fixed"?"active":""}" href="#reading-quiz">🧠 Quiz ghi nhớ</a><a class="${location.hash==="#reading-quiz/p4-fixed"?"active":""}" href="#reading-quiz/p4-fixed">📌 Part 4 không đảo</a></div><div class="reading-quiz-framebox"><iframe id="reading-quiz-frame" class="reading-quiz-frame" src="reading-quiz/?embed=1&v=p4pdf-20261013${location.hash==="#reading-quiz/p4-fixed"?"&part=p4&order=fixed&topic=fourday":""}" title="Dingdang Aptis Reading Quiz: Part 2, 3, 4" loading="eager" allow="fullscreen"></iframe><p class="reading-quiz-fallback"><a href="reading-quiz/" target="_blank" rel="noopener noreferrer">Mở quiz ở tab riêng ↗</a> nếu trình duyệt không hiển thị đầy đủ.</p></div>`;
     const frame=app.querySelector('#reading-quiz-frame');
-    frame.addEventListener('load',()=>{
+    frame.addEventListener('load',()=>{applyTranslationDisplay();
         if(!frame.isConnected)return;
         try{
             const doc=frame.contentDocument;
@@ -171,7 +177,7 @@ function isSourceDistractor(choice){
     return /^Đáp án (?:bỏ|nhiễu|sai)$/i.test(plain(text).trim());
 }
 function examText(text){
-    if(!mockTestMode)return text;
+    if(!mockTestMode&&(translationsEnabled||!['reading','listening'].includes(activeGroup?.skill)))return text;
     let value=plain(text).trim();
     const vietnamese=/[ĂăĐđĨĩŨũƠơƯưẠ-ỹ]/;
     if(!vietnamese.test(value))return value;
@@ -190,6 +196,7 @@ function mockQuestionPrompt(q){
 }
 function translateAsyncHTML(text,choice=false) {
     if(mockTestMode)return '';
+    if(['reading','listening'].includes(activeGroup?.skill)&&!translationsEnabled)return '';
     const vi=viCompanion(text);
     return vi?`<span class="vi-translation" lang="vi"${choice?' data-choice-translation hidden':''}><span class="vi-label">Tiếng Việt</span>${esc(vi).replace(/\[BLANK\]/g,'_______')}</span>`:'';
 }
@@ -206,7 +213,7 @@ function explanationHTML(s){
 function reference(s){return !mockTestMode&&s?`<details class="reference-details"><summary>Xem nội dung tham khảo</summary>${passage(s)}</details>`:''}
 
 function readingInstructions(q){
-    if(mockTestMode)return ({fill_in_blanks_mc:'Choose the word that fits each gap.',sentence_ordering:'Put the sentences in order. Use each position only once.',matching_headings:'Read each paragraph and choose the matching heading.',text_question_match:'Read the texts and choose the person who matches each statement.'})[q.type]||'Read the text and answer each question.';
+    if(mockTestMode||(!translationsEnabled&&activeGroup?.skill==='reading'))return ({fill_in_blanks_mc:'Choose the word that fits each gap.',sentence_ordering:'Put the sentences in order. Use each position only once.',matching_headings:'Read each paragraph and choose the matching heading.',text_question_match:'Read the texts and choose the person who matches each statement.'})[q.type]||'Read the text and answer each question.';
     return ({fill_in_blanks_mc:'Chọn từ phù hợp để hoàn thành từng câu.',sentence_ordering:'Sắp xếp các câu thành đoạn văn. Mỗi vị trí chỉ dùng một lần.',matching_headings:'Đọc từng đoạn văn và chọn tiêu đề phù hợp.',text_question_match:'Đọc thông tin của từng người và chọn đáp án phù hợp với mỗi nhận định.'})[q.type]||'Đọc nội dung và trả lời đầy đủ các ý.';
 }
 function questionBody(q){
@@ -741,4 +748,6 @@ function initMobileMenu(){
 }
 initMobileMenu();
 window.addEventListener('hashchange',route);
+document.querySelector('#translation-toggle')?.addEventListener('click',toggleSiteTranslation);
+window.addEventListener('storage',e=>{if(e.key===TRANSLATION_KEY){translationsEnabled=e.newValue!=='false';applyTranslationDisplay()}});
 route();
