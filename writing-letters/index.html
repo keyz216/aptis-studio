@@ -3,54 +3,98 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>Aptis · Học thuộc thư Part 4</title>
-<meta name="description" content="Học thuộc thư cho bạn và thư cho người quản lý: tiếng Anh, bản dịch Việt, mẹo nhớ, luyện gõ có gợi ý và tự kiểm tra.">
+<meta name="theme-color" content="#f5f8ff">
+<title>Dingdang Aptis Writing Memory · Thư Part 4</title>
+<meta name="description" content="Học thuộc thư cho bạn và người quản lý theo đúng giao diện Writing Memory: xem song ngữ, gõ chữ mờ, che chữ, gợi ý tiếng Việt và chấm đúng sai trực tiếp.">
 <style>
-:root{--ink:#1c2e4a;--muted:#63738d;--blue:#275ec8;--line:#dfe7f3;--bg:#f5f8fd;--soft:#eef4ff;--ok:#17815d;--bad:#c44646}
-*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.65 system-ui,-apple-system,"Segoe UI",sans-serif}
-button,textarea{font:inherit}button{cursor:pointer}button:focus-visible,textarea:focus-visible{outline:3px solid #9ac0ff;outline-offset:2px}
-button:disabled{opacity:.5;cursor:not-allowed}.wrap{max-width:990px;margin:auto;padding:22px 16px 50px}
-.hero{margin-bottom:18px}.eyebrow{font-size:11px;letter-spacing:.13em;font-weight:900;color:#5472ae}.hero h1{font-size:clamp(23px,4vw,32px);line-height:1.25;margin:4px 0}.hero p{margin:6px 0;color:var(--muted)}
-.panel{border:1px solid var(--line);border-radius:18px;background:#fff;box-shadow:0 7px 25px #183c7510}.top{padding:16px;display:grid;gap:15px}
-.picks,.modes,.tools,.actions{display:flex;gap:9px;flex-wrap:wrap}.pill{border:1px solid #d4e0f1;background:white;border-radius:11px;padding:10px 13px;color:#425a7e;font-weight:750}.pill[aria-pressed=true]{background:var(--blue);border-color:var(--blue);color:#fff}
-.meta{display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;color:var(--muted);font-size:12px}.meta b{color:#27519a}
-.progress{height:8px;border-radius:10px;overflow:hidden;background:#e7ecf6}.progress span{display:block;height:100%;background:#3273df;transition:width .2s}
-.lesson{margin-top:16px;padding:clamp(16px,3vw,25px)}
-.mini{display:inline-flex;background:#eaf1ff;color:#2455aa;border-radius:8px;padding:5px 9px;font-size:11px;font-weight:850}
-.lesson h2{font-size:clamp(20px,3vw,25px);margin:9px 0 2px;line-height:1.35}.sub{color:var(--muted);font-size:13px;margin:2px 0 18px}
-.memory{border:1px solid #efd8a9;background:#fff9eb;border-radius:12px;padding:12px 14px;margin:14px 0}.memory b{color:#86560e}.memory p{margin:4px 0 0}
-.line{padding:15px 0;border-top:1px solid #e8edf5}.line:first-child{border-top:0}.tag{display:inline-block;color:#6e83a2;text-transform:uppercase;letter-spacing:.08em;font-size:10px;font-weight:900;margin-bottom:5px}
-.en{font-size:17px;font-weight:700;line-height:1.55;margin:1px 0 5px}.vi{color:#426387;margin:4px 0;font-size:15px}.cue{color:#925710;font-size:13px;margin:5px 0}
-.prefs{display:flex;gap:15px;flex-wrap:wrap;margin:12px 0}.prefs label{font-size:13px;font-weight:650;color:#506481;cursor:pointer}.prefs input{accent-color:var(--blue)}
-.focushead{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap}.counter{color:#63738d;font-size:12px;font-weight:750}
-.target{padding:14px 15px;border-radius:13px;background:#f8faff;border:1px solid #dbe6f8;margin:15px 0}.target .vi{margin:3px 0 7px}.target .cue{margin-top:7px}
-.letters{display:block;line-height:1.9;white-space:pre-wrap;overflow-wrap:anywhere;border:1px dashed #c9d7ef;background:#f9fbff;border-radius:10px;padding:12px 14px;font-family:ui-monospace,Consolas,monospace;font-size:15px;color:#6d8eb8;margin:12px 0}.letters.faded{color:#b5c3d8}.letters.hidden{display:none}
-.writerlabel{display:block;font-size:12px;font-weight:850;margin:12px 0 6px;color:#48618b}
-textarea{display:block;width:100%;min-height:118px;border-radius:12px;border:2px solid #cbd8eb;resize:vertical;background:white;color:#1d304b;padding:13px;font-size:16px;line-height:1.7}
-.status{display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap;color:var(--muted);font-size:12px;margin:9px 0}.status strong{color:#2459ac}
-.result{border-radius:10px;padding:12px 13px;background:#eef9f4;color:#146b4a;border:1px solid #b9dfce;margin:11px 0;font-size:13px}.result.bad{background:#fff5f5;border-color:#f0caca;color:#a13f3f}.result:empty{display:none}
-.actions{margin-top:16px;align-items:center}.action{border:1px solid #c9d9ee;background:#fff;border-radius:10px;padding:10px 13px;color:#345779;font-weight:750}.primary{color:white;border-color:var(--blue);background:var(--blue)}
-.hintnote{font-size:12px;color:var(--muted);margin:15px 0 0}.spacer{flex:1}
-.footer{color:var(--muted);font-size:12px;margin:20px 5px}.vocab{font-size:12px;color:#788ca8;margin-top:7px}
-html.embed body{background:transparent}html.embed .wrap{padding:4px 3px 25px}html.embed .hero{display:none}html.embed .panel{box-shadow:none}
-@media(max-width:650px){.wrap{padding:11px 9px 36px}.top{padding:13px}.lesson{padding:14px}.picks,.modes{display:grid;grid-template-columns:1fr 1fr}.modes{grid-template-columns:repeat(3,minmax(0,1fr))}.pill{font-size:12px;padding:9px 7px}.en{font-size:17px}.vi{font-size:14px}.action{font-size:12px;padding:9px 10px}.picks button{min-height:44px}}
-@media(prefers-reduced-motion:reduce){.progress span{transition:none}}
+
+:root{--blue:#2b5ed6;--ink:#192944;--muted:#71809b;--line:#e2e9f5;--bg:#f5f8ff;--orange:#9b540f}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.6 Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif}
+button,input,textarea{font:inherit}button{cursor:pointer}button:disabled{opacity:.48;cursor:not-allowed}
+button:focus-visible,textarea:focus-visible,input:focus-visible,summary:focus-visible{outline:3px solid #8ab3fa;outline-offset:2px}
+.wm-shell{max-width:1140px;margin:0 auto;padding:24px 19px 55px}
+.masthead{display:flex;align-items:center;gap:14px;margin-bottom:19px}
+.logo{display:grid;place-items:center;width:49px;height:49px;border-radius:15px;background:var(--blue);color:#fff;font-size:28px;font-weight:900;flex-shrink:0}
+.eyebrow{font-weight:850;font-size:11px;letter-spacing:.14em;color:#5476b8}
+.masthead h1{margin:1px 0 0;font-size:clamp(22px,3vw,29px);line-height:1.2}
+.masthead p{margin:3px 0;color:#5e7091;font-size:13px}
+.panel{border-radius:18px;background:white;border:1px solid var(--line);box-shadow:0 5px 24px rgba(30,64,120,.035)}
+.controls{padding:17px;display:grid;gap:12px}
+.control-label{font-weight:800;font-size:12px;color:#405475;display:block;margin:0 0 7px}
+.letterbar,.modebar{display:flex;gap:8px;flex-wrap:wrap}
+.letterbar button,.modebar button{border:1px solid #d6e1f2;border-radius:10px;padding:9px 13px;background:#fff;color:#526785;font-size:13px;font-weight:800}
+.letterbar button.active,.modebar button.active{color:#fff;border-color:#2b5ed6;background:#2b5ed6}
+.summary{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:9px;padding:12px 17px;border-top:1px solid var(--line);font-size:12px;color:#637490}
+.summary b{color:#234f9d}.track{height:6px;background:#e8eef9;flex:1;max-width:210px;min-width:70px;border-radius:99px;overflow:hidden}
+.track i{display:block;background:#3976e0;height:100%;width:0;transition:width .15s}
+.paper{margin-top:17px;padding:22px;min-height:560px}
+.topline{display:flex;justify-content:space-between;align-items:start;gap:12px;flex-wrap:wrap}
+.step{display:inline-block;background:#e9f0ff;color:#2c59ac;border-radius:8px;padding:6px 9px;font-size:12px;font-weight:850}
+.wc{font-size:12px;color:#5d7091}
+.paper h2{font-size:23px;line-height:1.35;margin:10px 0 7px}
+.subnote{font-size:13px;color:var(--muted);margin:0 0 13px}
+.source{border-left:3px solid #7b9bde;background:#f7f9ff;padding:13px 15px;border-radius:0 12px 12px 0;margin:12px 0 17px;line-height:1.65;color:#283959;font-size:14px}
+.source-label{font-size:11px;color:#6882b4;font-weight:850;letter-spacing:.07em;margin-bottom:4px}
+.hint{display:flex;flex-wrap:wrap;align-items:center;gap:10px;background:#fffaf1;border:1px solid #f4dfbf;border-radius:12px;padding:11px 13px;margin-bottom:15px;font-size:12px;color:#75572f}
+.legend{display:inline-flex;align-items:center;gap:6px}
+.dot{height:10px;width:10px;border-radius:3px;background:#305fd2}.dot.bad-dot{background:#d93e48}.dot.ghost-dot{background:#c1cbdc}
+.modebar{margin:14px 0}.modebar button{font-size:12px}
+.preview{padding:14px;border-radius:13px;background:#f9fbff;border:1px solid #e3e9f4;line-height:1.8;font-size:15px;margin:12px 0}
+.readitem{padding:11px 2px;border-bottom:1px solid #e4ecf5}.readitem:last-child{border-bottom:0}
+.readitem .en{font-size:16px;color:#244e95;font-weight:700;margin:3px 0 4px}
+.readitem .vi{font-size:15px;color:#3d5b81;margin:2px 0 4px}
+.readitem .mnemo{font-size:12px;color:#95621e;margin:5px 0 0}
+.readitem .tag{font-size:11px;color:#6a7fa0;font-weight:800;letter-spacing:.06em}
+.opts{display:flex;gap:18px;align-items:center;flex-wrap:wrap;margin:10px 0;font-size:13px;color:#536a8a}
+.opts label{display:inline-flex;align-items:center;gap:7px;cursor:pointer}.opts input{width:18px;height:18px;accent-color:#235ee0}
+.cue{display:flex;flex-direction:column;gap:2px;border:1px solid #e8d9bd;background:#fffaf2;color:#79552d;border-radius:10px;padding:10px 13px;margin:9px 0 12px;font-size:13px}
+.cue strong{color:#704717;font-size:12px}.cue .initials{font:13px/1.7 ui-monospace,Consolas,monospace;color:#5c6c86}
+.ghostbox{position:relative;min-height:310px;background:#fff;border:2px solid #cbd9ef;border-radius:13px;overflow:hidden}
+.ghostbox:focus-within{border-color:#4784ea;box-shadow:0 0 0 3px #4d82da1f}
+.ghost,.writer{margin:0;width:100%;font:16px/1.85 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;letter-spacing:0;tab-size:4;padding:16px 17px;white-space:pre-wrap;overflow-wrap:break-word;word-break:normal;border:0}
+.ghost{position:absolute;inset:0;z-index:1;pointer-events:none;color:#bec7d6;overflow:hidden}
+.ghost .good{color:#193a72;background:#e5efff;border-radius:2px}
+.ghost .bad{color:#d93e48;background:#ffe5e7;border-radius:2px;text-decoration:underline}
+.ghost .todo{color:#bfc7d5}.ghost .hidden-text{color:transparent}
+.writer{position:relative;z-index:2;display:block;background:transparent;resize:vertical;outline:0;color:transparent;-webkit-text-fill-color:transparent;caret-color:#175fdf;min-height:310px}
+.typestatus{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin:11px 0;color:#5a6c87;font-size:12px}
+.typestatus b{font-size:14px;color:#2558b3}.scorebar{height:8px;background:#e7eefb;border-radius:99px;overflow:hidden;flex:1;min-width:65px}
+.scorebar i{background:#275fda;height:100%;display:block;width:0;transition:width .15s}
+.actions{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px}
+.actions button,.actions a{border:1px solid #cddaf0;background:#fff;color:#2956a8;padding:10px 14px;border-radius:11px;font-size:13px;font-weight:800;min-height:40px;text-decoration:none}
+.actions button.primary{background:var(--blue);color:#fff;border-color:var(--blue)}
+.actions button:hover:not(:disabled),.actions a:hover{filter:brightness(.97)}
+.bilingual{margin-top:14px;border:1px solid #e1e9f4;border-radius:12px;background:#fbfcff;overflow:hidden}
+.bilingual summary{cursor:pointer;padding:11px 13px;font-size:13px;font-weight:800;color:#355a98}
+.bilingual .inside{padding:0 13px 11px}
+.bilingual .inside p{margin:7px 0;font-size:13px}
+.bilingual .inside b{color:#315b9b}.bilingual .inside small{color:#98641e}
+.footer-note{font-size:12px;color:#6d7b91;margin-top:18px}
+.toast{position:fixed;right:20px;bottom:24px;background:#1f365b;color:#fff;padding:11px 17px;border-radius:10px;box-shadow:0 12px 40px #10203c30;font-weight:700;font-size:13px;z-index:30}
+html.embed body{background:#fff}html.embed .wm-shell{padding:6px 3px 20px}html.embed .masthead{display:none}html.embed .panel{box-shadow:none}
+@media(max-width:680px){.wm-shell{padding:10px 9px 35px}.masthead{gap:9px}.logo{height:43px;width:43px}.controls{padding:12px;gap:10px}.paper{padding:13px;min-height:510px;border-radius:14px}.paper h2{font-size:20px}.letterbar button,.modebar button{flex:1;padding:9px 8px;font-size:12px}.ghost,.writer{font-size:15px;line-height:1.85;padding:12px 12px}.source{font-size:13px;padding:10px}.actions button,.actions a{font-size:12px}.summary{padding:11px;font-size:11px}}
+@media(prefers-reduced-motion:reduce){.scorebar i,.track i{transition:none}}
 </style>
 </head>
 <body>
-<div class="wrap">
-<header class="hero"><div class="eyebrow">DINGDANG · APTIS WRITING PART 4</div><h1>Học thuộc hai lá thư</h1><p>Thư cho bạn · Thư cho quản lý · Tiếng Anh và bản dịch ngay bên dưới · Gợi ý gõ từng câu</p></header>
-<section class="panel top" aria-label="Chọn bài học">
-<div class="picks" role="group" aria-label="Chọn lá thư"><button class="pill" id="pick-friend" type="button">✉ Thư cho bạn · 50 từ</button><button class="pill" id="pick-manager" type="button">▤ Thư cho quản lý · 135 từ</button></div>
-<div class="modes" role="group" aria-label="Chế độ luyện"><button class="pill" id="mode-read" type="button">1. Đọc song ngữ</button><button class="pill" id="mode-hint" type="button">2. Gõ gợi ý</button><button class="pill" id="mode-test" type="button">3. Tự nhớ</button></div>
-<div class="meta"><span id="summary"></span><span id="progress-text"></span></div><div class="progress" aria-hidden="true"><span id="progress-bar"></span></div>
+<div class="wm-shell">
+<header class="masthead"><div class="logo">W</div><div><div class="eyebrow">DINGDANG · APTIS ESOL GENERAL</div><h1>Writing Memory · Hai lá thư Part 4</h1><p>Nhìn chữ mờ → gõ đúng → chữ sáng lên · Có bản dịch và mẹo nhớ tiếng Việt</p></div></header>
+<section class="panel">
+<div class="controls"><div class="control-label">Chọn bài học thuộc nguyên văn</div>
+<div class="letterbar" role="group" aria-label="Chọn thư">
+<button id="letter-friend" type="button" aria-pressed="true">✉ Thư cho bạn · 50 từ</button>
+<button id="letter-manager" type="button" aria-pressed="false">▤ Thư cho quản lý · 135 từ</button>
+</div></div>
+<div class="summary"><span>2 lá thư · <b id="learned">0/2</b> bài đã gõ đúng</span><span>Tiến độ thư hiện tại: <b id="best">0%</b></span><div class="track"><i id="overallbar"></i></div></div>
 </section>
-<main id="lesson" class="panel lesson" aria-live="polite"></main>
-<p class="footer">Mẫu này dùng để học thuộc, không phải đáp án đúng cho mọi đề. Khi thi, cần nhận diện thông tin và yêu cầu cụ thể, đặc biệt nếu đề yêu cầu chọn một phương án.</p>
+<main class="paper panel" id="paper" aria-live="polite"></main>
+<div class="footer-note">Mẫu chống liệt để luyện nhớ. Đề thi thực tế có thể yêu cầu cảm xúc, chọn A/B hoặc đề xuất cụ thể; cần chỉnh ý cho đúng yêu cầu đề. Tiến độ chỉ lưu trên trình duyệt này.</div>
 </div>
+<div class="toast" id="toast" role="status" aria-live="polite" hidden></div>
 <script>
 (function(){
-"use strict";
+'use strict';
 const letters={
  friend:{name:"Thư cho bạn",story:"LAN ƠI → ĐỌC TIN → CHUYỆN TO → CẢ LÀNG GÓP → NHÓM CHAT BÀN → HỎI LAN",audio:"https://www.aidocmaker.com/g0/audio?name=ab17408da8b04d87b4fc80a3b7be6596",rows:[
  ["Chào","Hi Lan,","Chào Lan,","Lan ơi!"],
@@ -78,45 +122,175 @@ const letters={
  ["Ký tên","Nam","Nam","Nam ký tên!"]
  ]}
 };
-const $=id=>document.getElementById(id),esc=s=>String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
-const key="aptis-part4-letter-memory-v1";
-let db={};try{db=JSON.parse(localStorage.getItem(key)||"{}")}catch(e){}if(!db||typeof db!=="object")db={};
+
+const $=id=>document.getElementById(id);
+const escape=s=>String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const words=t=>(String(t).trim().match(/\S+/g)||[]).length;
+const STORE="aptis-part4-letter-memory-v1";
+let saved;try{saved=JSON.parse(localStorage.getItem(STORE)||"{}")}catch{saved={}}
+if(!saved||typeof saved!=="object")saved={};
+if(!saved.full||typeof saved.full!=="object")saved.full={};
 const params=new URLSearchParams(location.search);
-const state={who:params.get("letter")==="manager"?"manager":"friend",mode:"hint",index:0,showVi:true,showCue:true,reveal:false,hintType:"initial"};
 if(params.get("embed")==="1")document.documentElement.classList.add("embed");
-function store(){try{localStorage.setItem(key,JSON.stringify(db))}catch(e){}}
-function rid(){return state.who+"-"+state.index}
-function row(){return letters[state.who].rows[state.index]}
-function norm(s){return String(s||"").trim().replace(/\s+/g," ").toLowerCase()}
-function words(s){return String(s).trim().split(/\s+/).filter(Boolean).length}
-function completed(who){return letters[who].rows.filter((r,i)=>db[who+"-"+i]?.done).length}
-function initials(s){return String(s).split(/\s+/).map(w=>{const clean=w.replace(/^[^\p{L}\p{N}]+/gu,"");return clean?clean[0]+"·".repeat(Math.max(0,Math.min(clean.length-1,7))):w}).join(" ")}
-function iconButton(label,id){return '<button class="action" type="button" id="'+id+'">'+label+'</button>'}
-function top(){const l=letters[state.who],n=completed(state.who),total=l.rows.length;$("pick-friend").setAttribute("aria-pressed",String(state.who==="friend"));$("pick-manager").setAttribute("aria-pressed",String(state.who==="manager"));["read","hint","test"].forEach(m=>$("mode-"+m).setAttribute("aria-pressed",String(state.mode===m)));$("summary").textContent=l.name+" · "+words(l.rows.map(r=>r[1]).join(" "))+" từ · "+total+" mảnh câu";$("progress-text").innerHTML="<b>"+n+"/"+total+"</b> mảnh đã gõ đúng";$("progress-bar").style.width=(100*n/total)+"%";}
-function speak(text){if(!("speechSynthesis" in window)){alert("Trình duyệt chưa hỗ trợ đọc văn bản.");return}window.speechSynthesis.cancel();const utter=new SpeechSynthesisUtterance(text);utter.lang="en-GB";utter.rate=.78;utter.pitch=1;window.speechSynthesis.speak(utter);}
-function allText(){const r=letters[state.who].rows.map(x=>x[1]);if(state.who==="friend")return r[0]+"\n\n"+r.slice(1,5).join(" ")+"\n\n"+r.slice(5).join("\n");return r[0]+"\n\n"+r.slice(1,4).join(" ")+"\n\n"+r.slice(4,7).join(" ")+"\n\n"+r.slice(7,9).join(" ")+"\n\n"+r.slice(9,12).join(" ")+"\n\n"+r.slice(12).join("\n");}
-function renderRead(){const l=letters[state.who],groups={};l.rows.forEach((r,i)=>{const para=state.who==="friend"?(i===0?0:i<=4?1:2):(i===0?0:i<4?1:i<7?2:i<9?3:i<12?4:5);(groups[para]??=[]).push([r,i]);});let out='<div class="memory"><b>🧠 Câu lóng ghi nhớ thứ tự</b><p>'+esc(l.story)+'</p></div><div class="prefs"><label><input id="showvi" type="checkbox" '+(state.showVi?"checked":"")+'> Hiện bản dịch Việt</label><label><input id="showcue" type="checkbox" '+(state.showCue?"checked":"")+'> Hiện mẹo lóng</label></div>';
- Object.entries(groups).forEach(([g,rs])=>{out+='<section class="readgroup" aria-label="Đoạn '+(Number(g)+1)+'">';rs.forEach(([r,i])=>{out+='<article class="line"><div class="tag">'+(i+1)+'. '+esc(r[0])+'</div><p class="en" lang="en">'+esc(r[1])+'</p>'+(state.showVi?'<p class="vi">'+esc(r[2])+'</p>':"")+(state.showCue?'<p class="cue">💡 '+esc(r[3])+'</p>':"")+'</article>'});out+='</section>'});
- out+='<div class="actions">'+iconButton("🔊 Nghe cả thư","listen-all")+'<a class="action" href="'+l.audio+'" target="_blank" rel="noopener noreferrer">🎧 Audio mẫu ↗</a><span class="spacer"></span>'+iconButton("⌨ Bắt đầu luyện gõ","start-writing")+'</div>';return out;}
-function renderPractice(){const r=row(),l=letters[state.who],id=rid(),saved=db[id]||{},hint=state.mode==="hint";let h='<div class="focushead"><span class="mini">'+esc(r[0])+'</span><span class="counter">Mảnh '+(state.index+1)+' / '+l.rows.length+'</span></div><div class="target"><div class="tag">NHỚ NGHĨA VÀ THỨ TỰ CÂU</div><p class="vi">'+esc(r[2])+'</p><p class="cue">💡 '+esc(r[3])+'</p></div>';
- if(hint){h+='<div class="tools">'+iconButton("🔤 Chữ đầu mỗi từ","use-initial")+' '+iconButton("🌫 Xem chữ mờ","use-ghost")+' '+iconButton(state.reveal?"🙈 Ẩn câu mẫu":"👁 Xem toàn câu","reveal")+'</div><div class="letters '+(state.hintType==="ghost"?"faded":"")+'" id="guide" lang="en">'+esc(state.reveal?r[1]:(state.hintType==="ghost"?r[1]:initials(r[1])))+'</div>';}
- else{h+='<div class="tools">'+iconButton(state.reveal?"🙈 Ẩn câu mẫu":"🔎 Xem câu sau khi thử","reveal")+'</div>'+(state.reveal?'<div class="letters" lang="en">'+esc(r[1])+'</div>':"");}
- h+='<label class="writerlabel" for="typed">Gõ câu tiếng Anh bên dưới (không tự động điền)</label><textarea id="typed" spellcheck="false" autocorrect="off" autocapitalize="off" autocomplete="off" placeholder="Nhớ từ nào, gõ từ đó…">'+esc(saved.typed||"")+'</textarea><div class="status"><span id="count">0 từ đã gõ</span><strong id="done">'+(saved.done?"✓ Đã hoàn thành":"Chưa hoàn thành")+'</strong></div><div id="feedback" class="result" role="status"></div><div class="actions">'+iconButton("← Câu trước","previous")+iconButton("🔊 Nghe câu","listen")+iconButton("↻ Gõ lại","reset")+'<span class="spacer"></span><button class="action primary" id="check" type="button">Kiểm tra</button><button class="action primary" id="next" type="button">Câu tiếp →</button></div><p class="hintnote">Gợi ý được dùng để học thuộc, không phải nội dung điền sẵn. Hệ thống kiểm tra cả dấu câu và chính tả (không phân biệt chữ hoa/thường). Bài gõ lưu trên trình duyệt này.</p>';return h;}
-function render(){top();const l=letters[state.who];$("lesson").innerHTML='<div class="mini">WRITING PART 4 · HỌC THUỘC</div><h2>'+esc(l.name)+'</h2><p class="sub">Giữ nguyên mẫu gốc · Tiếng Anh / bản dịch Việt · Mẹo nhớ tiếng Việt · Gõ từng câu</p>'+(state.mode==="read"?renderRead():renderPractice());
- if(state.mode==="read"){$("showvi").onchange=e=>{state.showVi=e.target.checked;render()};$("showcue").onchange=e=>{state.showCue=e.target.checked;render()};$("listen-all").onclick=()=>speak(allText());$("start-writing").onclick=()=>{state.mode="hint";render()};return;}
- const box=$("typed");box.oninput=()=>{const k=rid();db[k]={...db[k],typed:box.value,done:norm(box.value)===norm(row()[1])};store();$("count").textContent=words(box.value)+" từ đã gõ";$("done").textContent=db[k].done?"✓ Đã hoàn thành":"Chưa hoàn thành";top();$("feedback").textContent="";$("feedback").classList.remove("bad");};$("count").textContent=words(box.value)+" từ đã gõ";
- $("previous").disabled=state.index===0;$("previous").onclick=()=>{state.index--;state.reveal=false;render()};
- $("next").onclick=()=>{state.index=(state.index+1)%letters[state.who].rows.length;state.reveal=false;render()};
- $("listen").onclick=()=>speak(row()[1]);$("reset").onclick=()=>{db[rid()]={done:false,typed:""};store();render();$("typed").focus()};
- $("check").onclick=()=>{const good=norm(box.value)===norm(row()[1]);const result=$("feedback");result.classList.toggle("bad",!good);result.textContent=good?"✓ Chính xác! Bạn đã nhớ được mảnh câu này.":"Chưa khớp mẫu. Soát lại từ, dấu câu và khoảng trắng; bạn có thể dùng gợi ý hoặc nghe lại.";db[rid()]={typed:box.value,done:good};store();top();$("done").textContent=good?"✓ Đã hoàn thành":"Chưa hoàn thành"};
- $("reveal").onclick=()=>{state.reveal=!state.reveal;render()};
- if($("use-initial"))$("use-initial").onclick=()=>{state.hintType="initial";state.reveal=false;render()};
- if($("use-ghost"))$("use-ghost").onclick=()=>{state.hintType="ghost";state.reveal=false;render()};
+const S={who:params.get("letter")==="manager"?"manager":"friend",mode:"ghost",showVi:true,showCue:true,showHint:true,initials:false};
+function fullText(who){
+ const r=letters[who].rows.map(x=>x[1]);
+ if(who==="friend")return r[0]+"\n\n"+r.slice(1,5).join(" ")+"\n\n"+r.slice(5).join("\n");
+ return r[0]+"\n\n"+r.slice(1,4).join(" ")+"\n\n"+r.slice(4,7).join(" ")+"\n\n"+r.slice(7,9).join(" ")+"\n\n"+r.slice(9,12).join(" ")+"\n\n"+r.slice(12).join("\n");
 }
-function switchWho(w){if(state.who===w)return;state.who=w;state.index=0;state.reveal=false;render()}
-$("pick-friend").onclick=()=>switchWho("friend");$("pick-manager").onclick=()=>switchWho("manager");
-["read","hint","test"].forEach(m=>$("mode-"+m).onclick=()=>{state.mode=m;state.reveal=false;render()});
+function save(){try{localStorage.setItem(STORE,JSON.stringify(saved));return true}catch{return false}}
+function record(){return saved.full[S.who]||{typed:"",best:0,done:false}}
+function currentTarget(){return fullText(S.who)}
+function accurate(typed,target){
+ let correct=0;
+ for(let i=0;i<typed.length;i++)if(target[i]!==undefined&&typed[i].toLowerCase()===target[i].toLowerCase())correct++;
+ const percent=target.length?Math.min(100,Math.round(100*correct/target.length)):0;
+ return {correct,percent,complete:typed.length===target.length&&correct===target.length};
+}
+function updateProgress(){
+ const done=["friend","manager"].filter(k=>saved.full[k]?.done).length;
+ const r=record();$("learned").textContent=done+"/2";
+ $("best").textContent=Math.round(r.best||0)+"%";
+ $("overallbar").style.width=Math.max(0,Math.min(100,r.best||0))+"%";
+ ["friend","manager"].forEach(k=>{const b=$("letter-"+k);b.classList.toggle("active",S.who===k);b.setAttribute("aria-pressed",String(S.who===k))});
+}
+function updateModes(){document.querySelectorAll("[data-mode]").forEach(b=>{const active=b.dataset.mode===S.mode;b.classList.toggle("active",active);b.setAttribute("aria-pressed",String(active))})}
+let toastHandle;
+function toast(msg){const box=$("toast");box.textContent=msg;box.hidden=false;clearTimeout(toastHandle);toastHandle=setTimeout(()=>box.hidden=true,2500)}
+function speak(text){
+ if(!("speechSynthesis" in window)){toast("Trình duyệt chưa hỗ trợ đọc văn bản");return}
+ window.speechSynthesis.cancel();
+ const utter=new SpeechSynthesisUtterance(text);utter.lang="en-GB";utter.rate=.78;
+ window.speechSynthesis.speak(utter);
+}
+function getCue(position){
+ const rows=letters[S.who].rows,target=currentTarget();
+ let end=0;
+ for(let i=0;i<rows.length;i++){
+  const at=target.indexOf(rows[i][1],end);
+  if(at<0)continue;
+  end=at+rows[i][1].length;
+  if(position<=end || i===rows.length-1)return {row:rows[i],index:i};
+ }
+ return {row:rows[rows.length-1],index:rows.length-1};
+}
+function initials(str){
+ return String(str).split(/(\s+)/).map(word=>{
+  if(/^\s+$/.test(word))return word;
+  const match=word.match(/^([^a-zA-Z]*)([a-zA-Z])/);
+  return match?match[1]+match[2]+"·".repeat(Math.min(word.replace(/[^a-zA-Z]/g,"").length-1,7)):word;
+ }).join("");
+}
+function mirrorHTML(typed,target){
+ let html="",buff="",prev="";
+ const flush=()=>{if(buff){html+='<span class="'+prev+'">'+escape(buff)+'</span>';buff=""}};
+ for(let i=0;i<typed.length;i++){
+  const type=target[i]!==undefined&&typed[i].toLowerCase()===target[i].toLowerCase()?"good":"bad";
+  if(type!==prev){flush();prev=type}
+  buff+=typed[i];
+ }
+ flush();
+ const remain=target.slice(typed.length);
+ if(remain)html+='<span class="'+(S.mode==="exam"?"hidden-text":"todo")+'">'+escape(remain)+'</span>';
+ return html||'<span class="'+(S.mode==="exam"?"hidden-text":"todo")+'">'+escape(target)+'</span>';
+}
+function renderRows(showVi,showCue){
+ return '<div class="preview">'+letters[S.who].rows.map((r,i)=>
+ '<div class="readitem"><div class="tag">'+(i+1)+'. '+escape(r[0])+'</div><div class="en" lang="en">'+escape(r[1])+'</div>'+
+ (showVi?'<div class="vi">'+escape(r[2])+'</div>':"")+(showCue?'<div class="mnemo">💡 '+escape(r[3])+'</div>':"")+'</div>'
+ ).join("")+'</div>';
+}
+function renderBilingual(){
+ return '<details class="bilingual" id="translation-details"><summary>🇻🇳 Xem toàn bộ bản dịch & mẹo nhớ từng câu</summary><div class="inside">'+
+ letters[S.who].rows.map((r,i)=>'<p><b>'+(i+1)+'. '+escape(r[2])+'</b> <small>— '+escape(r[3])+'</small></p>').join("")+
+ '</div></details>';
+}
+function renderRead(){
+ return '<div class="opts"><label><input id="showvi" type="checkbox" '+(S.showVi?"checked":"")+'>Hiện bản dịch tiếng Việt</label><label><input id="showcue" type="checkbox" '+(S.showCue?"checked":"")+'>Hiện mẹo lóng</label></div>'+
+ renderRows(S.showVi,S.showCue)+
+ '<div class="actions"><button type="button" id="play">🔊 Nghe cả thư</button><a href="'+escape(letters[S.who].audio)+'" target="_blank" rel="noopener noreferrer">🎧 Audio mẫu ↗</a><button type="button" class="primary" id="start">Bắt đầu luyện gõ →</button></div>';
+}
+function renderWriting(){
+ const r=record(),text=currentTarget(),marks=S.mode==="exam"?"Không hiển thị chữ còn lại":"Chữ còn lại hiển thị mờ";
+ return '<div class="hint"><span class="legend"><span class="dot"></span>Câu mẫu giữ nguyên</span><span class="legend"><span class="dot ghost-dot"></span>'+marks+'</span><span class="legend"><span class="dot bad-dot"></span>Sai hiện đỏ</span><span>Gõ đúng sẽ sáng xanh · Không đảo thứ tự câu</span></div>'+
+ '<div class="opts"><label><input type="checkbox" id="showhint" '+(S.showHint?"checked":"")+'>Hiện gợi ý tiếng Việt khi gõ</label><button type="button" id="showinitial" class="action" style="background:white;border:1px solid #cddaf0;color:#2956a8;border-radius:9px;padding:6px 10px;font-size:12px">'+(S.initials?"Ẩn chữ đầu":"🔤 Gợi ý chữ đầu")+'</button></div>'+
+ '<div class="cue" id="cue" '+(S.showHint?"":"hidden")+'></div>'+
+ '<div class="ghostbox"><div id="ghost" class="ghost" aria-hidden="true"></div><textarea id="writer" class="writer" aria-label="Gõ toàn bộ lá thư theo chữ mờ" spellcheck="false" autocapitalize="off" autocomplete="off" autocorrect="off" wrap="soft"></textarea></div>'+
+ '<div class="typestatus"><b id="writeScore">0% đúng</b><span id="writeStats">0/'+text.length+' ký tự</span><div class="scorebar"><i id="writeBar"></i></div><span id="wordCount">0/'+words(text)+' từ</span></div>'+
+ renderBilingual()+
+ '<div class="actions"><button id="repeat" type="button">↻ Gõ lại</button><button id="showCopy" type="button">Sao chép mẫu</button><button id="play" type="button">🔊 Nghe</button><a href="'+escape(letters[S.who].audio)+'" target="_blank" rel="noopener noreferrer">🎧 Audio mẫu ↗</a><button class="primary" id="next" type="button">Bài tiếp theo →</button></div>';
+}
+function updateCue(){
+ const area=$("writer"),el=$("cue");
+ if(!area||!el||!S.showHint)return;
+ const v=getCue(area.selectionStart);
+ let inner='<strong>GỢI Ý CÂU '+(v.index+1)+'/'+letters[S.who].rows.length+' · '+escape(v.row[0])+'</strong>';
+ inner+='<span>🇻🇳 '+escape(v.row[2])+' &nbsp; · &nbsp; 💡 '+escape(v.row[3])+'</span>';
+ if(S.initials)inner+='<span class="initials">🔤 '+escape(initials(v.row[1]))+'</span>';
+ el.innerHTML=inner;
+}
+function updateTyping(){
+ const area=$("writer"),mirror=$("ghost");if(!area||!mirror)return;
+ const typed=area.value,target=currentTarget(),result=accurate(typed,target);
+ mirror.innerHTML=mirrorHTML(typed,target);
+ $("writeScore").textContent=result.percent+"% đúng";
+ $("writeStats").textContent=result.correct+"/"+target.length+" ký tự";
+ $("writeBar").style.width=result.percent+"%";
+ $("wordCount").textContent=words(typed)+"/"+words(target)+" từ";
+ let old=record(),firstComplete=!old.done&&result.complete;
+ saved.full[S.who]={typed,best:Math.max(old.best||0,result.percent),done:old.done||result.complete};
+ save();updateProgress();updateCue();
+ if(firstComplete)toast("✓ Đã gõ đúng toàn bộ lá thư!");
+}
+function fitTextarea(){
+ const area=$("writer");if(!area)return;
+ const typed=area.value,selection=area.selectionStart,target=currentTarget();
+ area.style.height="auto";
+ area.value=target;
+ const height=Math.max(325,area.scrollHeight+24);
+ area.value=typed;
+ area.style.height=height+"px";
+ try{area.setSelectionRange(selection,selection)}catch{}
+}
+function render(){
+ const letter=letters[S.who],text=currentTarget(),num=words(text),isManager=S.who==="manager";
+ updateProgress();
+ $("paper").innerHTML='<div class="topline"><span class="step">'+(isManager?"Part 4B · Email to the manager":"Part 4A · Email to a friend")+'</span><span class="wc">✓ '+num+' từ · Giữ nguyên mẫu trong tài liệu</span></div>'+
+ '<h2>'+escape(letter.name)+'</h2><p class="subnote">Một lá thư = một bài gõ liền mạch. Giữ đúng thứ tự câu, dấu câu và xuống dòng.</p>'+
+ '<div class="source"><div class="source-label">CÂU LÓNG GHI NHỚ THỨ TỰ BÀI VIẾT</div>'+escape(letter.story)+'</div>'+
+ '<div class="modebar" role="group" aria-label="Chế độ luyện gõ"><button type="button" data-mode="read">1. Xem & nhớ</button><button type="button" data-mode="ghost">2. Gõ chữ mờ</button><button type="button" data-mode="exam">3. Che chữ</button></div>'+
+ (S.mode==="read"?renderRead():renderWriting())+
+ '<p class="footer-note">Gõ đúng sáng xanh, gõ sai hiện đỏ. Nhấn Enter đúng vị trí xuống dòng của thư. Dữ liệu lưu tự động trên trình duyệt này.</p>';
+ updateModes();
+ document.querySelectorAll("[data-mode]").forEach(b=>b.onclick=()=>{S.mode=b.dataset.mode;render()});
+ $("play").onclick=()=>speak(text);
+ if(S.mode==="read"){
+  $("showvi").onchange=e=>{S.showVi=e.target.checked;render()};
+  $("showcue").onchange=e=>{S.showCue=e.target.checked;render()};
+  $("start").onclick=()=>{S.mode="ghost";render();$("writer")?.focus()};
+  return;
+ }
+ const area=$("writer");area.value=record().typed||"";
+ fitTextarea();
+ area.addEventListener("input",updateTyping);
+ area.addEventListener("click",updateCue);
+ area.addEventListener("keyup",updateCue);
+ area.addEventListener("scroll",()=>{const mirror=$("ghost");if(mirror)mirror.scrollTop=area.scrollTop});
+ updateTyping();
+ $("showhint").onchange=e=>{S.showHint=e.target.checked;$("cue").hidden=!S.showHint;updateCue()};
+ $("showinitial").onclick=()=>{S.initials=!S.initials;$("showinitial").textContent=S.initials?"Ẩn chữ đầu":"🔤 Gợi ý chữ đầu";updateCue()};
+ $("repeat").onclick=()=>{const old=record();saved.full[S.who]={typed:"",best:old.best||0,done:old.done||false};save();area.value="";updateTyping();area.focus()};
+ $("showCopy").onclick=()=>{
+  if(navigator.clipboard?.writeText)navigator.clipboard.writeText(text).then(()=>toast("Đã sao chép mẫu")).catch(()=>toast("Không sao chép được"));
+  else toast("Trình duyệt không hỗ trợ sao chép tự động");
+ };
+ $("next").onclick=()=>{S.who=S.who==="friend"?"manager":"friend";S.initials=false;render()};
+}
+$("letter-friend").onclick=()=>{if(S.who!=="friend"){S.who="friend";S.initials=false;render()}};
+$("letter-manager").onclick=()=>{if(S.who!=="manager"){S.who="manager";S.initials=false;render()}};
+window.addEventListener("resize",()=>{if(S.mode!=="read")fitTextarea()},{passive:true});
 render();
 })();
 </script>
-</body></html>
+</body>
+</html>
