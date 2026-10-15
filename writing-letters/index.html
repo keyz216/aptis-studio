@@ -1,0 +1,122 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Aptis · Học thuộc thư Part 4</title>
+<meta name="description" content="Học thuộc thư cho bạn và thư cho người quản lý: tiếng Anh, bản dịch Việt, mẹo nhớ, luyện gõ có gợi ý và tự kiểm tra.">
+<style>
+:root{--ink:#1c2e4a;--muted:#63738d;--blue:#275ec8;--line:#dfe7f3;--bg:#f5f8fd;--soft:#eef4ff;--ok:#17815d;--bad:#c44646}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.65 system-ui,-apple-system,"Segoe UI",sans-serif}
+button,textarea{font:inherit}button{cursor:pointer}button:focus-visible,textarea:focus-visible{outline:3px solid #9ac0ff;outline-offset:2px}
+button:disabled{opacity:.5;cursor:not-allowed}.wrap{max-width:990px;margin:auto;padding:22px 16px 50px}
+.hero{margin-bottom:18px}.eyebrow{font-size:11px;letter-spacing:.13em;font-weight:900;color:#5472ae}.hero h1{font-size:clamp(23px,4vw,32px);line-height:1.25;margin:4px 0}.hero p{margin:6px 0;color:var(--muted)}
+.panel{border:1px solid var(--line);border-radius:18px;background:#fff;box-shadow:0 7px 25px #183c7510}.top{padding:16px;display:grid;gap:15px}
+.picks,.modes,.tools,.actions{display:flex;gap:9px;flex-wrap:wrap}.pill{border:1px solid #d4e0f1;background:white;border-radius:11px;padding:10px 13px;color:#425a7e;font-weight:750}.pill[aria-pressed=true]{background:var(--blue);border-color:var(--blue);color:#fff}
+.meta{display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;color:var(--muted);font-size:12px}.meta b{color:#27519a}
+.progress{height:8px;border-radius:10px;overflow:hidden;background:#e7ecf6}.progress span{display:block;height:100%;background:#3273df;transition:width .2s}
+.lesson{margin-top:16px;padding:clamp(16px,3vw,25px)}
+.mini{display:inline-flex;background:#eaf1ff;color:#2455aa;border-radius:8px;padding:5px 9px;font-size:11px;font-weight:850}
+.lesson h2{font-size:clamp(20px,3vw,25px);margin:9px 0 2px;line-height:1.35}.sub{color:var(--muted);font-size:13px;margin:2px 0 18px}
+.memory{border:1px solid #efd8a9;background:#fff9eb;border-radius:12px;padding:12px 14px;margin:14px 0}.memory b{color:#86560e}.memory p{margin:4px 0 0}
+.line{padding:15px 0;border-top:1px solid #e8edf5}.line:first-child{border-top:0}.tag{display:inline-block;color:#6e83a2;text-transform:uppercase;letter-spacing:.08em;font-size:10px;font-weight:900;margin-bottom:5px}
+.en{font-size:17px;font-weight:700;line-height:1.55;margin:1px 0 5px}.vi{color:#426387;margin:4px 0;font-size:15px}.cue{color:#925710;font-size:13px;margin:5px 0}
+.prefs{display:flex;gap:15px;flex-wrap:wrap;margin:12px 0}.prefs label{font-size:13px;font-weight:650;color:#506481;cursor:pointer}.prefs input{accent-color:var(--blue)}
+.focushead{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap}.counter{color:#63738d;font-size:12px;font-weight:750}
+.target{padding:14px 15px;border-radius:13px;background:#f8faff;border:1px solid #dbe6f8;margin:15px 0}.target .vi{margin:3px 0 7px}.target .cue{margin-top:7px}
+.letters{display:block;line-height:1.9;white-space:pre-wrap;overflow-wrap:anywhere;border:1px dashed #c9d7ef;background:#f9fbff;border-radius:10px;padding:12px 14px;font-family:ui-monospace,Consolas,monospace;font-size:15px;color:#6d8eb8;margin:12px 0}.letters.faded{color:#b5c3d8}.letters.hidden{display:none}
+.writerlabel{display:block;font-size:12px;font-weight:850;margin:12px 0 6px;color:#48618b}
+textarea{display:block;width:100%;min-height:118px;border-radius:12px;border:2px solid #cbd8eb;resize:vertical;background:white;color:#1d304b;padding:13px;font-size:16px;line-height:1.7}
+.status{display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap;color:var(--muted);font-size:12px;margin:9px 0}.status strong{color:#2459ac}
+.result{border-radius:10px;padding:12px 13px;background:#eef9f4;color:#146b4a;border:1px solid #b9dfce;margin:11px 0;font-size:13px}.result.bad{background:#fff5f5;border-color:#f0caca;color:#a13f3f}.result:empty{display:none}
+.actions{margin-top:16px;align-items:center}.action{border:1px solid #c9d9ee;background:#fff;border-radius:10px;padding:10px 13px;color:#345779;font-weight:750}.primary{color:white;border-color:var(--blue);background:var(--blue)}
+.hintnote{font-size:12px;color:var(--muted);margin:15px 0 0}.spacer{flex:1}
+.footer{color:var(--muted);font-size:12px;margin:20px 5px}.vocab{font-size:12px;color:#788ca8;margin-top:7px}
+html.embed body{background:transparent}html.embed .wrap{padding:4px 3px 25px}html.embed .hero{display:none}html.embed .panel{box-shadow:none}
+@media(max-width:650px){.wrap{padding:11px 9px 36px}.top{padding:13px}.lesson{padding:14px}.picks,.modes{display:grid;grid-template-columns:1fr 1fr}.modes{grid-template-columns:repeat(3,minmax(0,1fr))}.pill{font-size:12px;padding:9px 7px}.en{font-size:17px}.vi{font-size:14px}.action{font-size:12px;padding:9px 10px}.picks button{min-height:44px}}
+@media(prefers-reduced-motion:reduce){.progress span{transition:none}}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header class="hero"><div class="eyebrow">DINGDANG · APTIS WRITING PART 4</div><h1>Học thuộc hai lá thư</h1><p>Thư cho bạn · Thư cho quản lý · Tiếng Anh và bản dịch ngay bên dưới · Gợi ý gõ từng câu</p></header>
+<section class="panel top" aria-label="Chọn bài học">
+<div class="picks" role="group" aria-label="Chọn lá thư"><button class="pill" id="pick-friend" type="button">✉ Thư cho bạn · 50 từ</button><button class="pill" id="pick-manager" type="button">▤ Thư cho quản lý · 135 từ</button></div>
+<div class="modes" role="group" aria-label="Chế độ luyện"><button class="pill" id="mode-read" type="button">1. Đọc song ngữ</button><button class="pill" id="mode-hint" type="button">2. Gõ gợi ý</button><button class="pill" id="mode-test" type="button">3. Tự nhớ</button></div>
+<div class="meta"><span id="summary"></span><span id="progress-text"></span></div><div class="progress" aria-hidden="true"><span id="progress-bar"></span></div>
+</section>
+<main id="lesson" class="panel lesson" aria-live="polite"></main>
+<p class="footer">Mẫu này dùng để học thuộc, không phải đáp án đúng cho mọi đề. Khi thi, cần nhận diện thông tin và yêu cầu cụ thể, đặc biệt nếu đề yêu cầu chọn một phương án.</p>
+</div>
+<script>
+(function(){
+"use strict";
+const letters={
+ friend:{name:"Thư cho bạn",story:"LAN ƠI → ĐỌC TIN → CHUYỆN TO → CẢ LÀNG GÓP → NHÓM CHAT BÀN → HỎI LAN",audio:"https://www.aidocmaker.com/g0/audio?name=ab17408da8b04d87b4fc80a3b7be6596",rows:[
+ ["Chào","Hi Lan,","Chào Lan,","Lan ơi!"],
+ ["Đọc tin","I have just read the recent message.","Mình vừa đọc thông báo gần đây.","Tao vừa đọc tin!"],
+ ["Chuyện quan trọng","I think this is an important matter, and everyone should have a chance to share their ideas.","Mình nghĩ đây là một vấn đề quan trọng, và mọi người nên có cơ hội chia sẻ ý kiến.","Chuyện to, cả làng góp ý!"],
+ ["Cùng bàn bạc","Perhaps we could discuss it together and use our group chat before a final decision is made.","Có lẽ chúng ta có thể cùng thảo luận và dùng nhóm chat trước khi đưa ra quyết định cuối cùng.","Kéo nhau lên nhóm bàn rồi mới quyết!"],
+ ["Hỏi bạn","What do you think?","Bạn nghĩ sao?","Lan nghĩ sao?"],
+ ["Kết thư","Best wishes,","Thân mến,","Chúc nhé!"],
+ ["Ký tên","Nam","Nam","Nam ký tên!"]
+ ]},
+ manager:{name:"Thư cho quản lý",story:"SẾP BÁO → TÔI GÓP → NGHE CẢ LÀNG → HỌP TRƯỚC → CHAT SAU → CẢM ƠN, CHỜ SẾP",audio:"https://www.aidocmaker.com/g0/audio?name=dfc5da74ace34dc9be2cb0365b6d9f39",rows:[
+ ["Chào","Dear Sir or Madam,","Kính gửi Ông/Bà,","Sếp ơi!"],
+ ["Cảm ơn","Thank you for your recent message.","Cảm ơn Ông/Bà về thông báo gần đây.","Cảm ơn sếp báo tin!"],
+ ["Mục đích","I am writing to share my thoughts and suggestions.","Tôi viết thư này để chia sẻ suy nghĩ và những đề xuất của mình.","Tôi viết để góp ý!"],
+ ["Hiểu vấn đề","I understand that the organisation is considering an important matter, and I appreciate the opportunity to give my opinion.","Tôi hiểu rằng tổ chức đang xem xét một vấn đề quan trọng, và tôi trân trọng cơ hội được nêu ý kiến.","Chuyện lớn, cho tôi nói!"],
+ ["Quan điểm","In my view, it is important to listen to everyone before making a final decision.","Theo tôi, việc lắng nghe mọi người trước khi quyết định cuối cùng là rất quan trọng.","Nghe cả làng rồi mới quyết!"],
+ ["Đề xuất 1","First, I suggest organising a short group meeting.","Đầu tiên, tôi đề xuất tổ chức một cuộc họp nhóm ngắn.","Họp làng trước!"],
+ ["Lý do 1","Everyone could share their ideas, discuss possible difficulties and work together to find a fair and practical solution.","Mọi người có thể chia sẻ ý tưởng, bàn về những khó khăn có thể xảy ra và cùng tìm một giải pháp công bằng, thiết thực.","Cả làng góp ý, bàn khó, tìm cách giải!"],
+ ["Đề xuất 2","Second, I suggest using our group chat to collect feedback and share useful information.","Thứ hai, tôi đề xuất dùng nhóm chat để thu thập phản hồi và chia sẻ thông tin hữu ích.","Chat nhóm sau!"],
+ ["Lý do 2","This would help people who cannot attend the meeting take part in the discussion.","Điều này giúp những người không thể dự họp vẫn được tham gia thảo luận.","Ai vắng vẫn được góp!"],
+ ["Hy vọng","I hope these suggestions will help everyone make a good decision.","Tôi hy vọng những đề xuất này sẽ giúp mọi người đưa ra quyết định tốt.","Mong sếp quyết cho tốt!"],
+ ["Cảm ơn cuối","Thank you for your time and consideration.","Cảm ơn Ông/Bà đã dành thời gian và cân nhắc.","Cảm ơn sếp đã xem!"],
+ ["Chờ phản hồi","I look forward to hearing from you.","Tôi mong nhận được phản hồi từ Ông/Bà.","Chờ sếp hồi âm!"],
+ ["Kết thư","Yours faithfully,","Trân trọng,","Chào sếp!"],
+ ["Ký tên","Nam","Nam","Nam ký tên!"]
+ ]}
+};
+const $=id=>document.getElementById(id),esc=s=>String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const key="aptis-part4-letter-memory-v1";
+let db={};try{db=JSON.parse(localStorage.getItem(key)||"{}")}catch(e){}if(!db||typeof db!=="object")db={};
+const params=new URLSearchParams(location.search);
+const state={who:params.get("letter")==="manager"?"manager":"friend",mode:"hint",index:0,showVi:true,showCue:true,reveal:false,hintType:"initial"};
+if(params.get("embed")==="1")document.documentElement.classList.add("embed");
+function store(){try{localStorage.setItem(key,JSON.stringify(db))}catch(e){}}
+function rid(){return state.who+"-"+state.index}
+function row(){return letters[state.who].rows[state.index]}
+function norm(s){return String(s||"").trim().replace(/\s+/g," ").toLowerCase()}
+function words(s){return String(s).trim().split(/\s+/).filter(Boolean).length}
+function completed(who){return letters[who].rows.filter((r,i)=>db[who+"-"+i]?.done).length}
+function initials(s){return String(s).split(/\s+/).map(w=>{const clean=w.replace(/^[^\p{L}\p{N}]+/gu,"");return clean?clean[0]+"·".repeat(Math.max(0,Math.min(clean.length-1,7))):w}).join(" ")}
+function iconButton(label,id){return '<button class="action" type="button" id="'+id+'">'+label+'</button>'}
+function top(){const l=letters[state.who],n=completed(state.who),total=l.rows.length;$("pick-friend").setAttribute("aria-pressed",String(state.who==="friend"));$("pick-manager").setAttribute("aria-pressed",String(state.who==="manager"));["read","hint","test"].forEach(m=>$("mode-"+m).setAttribute("aria-pressed",String(state.mode===m)));$("summary").textContent=l.name+" · "+words(l.rows.map(r=>r[1]).join(" "))+" từ · "+total+" mảnh câu";$("progress-text").innerHTML="<b>"+n+"/"+total+"</b> mảnh đã gõ đúng";$("progress-bar").style.width=(100*n/total)+"%";}
+function speak(text){if(!("speechSynthesis" in window)){alert("Trình duyệt chưa hỗ trợ đọc văn bản.");return}window.speechSynthesis.cancel();const utter=new SpeechSynthesisUtterance(text);utter.lang="en-GB";utter.rate=.78;utter.pitch=1;window.speechSynthesis.speak(utter);}
+function allText(){const r=letters[state.who].rows.map(x=>x[1]);if(state.who==="friend")return r[0]+"\n\n"+r.slice(1,5).join(" ")+"\n\n"+r.slice(5).join("\n");return r[0]+"\n\n"+r.slice(1,4).join(" ")+"\n\n"+r.slice(4,7).join(" ")+"\n\n"+r.slice(7,9).join(" ")+"\n\n"+r.slice(9,12).join(" ")+"\n\n"+r.slice(12).join("\n");}
+function renderRead(){const l=letters[state.who],groups={};l.rows.forEach((r,i)=>{const para=state.who==="friend"?(i===0?0:i<=4?1:2):(i===0?0:i<4?1:i<7?2:i<9?3:i<12?4:5);(groups[para]??=[]).push([r,i]);});let out='<div class="memory"><b>🧠 Câu lóng ghi nhớ thứ tự</b><p>'+esc(l.story)+'</p></div><div class="prefs"><label><input id="showvi" type="checkbox" '+(state.showVi?"checked":"")+'> Hiện bản dịch Việt</label><label><input id="showcue" type="checkbox" '+(state.showCue?"checked":"")+'> Hiện mẹo lóng</label></div>';
+ Object.entries(groups).forEach(([g,rs])=>{out+='<section class="readgroup" aria-label="Đoạn '+(Number(g)+1)+'">';rs.forEach(([r,i])=>{out+='<article class="line"><div class="tag">'+(i+1)+'. '+esc(r[0])+'</div><p class="en" lang="en">'+esc(r[1])+'</p>'+(state.showVi?'<p class="vi">'+esc(r[2])+'</p>':"")+(state.showCue?'<p class="cue">💡 '+esc(r[3])+'</p>':"")+'</article>'});out+='</section>'});
+ out+='<div class="actions">'+iconButton("🔊 Nghe cả thư","listen-all")+'<a class="action" href="'+l.audio+'" target="_blank" rel="noopener noreferrer">🎧 Audio mẫu ↗</a><span class="spacer"></span>'+iconButton("⌨ Bắt đầu luyện gõ","start-writing")+'</div>';return out;}
+function renderPractice(){const r=row(),l=letters[state.who],id=rid(),saved=db[id]||{},hint=state.mode==="hint";let h='<div class="focushead"><span class="mini">'+esc(r[0])+'</span><span class="counter">Mảnh '+(state.index+1)+' / '+l.rows.length+'</span></div><div class="target"><div class="tag">NHỚ NGHĨA VÀ THỨ TỰ CÂU</div><p class="vi">'+esc(r[2])+'</p><p class="cue">💡 '+esc(r[3])+'</p></div>';
+ if(hint){h+='<div class="tools">'+iconButton("🔤 Chữ đầu mỗi từ","use-initial")+' '+iconButton("🌫 Xem chữ mờ","use-ghost")+' '+iconButton(state.reveal?"🙈 Ẩn câu mẫu":"👁 Xem toàn câu","reveal")+'</div><div class="letters '+(state.hintType==="ghost"?"faded":"")+'" id="guide" lang="en">'+esc(state.reveal?r[1]:(state.hintType==="ghost"?r[1]:initials(r[1])))+'</div>';}
+ else{h+='<div class="tools">'+iconButton(state.reveal?"🙈 Ẩn câu mẫu":"🔎 Xem câu sau khi thử","reveal")+'</div>'+(state.reveal?'<div class="letters" lang="en">'+esc(r[1])+'</div>':"");}
+ h+='<label class="writerlabel" for="typed">Gõ câu tiếng Anh bên dưới (không tự động điền)</label><textarea id="typed" spellcheck="false" autocorrect="off" autocapitalize="off" autocomplete="off" placeholder="Nhớ từ nào, gõ từ đó…">'+esc(saved.typed||"")+'</textarea><div class="status"><span id="count">0 từ đã gõ</span><strong id="done">'+(saved.done?"✓ Đã hoàn thành":"Chưa hoàn thành")+'</strong></div><div id="feedback" class="result" role="status"></div><div class="actions">'+iconButton("← Câu trước","previous")+iconButton("🔊 Nghe câu","listen")+iconButton("↻ Gõ lại","reset")+'<span class="spacer"></span><button class="action primary" id="check" type="button">Kiểm tra</button><button class="action primary" id="next" type="button">Câu tiếp →</button></div><p class="hintnote">Gợi ý được dùng để học thuộc, không phải nội dung điền sẵn. Hệ thống kiểm tra cả dấu câu và chính tả (không phân biệt chữ hoa/thường). Bài gõ lưu trên trình duyệt này.</p>';return h;}
+function render(){top();const l=letters[state.who];$("lesson").innerHTML='<div class="mini">WRITING PART 4 · HỌC THUỘC</div><h2>'+esc(l.name)+'</h2><p class="sub">Giữ nguyên mẫu gốc · Tiếng Anh / bản dịch Việt · Mẹo nhớ tiếng Việt · Gõ từng câu</p>'+(state.mode==="read"?renderRead():renderPractice());
+ if(state.mode==="read"){$("showvi").onchange=e=>{state.showVi=e.target.checked;render()};$("showcue").onchange=e=>{state.showCue=e.target.checked;render()};$("listen-all").onclick=()=>speak(allText());$("start-writing").onclick=()=>{state.mode="hint";render()};return;}
+ const box=$("typed");box.oninput=()=>{const k=rid();db[k]={...db[k],typed:box.value,done:norm(box.value)===norm(row()[1])};store();$("count").textContent=words(box.value)+" từ đã gõ";$("done").textContent=db[k].done?"✓ Đã hoàn thành":"Chưa hoàn thành";top();$("feedback").textContent="";$("feedback").classList.remove("bad");};$("count").textContent=words(box.value)+" từ đã gõ";
+ $("previous").disabled=state.index===0;$("previous").onclick=()=>{state.index--;state.reveal=false;render()};
+ $("next").onclick=()=>{state.index=(state.index+1)%letters[state.who].rows.length;state.reveal=false;render()};
+ $("listen").onclick=()=>speak(row()[1]);$("reset").onclick=()=>{db[rid()]={done:false,typed:""};store();render();$("typed").focus()};
+ $("check").onclick=()=>{const good=norm(box.value)===norm(row()[1]);const result=$("feedback");result.classList.toggle("bad",!good);result.textContent=good?"✓ Chính xác! Bạn đã nhớ được mảnh câu này.":"Chưa khớp mẫu. Soát lại từ, dấu câu và khoảng trắng; bạn có thể dùng gợi ý hoặc nghe lại.";db[rid()]={typed:box.value,done:good};store();top();$("done").textContent=good?"✓ Đã hoàn thành":"Chưa hoàn thành"};
+ $("reveal").onclick=()=>{state.reveal=!state.reveal;render()};
+ if($("use-initial"))$("use-initial").onclick=()=>{state.hintType="initial";state.reveal=false;render()};
+ if($("use-ghost"))$("use-ghost").onclick=()=>{state.hintType="ghost";state.reveal=false;render()};
+}
+function switchWho(w){if(state.who===w)return;state.who=w;state.index=0;state.reveal=false;render()}
+$("pick-friend").onclick=()=>switchWho("friend");$("pick-manager").onclick=()=>switchWho("manager");
+["read","hint","test"].forEach(m=>$("mode-"+m).onclick=()=>{state.mode=m;state.reveal=false;render()});
+render();
+})();
+</script>
+</body></html>
